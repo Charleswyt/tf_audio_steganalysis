@@ -39,20 +39,27 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
     :param padding: padding="SAME"
     :return: 4-D tensor
     """
-    shape = input_data.get_shape()
-    print("name: %s, shape: (%d, %d, %d, %d)" % (name, shape[0], shape[1], shape[2], shape[3]))
+
     if is_max_pool is True:
-        return tf.nn.max_pool(input_data,
-                              ksize=[1, height, width, 1],
-                              strides=[1, x_stride, y_stride, 1],
-                              padding=padding,
-                              name=name)
+        pooling = tf.nn.max_pool(input_data,
+                                 ksize=[1, height, width, 1],
+                                 strides=[1, x_stride, y_stride, 1],
+                                 padding=padding,
+                                 name=name)
+        pooling_type = "max_pooling"
+
     else:
-        return tf.nn.avg_pool(input_data,
-                              ksize=[1, height, width, 1],
-                              strides=[1, x_stride, y_stride, 1],
-                              padding=padding,
-                              name=name)
+        pooling = tf.nn.avg_pool(input_data,
+                                 ksize=[1, height, width, 1],
+                                 strides=[1, x_stride, y_stride, 1],
+                                 padding=padding,
+                                 name=name)
+        pooling_type = "average_pooling"
+
+    shape = pooling.get_shape()
+    print("name: %s, shape: (%d, %d, %d, %d), type: %s" % (name, shape[0], shape[1], shape[2], shape[3], pooling_type))
+
+    return pooling
 
 
 def normalization(input_data, depth_radius, name, bias=1.0, alpha=0.001 / 9.0, beta=0.75):
@@ -207,7 +214,7 @@ def activation(input_data, activation_method=None, alpha=0.2):
     elif activation_method == "elu":
         output = tf.nn.elu(input_data, name="elu")
     elif activation_method == "leakrelu":
-        output = tf.maximum(alpha * input_data, input_data, name="leakrelu")
+        output = tf.maximum(alpha * input_data, input_data)
     else:
         output = input_data
 
@@ -215,7 +222,7 @@ def activation(input_data, activation_method=None, alpha=0.2):
 
 
 def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
-               activation_method="relu", alpha=0.1, padding="SAME", is_pretrain=True):
+               activation_method="relu", alpha=0.2, padding="SAME", is_pretrain=True):
     """
     卷积层
     :param input_data: 输入数据 tensor [batch_size, height, width, channels]

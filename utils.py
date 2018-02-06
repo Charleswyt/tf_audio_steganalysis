@@ -204,7 +204,7 @@ def tfrecord_export(files_path, tfrecord_file_path):
 
 def get_files_list(file_dir, start_idx=0, end_idx=-1):
     filename = os.listdir(file_dir)
-    file_list = [os.path.join(file_dir, file) for file in filename]
+    file_list = [file_dir + "/" + file for file in filename]
     total_num = len(file_list)
     if start_idx > total_num:
         start_idx = 0

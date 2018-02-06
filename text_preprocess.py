@@ -19,7 +19,7 @@ def get_files_list(files_dir):
     return files_list
 
 
-def read_text(text_file_path, content_type="array", separator=","):
+def read_text(text_file_path, content_type="array", separator=",", ):
     """
     从txt文本中读取数据
     content = read_text(text_file_path, content_type="array", separator=",")
