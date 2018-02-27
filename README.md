@@ -28,20 +28,27 @@ relative\_payload:
     `python main.py test -data_dir EECS 128 2 -model_dir`
 
 * Data Folder Name <br>
+
     cover
+
         128 | 192 | 256 | 320
     stego
+
         EECS
             128_W_2_H_7_ER_10, 128_W_3_H_7_ER_10, ..., 128_W_10_H_7_ER_10
             192_W_2_H_7_ER_10, 192_W_3_H_7_ER_10, ..., 192_W_10_H_7_ER_10
             256_W_2_H_7_ER_10, 256_W_3_H_7_ER_10, ..., 256_W_10_H_7_ER_10
             320_W_2_H_7_ER_10, 320_W_3_H_7_ER_10, ..., 320_W_10_H_7_ER_10
+        W: The width of the parity-check matrix, W = 1 / α, and α is the relative payload
+        H: the height of the parity-check matrix
+        ER: The number of fremes used for embedding = The number of whole frames * ER
         
         HCM-Gao
             128_01, 128_03, 128_05, 128_10
             192_01, 192_03, 192_05, 192_10
             256_01, 256_03, 256_05, 256_10
             320_01, 320_03, 320_05, 320_10
+        01, 03, 05, 10 is the ER as shown above
         
         HCM-Yan
             128_01, 128_03, 128_05, 128_10
