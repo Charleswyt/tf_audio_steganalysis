@@ -28,14 +28,14 @@ function:
 
 def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=True, padding="SAME"):
     """
-    池化层
-    :param input_data: 输入数据
-    :param height: 池化核高度
-    :param width: 池化核宽度
-    :param x_stride: x方向步长
-    :param y_stride: y方向步长
-    :param name: name
-    :param is_max_pool: 是否选用最大化池化
+    pooling layer
+    :param input_data: the input data
+    :param height: the height of the convolutional kernel
+    :param width: the width of the convolutional kernel
+    :param x_stride: stride in X axis
+    :param y_stride: stride in Y axis
+    :param name: the name of the layer
+    :param is_max_pool: if True, max pooling, else average pooling
     :param padding: padding="SAME"
     :return: 4-D tensor
     """
@@ -64,9 +64,9 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
 
 def normalization(input_data, depth_radius, name, bias=1.0, alpha=0.001 / 9.0, beta=0.75):
     """
-    :param input_data: 输入数据
-    :param name: name
+    :param input_data: the input data
     :param depth_radius: depth radius
+    :param name: name
     :param bias: bias
     :param alpha: alpha
     :param beta: beta
@@ -84,31 +84,15 @@ def normalization(input_data, depth_radius, name, bias=1.0, alpha=0.001 / 9.0, b
 
 def batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3):
     """
-    批正态化
-    :param input_data: 输入数据
+    BN layer
+    :param input_data: the input data
     :param name: name
     :param offset: beta
     :param scale: gamma
-    :param variance_epsilon: 避免除零错
+    :param variance_epsilon: variance_epsilon
     :return: 4-D tensor
-
-    tf.nn.moments(x, axes, name=None, keep_dim=False)
-        x: 输入数据，[batchsize, height, width, kernels]
-        axes: 求解的维度，是个list，例如 [0, 1, 2]
-        name: 名字
-        keep_dims: 是否保持维度
-        batch_mean: 当前批次的均值
-        batch_var: 当前批次的方差
-
-    tf.nn.batch_normalization(x, mean, variance, offset, scale, variance_epsilon, name=None)
-        x: 输入数据
-        mean: 当前批次的均值
-        variance: 当前批次的方差
-        offset: 一般初始化为0
-        scale: 一般初始化为1
-        variance_epsilon: 设为一个很小的数即可, 如0.001
-
     """
+
     batch_mean, batch_var = tf.nn.moments(input_data, [0])
     output_data = tf.nn.batch_normalization(input_data,
                                             mean=batch_mean,
@@ -118,14 +102,15 @@ def batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilo
                                             variance_epsilon=variance_epsilon,
                                             name=name)
     print("name: %s" % name)
+
     return output_data
 
 
 def dropout(input_data, keep_pro=0.5, name="dropout"):
     """
-
-    :param input_data: 输入数据
-    :param keep_pro: 保持概率
+    dropout layer
+    :param input_data: the input data
+    :param keep_pro: the probability that each element is kept
     :param name: name
     :return:
 
@@ -142,16 +127,18 @@ def dropout(input_data, keep_pro=0.5, name="dropout"):
     return output
 
 
-def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1):
+def fc_layer(input_data, output_dim, name, is_bn=True, activation_method="relu", alpha=0.1):
     """
-    全连接层
-    :param input_data: 输入数据
-    :param output_dim: 输出维度
+    fully-connected layer
+    :param input_data: the input data
+    :param output_dim: the dimension of the output data
     :param name: name
-    :param activation_method: 激活函数类型
+    :param is_bn: whether the BN layer is used
+    :param activation_method: the type of activation function
     :param alpha: leakey relu alpha
     :return: output
     """
+
     shape = input_data.get_shape()
     if len(shape) == 4:
         input_dim = shape[1].value * shape[2].value * shape[3].value
@@ -173,6 +160,9 @@ def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1):
                                 bias=biases,
                                 name="bias_add")
 
+        if is_bn is True:
+            output = batch_normalization(output, name+"_BN")
+
         if activation_method == "leakrelu":
             print("name: %s, shape: %d -> %d, activation:%s, alpha = %f"
                   % (name, input_dim, output_dim, activation_method, alpha))
@@ -187,18 +177,17 @@ def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1):
 
 def activation(input_data, activation_method=None, alpha=0.2):
     """
-    激活函数
-    :param input_data: 输入数据
-    :param activation_method: 激活函数类型
+    activation function
+    :param input_data: the input data
+    :param activation_method: the type of activation function
     :param alpha: for leaky relu
-    "relu": max(features, 0)
-    "relu6": min(max(features, 0), 6)
-    "tanh": tanh(features)
-    "sigmoid": 1 / (1 + exp(-features))
-    "softplus": log(exp(features) + 1)
-    "elu": exp(features) - 1 if < 0, features otherwise
-    "leakrelu": max(features, leak * features)
-
+        "relu": max(features, 0)
+        "relu6": min(max(features, 0), 6)
+        "tanh": tanh(features)
+        "sigmoid": 1 / (1 + exp(-features))
+        "softplus": log(exp(features) + 1)
+        "elu": exp(features) - 1 if < 0, features otherwise
+        "leakrelu": max(features, leak * features)
     :return:
     """
     if activation_method == "relu":
@@ -222,20 +211,21 @@ def activation(input_data, activation_method=None, alpha=0.2):
 
 
 def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
-               activation_method="relu", alpha=0.2, padding="SAME", is_pretrain=True):
+               is_bn=True, activation_method="relu", alpha=0.2, padding="SAME", is_pretrain=True):
     """
-    卷积层
-    :param input_data: 输入数据 tensor [batch_size, height, width, channels]
-    :param height: 卷积核高度
-    :param width: 卷积核宽度
-    :param x_stride: x方向的步长
-    :param y_stride: y方向的步长
-    :param filter_num: 卷积核个数
-    :param name: 卷积层名
-    :param activation_method: 激活函数类型
+    convolutional layer
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param height: the height of the convolutional kernel
+    :param width: the width of the convolutional kernel
+    :param x_stride: stride in X axis
+    :param y_stride: stride in Y axis
+    :param filter_num: the number of the convolutional kernel
+    :param name: the name of the layer
+    :param is_bn: whether the BN layer is used
+    :param activation_method: the type of activation function
     :param alpha: leaky relu alpha
-    :param padding: 边缘补全方式
-    :param is_pretrain: 该层参数是否需要训练(默认开启)
+    :param padding: the padding method, "SAME" | "VALID"
+    :param is_pretrain: whether the parameters are trainable
 
     :return: 4-D tensor
     """
@@ -263,6 +253,8 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
         print("name: %s, shape: (%d, %d, %d, %d), activation: %s"
               % (name, shape[0], shape[1], shape[2], shape[3], activation_method))
 
+        if is_bn is True:
+            output = batch_normalization(output, name+"_BN")
         output = activation(output, activation_method, alpha)
 
         return output
@@ -270,10 +262,10 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
 
 def loss(logits, label, method="sparse_softmax_cross_entropy"):
     """
-    损失函数层
+    calculate the loss
     :param logits: logits [batch_size, class_num]
     :param label: one hot label
-    :param method: loss method()
+    :param method: loss method
     :return: loss
     """
     with tf.variable_scope("loss") as scope:
@@ -303,10 +295,10 @@ def loss(logits, label, method="sparse_softmax_cross_entropy"):
 
 def accuracy(logits, label):
     """
-    计算准确率
+    calculate the accuracy
     :param logits: logits
     :param label: label
-    :return: auuracy
+    :return: accuracy
     """
     with tf.variable_scope("accuracy") as scope:
         correct = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
@@ -321,10 +313,10 @@ def accuracy(logits, label):
 def optimizer(losses, learning_rate, optimizer_type="Adam", beta1=0.9, beta2=0.999,
               epsilon=1e-8, initial_accumulator_value=0.1, momentum=0.9, decay=0.9):
     """
-    优化器
-    :param losses: 损失函数
-    :param learning_rate: 学习率
-    :param optimizer_type: 优化器种类
+    optimizer
+    :param losses: loss
+    :param learning_rate: lr
+    :param optimizer_type: the type of optimizer
     可选类型:
     GradientDescent                                               -> W += learning_rate * dW
     Adagrad         catch += dW ** 2                              -> W += -learning_rate * dW / (sqrt(catch) + epsilon)
@@ -333,17 +325,17 @@ def optimizer(losses, learning_rate, optimizer_type="Adam", beta1=0.9, beta2=0.9
     Momentum        v = (momentum * v - learning * dW)            -> W += v
     RMSProp         catch += decay * catch + (1 - decay) * dW ** 2-> W += -learning_rate * dW /  (sqrt(catch) + epsilon)
     Note:
-        ADAM通常会取得比较好的结果，同时收敛非常快相比SGD
+        Adam通常会取得比较好的结果，同时收敛非常快相比SGD
         L-BFGS适用于全batch做优化的情况
-        有时候可以多种优化方法同时使用，比如使用SGD进行warm up，然后ADAM
+        有时候可以多种优化方法同时使用，比如使用SGD进行warm up，然后Adam
         对于比较奇怪的需求，deepbit两个loss的收敛需要进行控制的情况，比较慢的SGD比较适用
 
-    :param beta1: Adam优化器, 默认为0.9
-    :param beta2: Adam优化器, 默认为0.999
-    :param epsilon: Adam | RMSProp优化器, 默认为1e-8
-    :param initial_accumulator_value: Adagrad优化器, 默认为0.1
-    :param momentum: Momentum | RMSProp优化器, 默认为0.9
-    :param decay: Momentum | RMSProp优化器, 默认为0.9
+    :param beta1: Adam, default 0.9
+    :param beta2: Adam, default 0.999
+    :param epsilon: Adam | RMSProp, default 1e-8
+    :param initial_accumulator_value: Adagrad, default 0.1
+    :param momentum: Momentum | RMSProp, default 0.9
+    :param decay: Momentum | RMSProp, default 0.9
     :return:
     """
     with tf.name_scope("optimizer"):
@@ -385,28 +377,39 @@ def optimizer(losses, learning_rate, optimizer_type="Adam", beta1=0.9, beta2=0.9
         return train_op
 
 
-def get_learning_rate(base_learning_rate, iters, max_iter, method="fixed", gamma=0.01, step=100, power=1.0):
+def learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
+                        end_learning_rate=0.0001, power=1.0, cycle=False,):
     """
-    :param base_learning_rate: 初始学习率
-    :param iters: 当前迭代次数
-    :param method: 学习率更新策略(fixed, step, inv, poly)
-    :param gamma: gamma
-    :param step: step(for step method)
-    :param power: power
-    :return: learning_rate
-    """
+    function: learning rate decay -> constant |  | inverse_time | natural_exp | polynomial
 
-    if method == "fixed":
-        learning_rate = base_learning_rate
-    elif method == "step":
-        learning_rate = base_learning_rate * gamma ** (int(iters / step))
-    elif method == "exp":
-        learning_rate = base_learning_rate * gamma ** iters
-    elif method == "inv":
-        learning_rate = base_learning_rate * (1 + gamma * iters) ** (-power)
-    elif method == "poly":
-        learning_rate = base_learning_rate * (1 - iters / max_iter) ** (-power)
+    :param init_learning_rate: A scalar float32 or float64 Tensor or a Python number. The initial learning rate.
+    :param decay_method: The method of learning rate decay
+    :param global_step: A scalar int32 or int64 Tensor or a Python number. Global step to use for the decay computation. Must not be negative.
+    :param decay_steps: A scalar int32 or int64 Tensor or a Python number. Must be positive. See the decay computation above.
+    :param decay_rate: A scalar float32 or float64 Tensor or a Python number. The decay rate.
+    :param staircase: Boolean. If True decay the learning rate at discrete intervals.
+    :param end_learning_rate: A scalar float32 or float64 Tensor or a Python number. The minimal end learning rate.
+    :param power: A scalar float32 or float64 Tensor or a Python number. The power of the polynomial. Defaults to linear, 1.0.
+    :param cycle: A boolean, whether or not it should cycle beyond decay_steps.
+    :return: decayed_learning_rate
+    type:
+        exponential_decay   -> decayed_learning_rate = learning_rate * decay_rate ^ (global_step / decay_steps)
+        inverse_time_decay  -> decayed_learning_rate = learning_rate / (1 + decay_rate * t)
+        natural_exp_decay   -> decayed_learning_rate = learning_rate * exp(-decay_rate * global_step)
+        polynomial_decay    -> decayed_learning_rate =
+                                (learning_rate - end_learning_rate) * (1 - global_step / decay_steps) ^ (power) + end_learning_rate
+    """
+    if decay_method == "constant":
+        decayed_learning_rate = init_learning_rate
+    elif decay_method == "exponential":
+        decayed_learning_rate = tf.train.exponential_decay(init_learning_rate, global_step, decay_steps, decay_rate, staircase)
+    elif decay_method == "inverse_time":
+        decayed_learning_rate = tf.train.inverse_time_decay(init_learning_rate, global_step, decay_steps, decay_rate, staircase)
+    elif decay_method == "natural_exp":
+        decayed_learning_rate = tf.train.natural_exp_decay(init_learning_rate, global_step, decay_steps, decay_rate, staircase)
+    elif decay_method == "polynomial":
+        decayed_learning_rate = tf.train.polynomial_decay(init_learning_rate, global_step, decay_steps, decay_rate, end_learning_rate, power, cycle)
     else:
-        learning_rate = base_learning_rate
+        decayed_learning_rate = init_learning_rate
 
-    return learning_rate
+    return decayed_learning_rate

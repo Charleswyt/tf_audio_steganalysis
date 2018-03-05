@@ -176,3 +176,4 @@ files_dir = "C:/Users/Charles_CatKing/Desktop/steganalysis/cover"
 #         coord.request_stop()
 #         coord.join(threads)
 
+read_text("E:/Myself/2.database/10.QMDCT/1.txt\EECS/128_W_4_H_7_ER_10/wav10s_00001.txt")

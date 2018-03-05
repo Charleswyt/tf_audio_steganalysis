@@ -216,7 +216,7 @@ def get_files_list(file_dir, start_idx=0, end_idx=-1):
     return file_list
 
 
-def read_data(cover_files_path, stego_files_path, start_idx, end_idx, is_shuffle=True, is_print=False):
+def read_data(cover_files_path, stego_files_path, start_idx, end_idx, is_shuffle=True):
     """
     读取数据(当前数据为文件名)
     :param cover_files_path: cover文件路径
@@ -224,7 +224,6 @@ def read_data(cover_files_path, stego_files_path, start_idx, end_idx, is_shuffle
     :param start_idx: 起始文件下标
     :param end_idx: 终止文件下标
     :param is_shuffle: 是否乱序
-    :param is_print: 是否打印输出信息
     :return:
         data_list: 数据列表
         label_list: 标签列表
@@ -234,74 +233,45 @@ def read_data(cover_files_path, stego_files_path, start_idx, end_idx, is_shuffle
     sample_num = len(cover_files_list)                                      # 样本对数
     cover_label_list = np.zeros(sample_num, np.int32)                       # cover标签列表
     stego_label_list = np.ones(sample_num, np.int32)                        # stego标签列表
-
-    files_list = np.hstack((cover_files_list, stego_files_list))            # 文件名列表
-    label_list = np.hstack((cover_label_list, stego_label_list))            # 标签列表
     
-    temp = np.array([files_list, label_list])
-    temp = temp.transpose()
+    temp_cover = np.array([cover_files_list, cover_label_list])
+    temp_cover = temp_cover.transpose()
+
+    temp_stego = np.array([stego_files_list, stego_label_list])
+    temp_stego = temp_stego.transpose()
 
     if is_shuffle is True:
-        np.random.shuffle(temp)
+        np.random.shuffle(temp_cover)
+        np.random.shuffle(temp_stego)
 
     if start_idx > sample_num:
         start_idx = 0
     if end_idx > sample_num:
         end_idx = -1
 
-    data_list = list(temp[start_idx:end_idx, 0])
-    label_list = list(temp[start_idx:end_idx, 1])
+    cover_data_list = list(temp_cover[start_idx:end_idx, 0])
+    stego_data_list = list(temp_stego[start_idx:end_idx, 0])
+    cover_label_list = list(temp_cover[start_idx:end_idx, 1])
+    stego_label_list = list(temp_stego[start_idx:end_idx, 1])
 
-    if is_print is True:
-        print("data_list: ", data_list)
-        print("label_list: ", label_list)
-
-    return data_list, label_list
-
-
-def make_train_set(data_list, label_list, ratio=0.8, is_print=False):
-    """
-    制备训练集和验证集
-    :param data_list: 数据列表
-    :param label_list: 标签列表
-    :param ratio: 训练集占比
-    :param is_print: 是否打印输出信息
-    :return:
-        train_data_list: 训练集数据列表
-        valid_data_list: 验证集数据列表
-        train_label_list: 训练集标签列表
-        valid_label_list: 验证集标签列表
-    """
-    data_number = len(data_list)
-    train_set_number = np.int(data_number * ratio)
-
-    train_data_list = data_list[:train_set_number]
-    valid_data_list = data_list[train_set_number:]
-    train_label_list = label_list[:train_set_number]
-    valid_label_list = label_list[train_set_number:]
-
-    if is_print is True:
-        print("train_data_list: ", train_data_list)
-        print("valid_data_list: ", valid_data_list)
-        print("train_label_list: ", train_label_list)
-        print("valid_label_list: ", valid_label_list)
-
-    return train_data_list, valid_data_list, train_label_list, valid_label_list
+    return cover_data_list, cover_label_list, stego_data_list, stego_label_list
 
 
 # 定义一个函数，按批次取数据
-def minibatches(datas=None, labels=None, batchsize=None):
+def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None):
     """
     批次读取数据
-    :param datas: 数据列表
-    :param labels: 标签列表
+    :param cover_datas: 数据列表(cover)
+    :param cover_labels: 标签列表(cover)
+    :param stego_datas: 数据列表(stego)
+    :param stego_labels: 标签列表(stego)
     :param batchsize: 批次大小
     :return:
     """
-    if len(datas) != len(labels):
-        print("数据集与标签集不匹配")
-        assert len(datas) == len(labels)
-    else:
-        for start_idx in range(0, len(datas) - batchsize + 1, batchsize):
-            excerpt = slice(start_idx, start_idx + batchsize)
-            yield datas[excerpt], labels[excerpt]
+    for start_idx in range(0, len(cover_datas) - batchsize // 2 + 1, batchsize // 2):
+        excerpt = slice(start_idx, start_idx + batchsize // 2)
+        datas = cover_datas[excerpt]
+        datas.extend(stego_datas[excerpt])
+        labels = cover_labels[excerpt]
+        labels.extend(stego_labels[excerpt])
+        yield datas, labels

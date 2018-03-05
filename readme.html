@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Converted from: readme.md</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+<h1 id="heading.audio-steganalysis-with-cnn" id="heading.necessary-package" id="heading.cnn-architecture" id="heading.steganography-algorithm" id="heading.results" id="heading.run">Audio Steganalysis with CNN</h1>
+<h2>Necessary Package</h2>
+<p>tensorflow-gpu==1.3, numpy, matplotlib</p>
+<h2>CNN Architecture</h2>
+<h2>Steganography Algorithm</h2>
+<p>HCM(Huffman Code Mapping), EECS(Equal Length Entropy Codes Substitution)</p>
+<h2>Results</h2>
+<h2>Run</h2>
+<p>Command: python main.py &lt;data_dir&gt; <mode> &lt;stego_method&gt; &lt;bitrate&gt; &lt;relative_payload&gt; &lt;model_dir&gt; &lt;log_dir&gt; <br><br />
+data_dir: data dir <br><br />
+mode: train | test <br><br />
+stego_method: EECS | HCM-Gao | HCM-Yan <br><br />
+bitrate: 128 | 192 | 256 | 320 <br><br />
+relative_payload:</p>
+<ul>
+<li>
+<p>2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10, if the steganography algorithm is EECS <br></p>
+</li>
+<li>
+<p>0.1 | 0.3 | 0.5, otherwise <br></p>
+</li>
+<li>
+<p>Training <br><br />
+<code>python main.py -data_dir train EECS 128 2 -model_dir -log_dir</code></p>
+</li>
+<li>
+<p>Test <br><br />
+<code>python main.py -data_dir test EECS 128 2 -model_dir</code></p>
+</li>
+</ul>
+
+
+</body>
+</html>

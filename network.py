@@ -13,18 +13,18 @@ from layer import *
         network1_5: ReLu is used as the activation function (将激活函数由Tanh改为ReLu)
         network1_6: Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
         network1_7: Deepen the network to block convolution layers (加深网络)
-        network1_8: Design a network to steganalyze audios of arbitrary size (解决可变尺寸输入数据的训练问题)
         
         Note: HPF and ABS is applied at the pre-processing
 """
 
 
-def network1(input_data, class_num=2, activation_method="tanh", padding="SAME"):
-
+def network1(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME"):
+    
+    print("network1")
     print("Network Structure: ")
     # Group1
-    conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 1, "conv1_1", activation_method, padding)
-    conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 8, "conv1_2", activation_method, padding)
+    conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 1, "conv1_1", is_bn, activation_method, padding)
+    conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 8, "conv1_2", is_bn, activation_method, padding)
     pool1_3 = pool_layer(conv1_2, 2, 2, 2, 2, "pool1_3")
 
     # Group2
@@ -68,6 +68,7 @@ def network1(input_data, class_num=2, activation_method="tanh", padding="SAME"):
 
 def network1_test(input_data, class_num=2, activation_method="tanh", padding="SAME"):
 
+    print("network")
     print("Network Structure: ")
     # Group1
     conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 1, "conv1_1", activation_method, padding)
@@ -448,59 +449,6 @@ def network1_7(input_data, class_num=2, activation_method="tanh", padding="SAME"
     return logits
 
 
-def network1_8(input_data, class_num=2, activation_method="tanh", padding="SAME"):
-    """
-    检测任意尺寸输入数据的网络
-    """
-    print("Network Structure: ")
-    # Group1
-    conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 1, "conv1_1", activation_method, padding)
-    conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 8, "conv1_2", activation_method, padding)
-    pool1_3 = pool_layer(conv1_2, 2, 2, 2, 2, "pool1_3")
-
-    # Group2
-    conv2_1 = conv_layer(pool1_3, 3, 3, 1, 1, 8, "conv2_1", activation_method, padding)
-    conv2_2 = conv_layer(conv2_1, 1, 1, 1, 1, 16, "conv2_2", activation_method, padding)
-    pool2_3 = pool_layer(conv2_2, 2, 2, 2, 2, "pool2_3")
-
-    # Group3
-    conv3_1 = conv_layer(pool2_3, 3, 3, 1, 1, 16, "conv3_1", activation_method, padding)
-    conv3_2 = conv_layer(conv3_1, 1, 1, 1, 1, 32, "conv3_2", activation_method, padding)
-    pool3_3 = pool_layer(conv3_2, 2, 2, 2, 2, "pool3_3")
-
-    # Group4
-    conv4_1 = conv_layer(pool3_3, 3, 3, 1, 1, 32, "conv4_1", activation_method, padding)
-    conv4_2 = conv_layer(conv4_1, 1, 1, 1, 1, 64, "conv4_2", activation_method, padding)
-    pool4_3 = pool_layer(conv4_2, 2, 2, 2, 2, "pool4_3")
-
-    # Group5
-    conv5_1 = conv_layer(pool4_3, 3, 3, 1, 1, 64, "conv5_1", activation_method, padding)
-    conv5_2 = conv_layer(conv5_1, 1, 1, 1, 1, 128, "conv5_2", activation_method, padding)
-    pool5_3 = pool_layer(conv5_2, 2, 2, 2, 2, "pool5_3")
-
-    # Group6
-    conv6_1 = conv_layer(pool5_3, 3, 3, 1, 1, 128, "conv6_1", activation_method, padding)
-    conv6_2 = conv_layer(conv6_1, 1, 1, 1, 1, 256, "conv6_2", activation_method, padding)
-    pool6_3 = pool_layer(conv6_2, 2, 2, 2, 2, "pool6_3")
-
-    shape = pool6_3.get_shape()
-    multiple = shape[1] // 4
-    pool6_4 = pool_layer(pool6_3, 2, 2, 2, 2, "pool6_3")
-
-    # 全连接层
-    fc7 = fc_layer(pool6_3, 2048, "fc7", None)
-    bn8 = batch_normalization(fc7, name="bn8")
-    bn8 = activation(bn8, "relu")
-
-    fc9 = fc_layer(bn8, 512, "fc9", None)
-    bn10 = batch_normalization(fc9, name="bn10")
-    bn11 = activation(bn10, "relu")
-
-    logits = fc_layer(bn11, class_num, "fc12", None)
-
-    return logits
-
-
 def le_net(input_data, class_num=10):
     # Group1
     conv1_1 = conv_layer(input_data, 5, 5, 1, 1, 6, "conv1", "VALID")
@@ -581,30 +529,30 @@ def vgg16(input_data, class_num=4096):
 
 def vgg19(input_data, class_num=4096):
     # vgg19
-    conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 64, "conv1_1")
-    conv1_2 = conv_layer(conv1_1, 3, 3, 1, 1, 64, "conv1_2")
+    conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 64, "conv1_1", is_bn=False)
+    conv1_2 = conv_layer(conv1_1, 3, 3, 1, 1, 64, "conv1_2", is_bn=False)
     pool1_3 = pool_layer(conv1_2, 2, 2, 2, 2, "pool1_3")
 
-    conv2_1 = conv_layer(pool1_3, 3, 3, 1, 1, 128, "conv2_1")
-    conv2_2 = conv_layer(conv2_1, 3, 3, 1, 1, 128, "conv2_2")
+    conv2_1 = conv_layer(pool1_3, 3, 3, 1, 1, 128, "conv2_1", is_bn=False)
+    conv2_2 = conv_layer(conv2_1, 3, 3, 1, 1, 128, "conv2_2", is_bn=False)
     pool2_3 = pool_layer(conv2_2, 2, 2, 2, 2, "pool2_3")
 
-    conv3_1 = conv_layer(pool2_3, 3, 3, 1, 1, 256, "conv3_1")
-    conv3_2 = conv_layer(conv3_1, 3, 3, 1, 1, 256, "conv3_2")
-    conv3_3 = conv_layer(conv3_2, 3, 3, 1, 1, 256, "conv3_3")
-    conv3_4 = conv_layer(conv3_3, 3, 3, 1, 1, 256, "conv3_4")
+    conv3_1 = conv_layer(pool2_3, 3, 3, 1, 1, 256, "conv3_1", is_bn=False)
+    conv3_2 = conv_layer(conv3_1, 3, 3, 1, 1, 256, "conv3_2", is_bn=False)
+    conv3_3 = conv_layer(conv3_2, 3, 3, 1, 1, 256, "conv3_3", is_bn=False)
+    conv3_4 = conv_layer(conv3_3, 3, 3, 1, 1, 256, "conv3_4", is_bn=False)
     pool3_5 = pool_layer(conv3_4, 2, 2, 2, 2, "pool3_5")
 
-    conv4_1 = conv_layer(pool3_5, 3, 3, 1, 1, 512, "conv4_1")
-    conv4_2 = conv_layer(conv4_1, 3, 3, 1, 1, 512, "conv4_2")
-    conv4_3 = conv_layer(conv4_2, 3, 3, 1, 1, 512, "conv4_3")
-    conv4_4 = conv_layer(conv4_3, 3, 3, 1, 1, 512, "conv4_4")
+    conv4_1 = conv_layer(pool3_5, 3, 3, 1, 1, 512, "conv4_1", is_bn=False)
+    conv4_2 = conv_layer(conv4_1, 3, 3, 1, 1, 512, "conv4_2", is_bn=False)
+    conv4_3 = conv_layer(conv4_2, 3, 3, 1, 1, 512, "conv4_3", is_bn=False)
+    conv4_4 = conv_layer(conv4_3, 3, 3, 1, 1, 512, "conv4_4", is_bn=False)
     pool4_5 = pool_layer(conv4_4, 2, 2, 2, 2, "pool4_5")
 
-    conv5_1 = conv_layer(pool4_5, 3, 3, 1, 1, 512, "conv5_1")
-    conv5_2 = conv_layer(conv5_1, 3, 3, 1, 1, 512, "conv5_2")
-    conv5_3 = conv_layer(conv5_2, 3, 3, 1, 1, 512, "conv5_3")
-    conv5_4 = conv_layer(conv5_3, 3, 3, 1, 1, 512, "conv5_4")
+    conv5_1 = conv_layer(pool4_5, 3, 3, 1, 1, 512, "conv5_1", is_bn=False)
+    conv5_2 = conv_layer(conv5_1, 3, 3, 1, 1, 512, "conv5_2", is_bn=False)
+    conv5_3 = conv_layer(conv5_2, 3, 3, 1, 1, 512, "conv5_3", is_bn=False)
+    conv5_4 = conv_layer(conv5_3, 3, 3, 1, 1, 512, "conv5_4", is_bn=False)
     pool5_5 = pool_layer(conv5_4, 2, 2, 2, 2, "pool5_5")
 
     fc6 = fc_layer(pool5_5, 4096, "fc6")
@@ -614,4 +562,3 @@ def vgg19(input_data, class_num=4096):
     logits = fc_layer(fc7_drop, class_num, "fc8")
 
     return logits
-
