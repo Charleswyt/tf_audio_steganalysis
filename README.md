@@ -43,6 +43,13 @@ The introdction of each network
         
     Note: HPF and ABS is applied at the pre-processing
     
+* The method of pre-processing
+    There are positive and negative values in QMDCT coefficients matrix. The values in interval [-15, 15] is modified.
+    The ratio of values in [-15, 15] is more than 99%, as the figure shown.
+    * Abs
+    * Truncation
+    * Down-sampling
+
 * Training <br>
     `python main.py train -data_dir EECS 128 2 -model_dir -log_dir`
 

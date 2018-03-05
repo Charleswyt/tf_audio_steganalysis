@@ -24,52 +24,48 @@ Finished on 2017.11.30
 
 def train(args):
 
-    # hyper parameters
+    # hyper parameters (超参)
     batch_size = args.batch_size                                                    # batch size
-    init_learning_rate = args.learning_rate                                         # iniliazed learning rate
+    init_learning_rate = args.learning_rate                                         # initialized learning rate
     n_epoch = args.epoch                                                            # epoch
-    global_step = tf.Variable(0, trainable=False)                                   # global step
-    decay_steps, decay_rate = 1, 0.95                                               # decay steps | decay rate
+    decay_steps, decay_rate = args.decay_step, args.decay_rate                      # decay steps | decay rate
     classes_num = 2                                                                 # classes number
-    start_index, end_index = 0, 10000                                               # the scale of the dataset
+    start_index, end_index = args.start_index, args.end_index                       # the scale of the dataset
+    global_step = tf.Variable(0, trainable=False)                                   # global step
+    step_train, step_test = 0, 0
+
+    # learning rate decay (学习率递减方法)
     learning_rate = learning_rate_decay(init_learning_rate=init_learning_rate,
                                         decay_method="exponential",
                                         global_step=global_step,
                                         decay_steps=decay_steps,
                                         decay_rate=decay_rate)                      # learning rate
 
-    # file path
-    model_dir = args.model_dir
+    # file path (文件路径)
+    model_dir = args.model_dir                                                      # model dir
     cover_train_files_path, \
     cover_valid_files_path, \
     stego_train_files_path, \
-    stego_valid_files_path, model_file_path = file_path_setup(args)
+    stego_valid_files_path, model_file_path = file_path_setup(args)                 # data dir
 
     # placeholder
-    height = 200                                                                    # the height of the QMDCT matrix
-    width = 576                                                                     # the width of the QMDCT matrix
-    channel = 1                                                                     # the channel of the QMDCT matrix
-
+    height, width, channel = 200, 576, 1                                            # the height, width and channel of the QMDCT matrix
     x = tf.placeholder(tf.float32, [batch_size, height - 2, width, channel], name="QMDCTs")
     y_ = tf.placeholder(tf.int32, [batch_size, ], name="label")
 
-    step_train = 0
-    step_test = 0
-
     # start session
-    # init = tf.global_variables_initializer()
-    # sess = tf.Session()
-    # sess.run(init)
-    # for i in range(100):
-    #     global_step = global_step + 1
-    #     sess.run(global_step)
-    #     print("global_step:", sess.run(global_step), "learning_rate: ", sess.run(learning_rate))
+    init = tf.global_variables_initializer()
+    sess = tf.Session()
+    sess.run(init)
+    for i in range(100):
+        global_step = global_step + 1
+        sess.run(global_step)
+        print("global_step:", sess.run(global_step), "learning_rate: ", sess.run(learning_rate))
 
-    logits = "network" + str(args.network) + "(x, classes_num)"
-    eval(logits)
+    # logits = "network" + str(args.network) + "(x, classes_num)"
+    # eval(logits)
 
 
-    """
     # information output
     print("batch_size: %d, total_epoch: %d, class_num: %d" % (batch_size, n_epoch, classes_num))
     print("start load network...")
@@ -103,7 +99,7 @@ def train(args):
         os.mkdir(model_dir)
     if os.path.exists(model_dir) is False:
         os.mkdir(model_dir)
-"""
+
 """
     print("Start training...")
     for epoch in range(n_epoch):
@@ -118,42 +114,41 @@ def train(args):
                                                   stego_val_files_path,
                                                   start_index,
                                                   384)  # 读取文件列表(默认shuffle)
-        # 学习率更新
+        # update the learning rate (学习率更新)
         lr = sess.run(learning_rate)
 
-        # training
+        # training (训练)
         n_batch_train, train_loss, train_acc = 0, 0, 0
         for x_train_a, y_train_a in minibatches(train_data_list, train_label_list, batch_size):
-            # 数据读取与处理
+            # data read and process (数据读取与处理)
             x_train_data = read_text_batch(x_train_a, height, width)
 
-            # 训练与指标显示
+            # get the accuracy and loss (训练与指标显示)
             _, err, ac = sess.run([train_op, loss, acc], feed_dict={x: x_train_data, y_: y_train_a})
             train_loss += err
             train_acc += ac
             n_batch_train += 1
             step_train += 1
-            summary_str_train = sess.run(summary_op, feed_dict={x: x_train_data, y_: y_train_a})
-            if step_train > 200:
-                train_writer_train.add_summary(summary_str_train, step_train)
+            summary_str_train = sess.run(summary_op, feed_dict={x: x_train_data, y_: y_train_a})          
+            train_writer_train.add_summary(summary_str_train, step_train)
 
             print("train_iter-%d: train_loss: %f, train_acc: %f" % (n_batch_train, err, ac))
 
-        # validation
+        # validation (验证)
         n_batch_val, val_loss, val_acc = 0, 0, 0
         for x_val_a, y_val_a in minibatches(val_data_list, val_label_list, batch_size):
-            # 数据读取与处理
+            # data read and process (数据读取与处理)
             x_val_data = read_text_batch(x_val_a, height, width)
 
-            # 验证与指标显示
+            # get the accuracy and loss (验证与指标显示)
             err, ac = sess.run([loss, acc], feed_dict={x: x_val_data, y_: y_val_a})
             val_loss += err
             val_acc += ac
             n_batch_val += 1
             step_test += 1
             summary_str_val = sess.run(summary_op, feed_dict={x: x_val_data, y_: y_val_a})
-            if step_train > 200:
-                train_writer_val.add_summary(summary_str_val, step_test)
+            train_writer_val.add_summary(summary_str_val, step_test)
+            
             print("validation_iter-%d: loss: %f, acc: %f" % (n_batch_val, err, ac))
 
         print("epoch: %d, learning_rate: %f -- train loss: %f, train acc: %f, validation loss: %f, validation acc: %f"
@@ -163,11 +158,11 @@ def train(args):
         end_time = time.time()
         print("Runtime: %.2fs" % (end_time - start_time))
 
-        # 保存模型
+        # model save (保存模型)
         if val_acc > max_acc:
             max_acc = val_acc
             saver.save(sess, os.path.join(model_dir, model_name), global_step=epoch + 1)
-            print("模型保存成功")
+            print("The model is saved successfully.")
 
     train_writer_train.close()
     train_writer_val.close()

@@ -12,6 +12,12 @@ import argparse
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
+"""
+function:
+        command_parse()         : command-line arguments parse
+        file_path_setup(args)   : get the data and model files path
+"""
+
 
 def command_parse():
     """
@@ -21,6 +27,11 @@ def command_parse():
     """
     parser = argparse.ArgumentParser(description="Audio steganalysis with CNN")
     print(parser.description)
+
+    # get the current path
+    current_path = os.getcwd()
+    print("current path: %s" % current_path)
+    print("The introduction of the parameters -- \"python3 **.py\" -h, more detailed information is in readme.md")
 
     # mode
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
@@ -34,6 +45,8 @@ def command_parse():
                         help="2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10, if the steganography algorithm is the EECS algorithm; 1 | 3 | 5 | 10, otherwise")
     parser.add_argument("--stego_method", type=str, default="EECS",
                         help="EECS | HCM-Gao | HCM- Yan  (default: EECS)")
+    parser.add_argument("--start_index", type=int, default=0, help="model files path")
+    parser.add_argument("--end_index", type=int, default=10000, help="model files path")
     parser.add_argument("--model_dir", type=str, help="model files path")
     parser.add_argument("--log_dir", type=str, help="log files path")
 
@@ -58,9 +71,9 @@ def command_parse():
                         help="the path of directory containing stego files for train")
     parser.add_argument("--stego_valid_dir", type=str,
                         help="the path of directory containing stego files for valid")
-    parser.add_argument("--models_path", type=str,
+    parser.add_argument("--models_path", type=str, default=current_path+"/models",
                         help="the path of directory containing models")
-    parser.add_argument("--logs_path", type=str,
+    parser.add_argument("--logs_path", type=str, default=current_path+"/logs",
                         help="the path of directory containing logs")
     parser.add_argument("--network", type=int, default=1, help="the index of the network (default:1), the detailed introduction of each network is in readme")
                                                                
