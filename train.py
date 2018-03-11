@@ -27,7 +27,6 @@ def test_steganalysis_batch(model_dir, files_dir):
     """
     height = 198
     width = 576
-    label = ["cover", "stego"]
 
     # 设定占位符
     x = tf.placeholder(tf.float32, [1, height, width, 1], name="QMDCTs")
@@ -121,7 +120,3 @@ def steganalysis_batch(model_dir, files_dir):
         print("文件: %s, 分析结果: %s" % (file_name, label[int(result)]))
 
     sess.close()
-
-
-steganalysis_batch("E:/Myself/13.project/python/steganalysis_CNN/models/128_W_4_H_7_ER_10",
-                   "E:/Myself/2.database/10.QMDCT/1.txt/Test")

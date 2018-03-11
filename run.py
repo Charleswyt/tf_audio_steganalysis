@@ -5,9 +5,7 @@ import os
 import time
 from model import *
 from config import file_path_setup
-from utils import read_text, get_files_list, read_data
-import win_unicode_console
-win_unicode_console.enable()
+from utils import read_text, read_text_batch, get_files_list, read_data, minibatches
 
 """
 Created on 2017.11.27
@@ -30,7 +28,10 @@ def train(args):
     n_epoch = args.epoch                                                            # epoch
     decay_steps, decay_rate = args.decay_step, args.decay_rate                      # decay steps | decay rate
     classes_num = 2                                                                 # classes number
+    max_to_keep = args.max_to_keep                                                  # maximum number of recent checkpoints to keep
+    keep_checkpoint_every_n_hours = args.keep_checkpoint_every_n_hours              # how often to keep checkpoints
     start_index, end_index = args.start_index, args.end_index                       # the scale of the dataset
+    model_file_name = args.model_file_name                                          # model file name
     global_step = tf.Variable(0, trainable=False)                                   # global step
     step_train, step_test = 0, 0
 
@@ -42,11 +43,7 @@ def train(args):
                                         decay_rate=decay_rate)                      # learning rate
 
     # file path (文件路径)
-    model_dir = args.model_dir                                                      # model dir
-    cover_train_files_path, \
-    cover_valid_files_path, \
-    stego_train_files_path, \
-    stego_valid_files_path, model_file_path = file_path_setup(args)                 # data dir
+    cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, model_file_path, log_file_path = file_path_setup(args)
 
     # placeholder
     height, width, channel = 200, 576, 1                                            # the height, width and channel of the QMDCT matrix
@@ -57,27 +54,19 @@ def train(args):
     init = tf.global_variables_initializer()
     sess = tf.Session()
     sess.run(init)
-    for i in range(100):
-        global_step = global_step + 1
-        sess.run(global_step)
-        print("global_step:", sess.run(global_step), "learning_rate: ", sess.run(learning_rate))
 
-    # logits = "network" + str(args.network) + "(x, classes_num)"
-    # eval(logits)
-
+    # initialize the network
+    command = args.network + "(x, classes_num)"
+    logits = eval(command)
 
     # information output
     print("batch_size: %d, total_epoch: %d, class_num: %d" % (batch_size, n_epoch, classes_num))
     print("start load network...")
     time.sleep(3)
 
-    # initialize the network
-    logits = network1(x, classes_num)
-    time.sleep(3)
-
     # evaluation
     loss = tf.losses.sparse_softmax_cross_entropy(labels=y_, logits=logits)
-    train_op = tf.train.AdamOptimizer(learning_rate=init_learning_rate).minimize(loss)
+    train_op = tf.train.AdamOptimizer(learning_rate=init_learning_rate).minimize(loss, global_step=global_step)
     correct_prediction = tf.equal(tf.cast(tf.argmax(logits, 1), tf.int32), y_)
     acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -86,40 +75,32 @@ def train(args):
     tf.summary.scalar("accuracy", acc)
     summary_op = tf.summary.merge_all()
     sess = tf.InteractiveSession()
-    train_writer_train = tf.summary.FileWriter(logs_train_dir + "/train", sess.graph)
-    train_writer_val = tf.summary.FileWriter(logs_val_dir + "/validation")
+    train_writer_train = tf.summary.FileWriter(log_file_path + "/train", tf.get_default_graph())
+    train_writer_val = tf.summary.FileWriter(log_file_path + "/validation", tf.get_default_graph())
     init = tf.global_variables_initializer()
     sess.run(init)
 
-    # save the model
-    saver = tf.train.Saver(max_to_keep=3)
+    saver = tf.train.Saver(max_to_keep=max_to_keep,
+                           keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
     max_acc = 0
-
-    if os.path.exists(model_dir) is False:
-        os.mkdir(model_dir)
-    if os.path.exists(model_dir) is False:
-        os.mkdir(model_dir)
-
-"""
     print("Start training...")
     for epoch in range(n_epoch):
         start_time = time.time()
 
         cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_files_path,
-                                                      stego_train_files_path,
-                                                      start_index,
-                                                      3840)  # 读取文件列表(默认shuffle)
+                                                                                                                 stego_train_files_path,
+                                                                                                                 start_index,
+                                                                                                                 end_index)                 # 读取文件列表(默认shuffle)
 
-        cover_val_data_list, cover_val_label_list, stego_val_data_list, stego_val_label_list = read_data(cover_val_files_path,
-                                                  stego_val_files_path,
-                                                  start_index,
-                                                  384)  # 读取文件列表(默认shuffle)
+        cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_files_path,
+                                                                                                                 stego_valid_files_path,
+                                                                                                                 0, -1)    # 读取文件列表(默认shuffle)
         # update the learning rate (学习率更新)
         lr = sess.run(learning_rate)
 
         # training (训练)
         n_batch_train, train_loss, train_acc = 0, 0, 0
-        for x_train_a, y_train_a in minibatches(train_data_list, train_label_list, batch_size):
+        for x_train_a, y_train_a in minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size):
             # data read and process (数据读取与处理)
             x_train_data = read_text_batch(x_train_a, height, width)
 
@@ -136,7 +117,7 @@ def train(args):
 
         # validation (验证)
         n_batch_val, val_loss, val_acc = 0, 0, 0
-        for x_val_a, y_val_a in minibatches(val_data_list, val_label_list, batch_size):
+        for x_val_a, y_val_a in minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size):
             # data read and process (数据读取与处理)
             x_val_data = read_text_batch(x_val_a, height, width)
 
@@ -161,13 +142,12 @@ def train(args):
         # model save (保存模型)
         if val_acc > max_acc:
             max_acc = val_acc
-            saver.save(sess, os.path.join(model_dir, model_name), global_step=epoch + 1)
+            saver.save(sess, os.path.join(model_file_path, model_file_name), global_step=global_step)
             print("The model is saved successfully.")
 
     train_writer_train.close()
     train_writer_val.close()
     sess.close()
-"""
 
 
 def test_batch(model_dir, files_dir):
@@ -175,12 +155,10 @@ def test_batch(model_dir, files_dir):
     单个文件测试
     :param model_dir: 模型存储路径
     :param files_dir: 待检测文件目录
-    :param file_label: 待检测文件label
     :return: NULL
     """
     height = 198
     width = 576
-    label = ["cover", "stego"]
 
     # 设定占位符
     x = tf.placeholder(tf.float32, [1, height, width, 1], name="QMDCTs")
@@ -202,6 +180,8 @@ def test_batch(model_dir, files_dir):
         # labels.append(file_label)
         labels = np.asarray(labels, np.float32)
         ret = sess.run(y_, feed_dict={x: data, y_: labels})
+
+    return ret
 
 
 def test(model_dir, file_path, file_label):
@@ -252,7 +232,7 @@ def steganalysis_batch(model_dir, files_dir):
 
     # 设定占位符
     x = tf.placeholder(tf.float32, [1, height, width, 1], name="QMDCTs")
-    y = network1_test(x, 2)
+    y = network1(x, 2, is_bn=False)
     logits = tf.nn.softmax(y, 1)
 
     # 加载模型

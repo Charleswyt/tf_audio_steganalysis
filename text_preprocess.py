@@ -12,143 +12,129 @@ Finished on 2017.11.27
 
 
 def get_files_list(files_dir):
-    # 获取文件列表
+    """
+    # get the files list
+    :param files_dir: the folder of the files
+    :return: files list
+    """
+
     filename = os.listdir(files_dir)
     files_list = [os.path.join(files_dir, file) for file in filename]
 
     return files_list
 
 
-def read_text(text_file_path, content_type="array", separator=",", ):
+def read_text(text_file_path, separator=",", height=200, width=576,
+              is_abs=False, is_diff=False, order=2, direction=0, is_trunc=False, threshold=15):
     """
-    从txt文本中读取数据
-    content = read_text(text_file_path, content_type="array", separator=",")
+    data read from one text file (从单个txt文本中读取数据)
+    read_text(text_file_path, separator=",", is_abs=False, is_dif=False, order=2, direction=0, is_trunc=False, threshold=15)
 
-    :param text_file_path: 文本文件路径
-    :param content_type: 读取形式(str, strlist, list, array)
-    :param separator: 数据分隔符
-    :return content: 数据
+    :param text_file_path: the file path (文本文件路径)
+    :param separator: separator (数据分隔符)
+    :param height: the height of QMDCT matrix (QMDCT矩阵的高度)
+    :param width: the width of QMDCT matrix (QMDCT矩阵的宽度)
+    :param is_abs: whether abs or not (是否对矩阵数据取绝对值, default: False)
+    :param is_diff: whether difference or not (是否对矩阵数据差分处理, default: False)
+    :param order: the order of the difference (差分阶数, default: 2)
+    :param direction: the direction of the difference (差分方向, 0 - row, 1 - col, default: 0)
+    :param is_trunc: whether truncation or not (是否对矩阵数据截断处理, default: False)
+    :param threshold: threshold (截断阈值, default: 15)
+
+    :return content: QMDCT matrix (读取的QMDCT矩阵) shape: [height, width, 1]
     """
     file = open(text_file_path)
     content = []
 
-    if content_type == "str":
-        content = file.read()
+    # read data line by line (逐行读取数据)
+    lines = file.readlines()
+    for line in lines:
+        numbers = [int(character) for character in line.split(separator)[:-1]]
+        content.append(numbers)
 
-    elif content_type == "strlist":
-        lines = file.readlines()
-        for line in lines:
-            content.append(line)
+    # pre-process (more pre-process method can be added here)
+    content = np.array(content)                                                 # list -> numpy.ndarray (将list类型的数据转为numpy.ndarray)
+    content = content[:height, :width]                                          # cut (矩阵裁剪)
 
-    elif content_type == "list":
-        lines = file.readlines()
-        for line in lines:
-            numbers = [int(character) for character in line.split(separator)[:-1]]
-            content.append(numbers)
+    if is_abs is True:
+        content = abs(content)
+    if is_diff is True:
+        content = np.diff(content, n=order, axis=direction)
+    if is_trunc is True:
+        content = truncate(content, threshold)
 
-    elif content_type == "array":
-        lines = file.readlines()
-        for line in lines:
-            numbers = [int(character)
-                       for character in line.split(separator)[:-1]]
-            content.append(numbers)
-        content = np.array(content)
-        content = diff(content, "row", 2)
-        height = np.shape(content)[0]
-        width = np.shape(content)[1]
-        content = np.reshape(content, [height, width, 1])
+    # reshape
+    h = np.shape(content)[0]
+    w = np.shape(content)[1]
+    print("height = %d, width = %d" % (h, w))
+
+    content = np.reshape(content, [h, w, 1])
 
     return content
 
 
-def read_text_all(text_files_dir, height=200, width=576, content_type="array", separator=",",
-                  is_abs=False, is_trunc=False, threshold=3, is_downsampling=False, stride=2):
+def read_text_all(text_files_dir, separator=",", height=200, width=576,
+                  is_abs=False, is_diff=False, order=2, direction=0, is_trunc=False, threshold=15):
     """
-    将所有txt一次性读入内存(不建议)
-    :param text_files_dir: txt文件存储路径
-    :param height: QMDCT系数矩阵高度
-    :param width: QMDCT系数矩阵宽度
-    :param content_type: 类型
-    :param separator: txt文本分隔符
-    预处理方式
-    :param is_abs: 是否取绝对值
-    :param is_trunc: 是否做截断处理
-    :param threshold: 截断阈值
-    :param is_downsampling: 是否做下采样
-    :param stride: 降采样间隔
-    :return:
+    read all txt files into the memory (not recommend)
+
+    :param text_files_dir: the folder of txt files (txt文件存储路径)
+    :param separator: separator (数据分隔符)
+    :param height: the height of QMDCT matrix (QMDCT矩阵的高度)
+    :param width: the width of QMDCT matrix (QMDCT矩阵的宽度)
+
+    the methods of pre-process
+    :param is_abs: whether abs or not (是否对矩阵数据取绝对值, default: False)
+    :param is_diff: whether difference or not (是否对矩阵数据差分处理, default: False)
+    :param order: the order of the difference (差分阶数, default: 2)
+    :param direction: the direction of the difference (差分方向, 0 - row, 1 - col, default: 0)
+    :param is_trunc: whether truncation or not (是否对矩阵数据截断处理, default: False)
+    :param threshold: threshold (截断阈值, default: 15)
+    :return: QMDCT matrixs (QMDCT矩阵) shape: [files_num, height, width, 1]
     """
-    text_files_list = get_files_list(text_files_dir)
-    files_num = len(text_files_list)
-    if is_downsampling is True:
-        depth = stride ** 2
-        height_new = height // stride
-        width_new = width // stride
-        data = np.zeros([files_num, height_new, width_new, depth], dtype=np.float32)
-    else:
-        data = np.zeros([files_num, height, width, 1], dtype=np.float32)
+
+    text_files_list = get_files_list(text_files_dir)                            # get the files list
+    files_num = len(text_files_list)                                            # get the number of files in the foloder
+    data = np.zeros([files_num, height, width, 1], dtype=np.float32)
     i = 0
     for text_file in text_files_list:
-        content = read_text(text_file, content_type, separator)
-
-        # 预处理(加绝对值，做截断，降采样)
-        if is_abs is True:
-            content = abs(content)
-        if is_trunc is True:
-            content = truncate(content, threshold)
-        if is_downsampling is True:
-            data[i] = downsampling(content, stride)
-        else:
-            data[i, :, :, 1] = content
+        content = read_text(text_file, separator, height, width, is_abs, is_diff, order, direction, is_trunc, threshold)
+        data[i, :, :, 1] = content
         i = i + 1
     
     return data
 
 
-def read_text_batch(text_files_list, height=200, width=576, content_type="array", separator=",",
-                    is_abs=False,
-                    is_trunc=False, threshold=3,
-                    is_downsampling=False, stride=2):
+def read_text_batch(text_files_list, separator=",", height=200, width=576,
+                    is_abs=False, is_diff=False, order=2, direction=0, is_trunc=False, threshold=15):
+    """
+    read all txt files into the memory (not recommend)
+
+    :param text_files_list: text files list (txt文件存储路径)
+    :param separator: separator (数据分隔符)
+    :param height: the height of QMDCT matrix (QMDCT矩阵的高度)
+    :param width: the width of QMDCT matrix (QMDCT矩阵的宽度)
+
+    the methods of pre-process
+    :param is_abs: whether abs or not (是否对矩阵数据取绝对值, default: False)
+    :param is_diff: whether difference or not (是否对矩阵数据差分处理, default: False)
+    :param order: the order of the difference (差分阶数, default: 2)
+    :param direction: the direction of the difference (差分方向, 0 - row, 1 - col, default: 0)
+    :param is_trunc: whether truncation or not (是否对矩阵数据截断处理, default: False)
+    :param threshold: threshold (截断阈值, default: 15)
+    :return: QMDCT matrixs (QMDCT矩阵) shape: [files_num, height, width, 1]
+    """
+
     files_num = len(text_files_list)
-    if is_downsampling is True:
-        depth = stride ** 2
-        height_new = height // stride
-        width_new = width // stride
-        data = np.zeros([files_num, height_new, width_new, depth], dtype=np.float32)
-    else:
-        data = np.zeros([files_num, height-2, width, 1], dtype=np.float32)
+    data = np.zeros([files_num, height-2, width, 1], dtype=np.float32)
 
     i = 0
     for text_file in text_files_list:
-        content = read_text(text_file, content_type, separator)     # shape: [height, width, channel]
-
-        # 预处理(加绝对值，做截断，降采样)
-        if is_downsampling is True:
-            data[i] = downsampling(content, stride)
-        elif is_abs is True:
-            data[i] = abs(data[i])
-        elif is_trunc is True:
-            data[i] = truncate(data[i], threshold)
-        else:
-            data[i] = content
+        content = read_text(text_file, separator, height, width, is_abs, is_diff, order, direction, is_trunc, threshold)
+        data[i] = content
         i = i + 1
 
     return data
-
-
-files_dir = "C:/Users/Charles_CatKing/Desktop/steganalysis/cover"
-# data = read_text_all(files_dir)
-# print(data)
-# print(np.shape(data))
-# print(len(data))
-
-
-# def read_text_batch(text_files_dir, batch_size, content_type="array", separator=","):
-#     text_files_list = get_files_list(text_files_dir)
-
-
-# import tensorflow as tf
-# import os
 
 
 # def csv_read(filelist):
@@ -176,4 +162,10 @@ files_dir = "C:/Users/Charles_CatKing/Desktop/steganalysis/cover"
 #         coord.request_stop()
 #         coord.join(threads)
 
-read_text("E:/Myself/2.database/10.QMDCT/1.txt\EECS/128_W_4_H_7_ER_10/wav10s_00001.txt")
+
+if __name__ == "__main__":
+    file_path = "E:/Myself/2.database/10.QMDCT/1.txt/APS/128_01/wav10s_00689.txt"
+    if os.path.exists(file_path):
+        read_text(file_path, is_abs=True, is_diff=True, order=2, direction=1, is_trunc=True, threshold=3)
+    else:
+        print("This file does not exist.")

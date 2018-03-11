@@ -35,15 +35,15 @@ def get_file_size(file_path, unit="KB"):
     """
     获取文件名
     :param file_path: 文件路径
-    :param unit: 文件大小单位(B KB MB GB)
+    :param unit: 文件大小单位(B KB MB GB TB)
     :return: file_size
     """
-    units = ["B", "KB", "MB", "GB"]
+    units = ["B", "KB", "MB", "GB", "TB"]
     power = units.index(unit)
-    divisior = 1024 ** (power)
+    divisor = 1024 ** power
     if os.path.exists(file_path):
         file_size = os.path.getsize(file_path)
-        file_size = round(file_size / divisior)
+        file_size = round(file_size / divisor)
     else:
         file_size = -1
 
@@ -62,5 +62,3 @@ def get_file_type(file_path):
         file_type = None
 
     return file_type
-
-

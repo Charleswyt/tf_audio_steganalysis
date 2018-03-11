@@ -102,7 +102,3 @@ class Network(object):
         # self.fc8 = fc8
 
         return fc8
-
-
-
-

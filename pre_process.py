@@ -22,63 +22,21 @@ def cut(matrix, height_start_idx=0, width_start_idx=0, height_end_idx=-1, width_
     return matrix[height_start_idx:height_end_idx, width_start_idx:width_end_idx]
 
 
-def diff(matrix, direction, order):
+def truncate(matrix, threshold, threshold_left=None, threshold_right=None):
     """
-    差分运算
-    输入数据类型:
-    :param matrix: 输入矩阵
-    :param direction: 差分运算方向"0 - row, 1 - col"
-    :param order: 阶数
-    :return: matrix_dif
+    truncation (数据截断)
+    :param matrix: the input matrix (numpy.ndarray)
+    :param threshold: threshold
+    :param threshold_left: threshold (for minimum)
+    :param threshold_right: threshold (for maximum)
+    :return:
     """
-
-    height = np.shape(matrix)[0]                                # 矩阵高度
-    width = np.shape(matrix)[1]                                 # 矩阵宽度
-
-    w, h = 0, 0
-    if direction == "row" and order == 1:
-        output = np.zeros([height-1, width], dtype=float)
-        while h < height-1:
-            output[h, :] = matrix[h+1, :] - matrix[h, :]
-            h += 1
-
-    elif direction == "col" and order == 1:
-        output = np.zeros([height, width-1], dtype=float)
-        while w < width-1:
-            output[:, w] = matrix[:, w+1] - matrix[:, w]
-            w += 1
-
-    elif direction == "row" and order == 2:
-        output = np.zeros([height-2, width], dtype=float)
-        while h < height-2:
-            output[h, :] = 2 * matrix[h+1, :] - matrix[h, :] - matrix[h+2, :]
-            h += 1
-
-    elif direction == "col" and order == 2:
-        output = np.zeros([height, width-2], dtype=float)
-        while w < width-2:
-            output[:, w] = 2 * matrix[:, w+1] - matrix[:, w] - matrix[:, w+2]
-            w += 1
-
+    if threshold_left is not None and threshold_right is not None:
+        matrix[matrix > threshold_left] = threshold_left
+        matrix[matrix > threshold_right] = threshold_right
     else:
-        output = matrix
-
-    return output
-
-
-def truncate(matrix, threshold):
-    height = np.shape(matrix)[0]
-    width = np.shape(matrix)[1]
-
-    h = 0
-    while h < height:
-        w = 0
-        while w < width:
-            if abs(matrix[h, w]) > threshold:
-                matrix[h, w] = threshold
-
-            w += 1
-        h += 1
+        matrix[matrix > threshold] = threshold
+        matrix[matrix < threshold] = -threshold
 
     return matrix
 

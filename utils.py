@@ -12,7 +12,6 @@ from text_preprocess import *
 
 """
 function:
-    down_sampling(input_data, scale=2)                                              音频数据降采样
 
 """
 
@@ -183,7 +182,7 @@ def tfrecord_export(files_path, tfrecord_file_path):
     features = tf.parse_single_example(serialized_example,
                                        features={
                                         'label': tf.FixedLenFeature([], tf.int64),
-                                        'img_raw' : tf.FixedLenFeature([], tf.string),
+                                        'img_raw': tf.FixedLenFeature([], tf.string),
                                        })
     data = tf.decode_raw(features['data_raw'], tf.float32)
     data = tf.reshape(data, [200, 576, 1])
@@ -261,11 +260,11 @@ def read_data(cover_files_path, stego_files_path, start_idx, end_idx, is_shuffle
 def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None):
     """
     批次读取数据
-    :param cover_datas: 数据列表(cover)
-    :param cover_labels: 标签列表(cover)
-    :param stego_datas: 数据列表(stego)
-    :param stego_labels: 标签列表(stego)
-    :param batchsize: 批次大小
+    :param cover_datas: data list (cover)
+    :param cover_labels: data label (cover)
+    :param stego_datas: data list (stego)
+    :param stego_labels: data label (stego)
+    :param batchsize: batch size
     :return:
     """
     for start_idx in range(0, len(cover_datas) - batchsize // 2 + 1, batchsize // 2):
@@ -275,3 +274,18 @@ def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_lab
         labels = cover_labels[excerpt]
         labels.extend(stego_labels[excerpt])
         yield datas, labels
+
+
+def model_load(model_file):
+    if not os.path.exists(model_file):
+        print("There is no such file, try again please.")
+    else:
+        model = np.load(model_file, encoding="latin1").item()
+        model_keys = model.keys()
+
+        for k in model.keys():
+            print(k)
+
+
+if __name__ == "__main__":
+    model_load("E:/Myself/1.source_code/tf_audio_steganalysis/vgg19.npy")
