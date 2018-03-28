@@ -23,39 +23,39 @@ def network1(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     print("network1")
     print("Network Structure: ")
     # Group1
-    conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 1, "conv1_1", is_bn, activation_method, padding)
-    conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 8, "conv1_2", is_bn, activation_method, padding)
-    pool1_3 = pool_layer(conv1_2, 2, 2, 2, 2, "pool1_3")
+    conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 8, name="conv1_1", is_bn=False, activation_method=activation_method, padding=padding)
+    conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 16, name="conv1_2", is_bn=False, activation_method=activation_method, padding=padding)
+    pool1_3 = pool_layer(conv1_2, 2, 2, 2, 2, name="pool1_3")
 
     # Group2
-    conv2_1 = conv_layer(pool1_3, 3, 3, 1, 1, 8, "conv2_1", is_bn, activation_method, padding)
-    conv2_2 = conv_layer(conv2_1, 1, 1, 1, 1, 16, "conv2_2", is_bn, activation_method, padding)
-    pool2_3 = pool_layer(conv2_2, 2, 2, 2, 2, "pool2_3")
+    conv2_1 = conv_layer(pool1_3, 3, 3, 1, 1, 16, name="conv2_1", is_bn=False, activation_method=activation_method, padding=padding)
+    conv2_2 = conv_layer(conv2_1, 1, 1, 1, 1, 32, name="conv2_2", is_bn=False, activation_method=activation_method, padding=padding)
+    pool2_3 = pool_layer(conv2_2, 2, 2, 2, 2, name="pool2_3")
 
     # Group3
-    conv3_1 = conv_layer(pool2_3, 3, 3, 1, 1, 16, "conv3_1", is_bn, activation_method, padding)
-    conv3_2 = conv_layer(conv3_1, 1, 1, 1, 1, 32, "conv3_2", is_bn, activation_method, padding)
-    pool3_3 = pool_layer(conv3_2, 2, 2, 2, 2, "pool3_3")
+    conv3_1 = conv_layer(pool2_3, 3, 3, 1, 1, 32, name="conv3_1", is_bn=False, activation_method=activation_method, padding=padding)
+    conv3_2 = conv_layer(conv3_1, 1, 1, 1, 1, 64, name="conv3_2", is_bn=False, activation_method=activation_method, padding=padding)
+    pool3_3 = pool_layer(conv3_2, 2, 2, 2, 2, name="pool3_3")
 
     # Group4
-    conv4_1 = conv_layer(pool3_3, 3, 3, 1, 1, 32, "conv4_1", is_bn, activation_method, padding)
-    conv4_2 = conv_layer(conv4_1, 1, 1, 1, 1, 64, "conv4_2", is_bn, activation_method, padding)
-    pool4_3 = pool_layer(conv4_2, 2, 2, 2, 2, "pool4_3")
+    conv4_1 = conv_layer(pool3_3, 3, 3, 1, 1, 64, name="conv4_1", is_bn=False, activation_method=activation_method, padding=padding)
+    conv4_2 = conv_layer(conv4_1, 1, 1, 1, 1, 128, name="conv4_2", is_bn=False, activation_method=activation_method, padding=padding)
+    pool4_3 = pool_layer(conv4_2, 2, 2, 2, 2, name="pool4_3")
 
     # Group5
-    conv5_1 = conv_layer(pool4_3, 3, 3, 1, 1, 64, "conv5_1", is_bn, activation_method, padding)
-    conv5_2 = conv_layer(conv5_1, 1, 1, 1, 1, 128, "conv5_2", is_bn, activation_method, padding)
-    pool5_3 = pool_layer(conv5_2, 2, 2, 2, 2, "pool5_3")
+    conv5_1 = conv_layer(pool4_3, 3, 3, 1, 1, 128, name="conv5_1", is_bn=False, activation_method=activation_method, padding=padding)
+    conv5_2 = conv_layer(conv5_1, 1, 1, 1, 1, 256, name="conv5_2", is_bn=False, activation_method=activation_method, padding=padding)
+    pool5_3 = pool_layer(conv5_2, 2, 2, 2, 2, name="pool5_3")
 
     # Group6
-    conv6_1 = conv_layer(pool5_3, 3, 3, 1, 1, 128, "conv6_1", is_bn, activation_method, padding)
-    conv6_2 = conv_layer(conv6_1, 1, 1, 1, 1, 256, "conv6_2", is_bn, activation_method, padding)
-    pool6_3 = pool_layer(conv6_2, 2, 2, 2, 2, "pool6_3")
+    conv6_1 = conv_layer(pool5_3, 3, 3, 1, 1, 256, name="conv6_1", is_bn=False, activation_method=activation_method, padding=padding)
+    conv6_2 = conv_layer(conv6_1, 1, 1, 1, 1, 512, name="conv6_2", is_bn=False, activation_method=activation_method, padding=padding)
+    pool6_3 = pool_layer(conv6_2, 2, 2, 2, 2, name="pool6_3")
 
     # 全连接层
-    fc7 = fc_layer(pool6_3, 2048, "fc7", is_bn, None)
-    fc8 = fc_layer(fc7, 512, "fc8", is_bn, None)
-    logits = fc_layer(fc8, class_num, "fc9", None)
+    fc7 = fc_layer(pool6_3, 4096, name="fc7", is_bn=is_bn, activation_method="tanh")
+    fc8 = fc_layer(fc7, 512, name="fc8", is_bn=is_bn, activation_method="tanh")
+    logits = fc_layer(fc8, class_num, name="fc9", is_bn=False, activation_method=None)
 
     return logits
 
@@ -401,6 +401,43 @@ def network1_7(input_data, class_num=2, activation_method="tanh", padding="SAME"
     return logits
 
 
+def stegshi(input_data, class_num=2):
+    # group 0
+    conv0 = static_conv_layer(input_data, kv_kernel, 1, 1, "conv0")
+
+    # group 1
+    conv1_1 = conv_layer(conv0, 5, 5, 1, 1, 8, "conv1_1", is_bn=False, activation_method=None, init_method="gaussian", bias_term=False)
+    conv1_1 = tf.abs(conv1_1, "conv1_abs")
+    conv1_2 = batch_normalization(conv1_1, name="conv1_BN")
+    conv1_3 = activation(conv1_2, "tanh")
+    pool1_4 = pool_layer(conv1_3, 5, 5, 2, 2, "pool1_4", is_max_pool=False)
+
+    # group 2
+    conv2_1 = conv_layer(pool1_4, 5, 5, 1, 1, 16, "conv2_1", activation_method="tanh", init_method="gaussian", bias_term=False)
+    pool2_2 = pool_layer(conv2_1, 5, 5, 2, 2, "pool2_2", is_max_pool=False)
+
+    # group 3
+    conv3_1 = conv_layer(pool2_2, 1, 1, 1, 1, 32, "conv3_1", activation_method="relu", init_method="gaussian", bias_term=False)
+    pool3_2 = pool_layer(conv3_1, 5, 5, 2, 2, "pool3_2", is_max_pool=False)
+
+    # group 4
+    conv4_1 = conv_layer(pool3_2, 1, 1, 1, 1, 64, "conv4_1", activation_method="relu", init_method="gaussian", bias_term=False)
+    pool4_2 = pool_layer(conv4_1, 7, 7, 2, 2, "pool4_2", is_max_pool=False)
+
+    # group 5
+    conv5_1 = conv_layer(pool4_2, 1, 1, 1, 1, 128, "conv5_1", activation_method="relu", init_method="gaussian", bias_term=False)
+    pool5_2 = pool_layer(conv5_1, 7, 7, 2, 2, "pool5_2", is_max_pool=False)
+
+    # group 6
+    conv6_1 = conv_layer(pool5_2, 1, 1, 1, 1, 256, "conv6_1", activation_method="relu", init_method="gaussian", bias_term=False)
+    pool6_2 = pool_layer(conv6_1, 16, 16, 16, 16, "pool6_2", is_max_pool=False)
+
+    # fc layer
+    logits = fc_layer(pool6_2, class_num, "fc7", is_bn=False, activation_method=None)
+
+    return logits
+
+
 def le_net(input_data, class_num=10):
     # Group1
     conv1_1 = conv_layer(input_data, 5, 5, 1, 1, 6, "conv1", "VALID")
@@ -413,7 +450,8 @@ def le_net(input_data, class_num=10):
     # 全连接层
     fc4 = fc_layer(pool2_2, 120, "fc4", "relu")
     fc5 = fc_layer(fc4, 84, "fc5", False)
-    logits = fc_layer(fc5, class_num, "fc6", False)
+    fc5_drop = dropout(fc5, keep_pro=0.5, name="fc5_drop")
+    logits = fc_layer(fc5_drop, class_num, "fc6", False)
 
     return logits
 
@@ -423,19 +461,19 @@ def alex_net(input_data, class_num=4096):
     conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 64, "conv1_1")
     pool1_2 = pool_layer(conv1_1, 2, 2, 2, 2, "pool1_2")
     norm1_3 = normalization(pool1_2, 4, "norm1_3")
-    dropout1_4 = dropout(norm1_3, 0.8, "dropout1_4")
+    dropout1_4 = dropout(norm1_3, keep_pro=0.8, name="dropout1_4")
 
     # Group 2
     conv2_1 = conv_layer(dropout1_4, 3, 3, 1, 1, 128, "conv2_1")
     pool2_2 = pool_layer(conv2_1, 2, 2, 2, 2, "pool2_2")
     norm2_3 = normalization(pool2_2, 4, "norm2_3")
-    dropout2_4 = dropout(norm2_3, 0.8, "dropout2_4")
+    dropout2_4 = dropout(norm2_3, keep_pro=0.8, name="dropout2_4")
 
     # Group 3
     conv3_1 = conv_layer(dropout2_4, 3, 3, 1, 1, 256, "conv3_1")
     pool3_2 = pool_layer(conv3_1, 2, 2, 2, 2, "pool3_2")
     norm3_3 = normalization(pool3_2, 4, "norm3_3")
-    dropout3_4 = dropout(norm3_3, 0.8, "dropout3_4")
+    dropout3_4 = dropout(norm3_3, keep_pro=0.8, name="dropout3_4")
 
     # 全连接层
     fc4 = fc_layer(dropout3_4, 1024, "fc4")
@@ -471,9 +509,9 @@ def vgg16(input_data, class_num=4096):
     pool5_4 = pool_layer(conv5_3, 2, 2, 2, 2, "pool5_4")
 
     fc6 = fc_layer(pool5_4, 4096, "fc6")
-    fc6_drop = dropout(fc6, name="fc6_drop")
+    fc6_drop = dropout(fc6, keep_pro=0.5, name="fc6_drop")
     fc7 = fc_layer(fc6_drop, 4096, "fc7")
-    fc7_drop = dropout(fc7, name="fc7_drop")
+    fc7_drop = dropout(fc7, keep_pro=0.5, name="fc7_drop")
     logits = fc_layer(fc7_drop, class_num, "fc8")
 
     return logits
@@ -508,9 +546,9 @@ def vgg19(input_data, class_num=4096):
     pool5_5 = pool_layer(conv5_4, 2, 2, 2, 2, "pool5_5")
 
     fc6 = fc_layer(pool5_5, 4096, "fc6")
-    fc6_drop = dropout(fc6, name="fc6_drop")
+    fc6_drop = dropout(fc6, keep_pro=0.5, name="fc6_drop")
     fc7 = fc_layer(fc6_drop, 4096, "fc7")
-    fc7_drop = dropout(fc7, name="fc7_drop")
+    fc7_drop = dropout(fc7, keep_pro=0.5, name="fc7_drop")
     logits = fc_layer(fc7_drop, class_num, "fc8")
 
     return logits
