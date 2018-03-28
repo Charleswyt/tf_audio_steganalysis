@@ -16,11 +16,15 @@ Command: python3 main.py --argument 1 --argument 2 ... --argument N <br>
 
 
 Example: <br>
-    
-    simple 1: sudo python3 main.py --mode train --data\_dir \home\\"home_name"\\data --height 200 --width 380
+    train:
+    simple 1: sudo python3 main.py --mode train --data\_dir /home/"home_name"/data --height 200 --width 380
     
     simple 2: sudo python3.5 main.py --mode train --carrier image --height 512 --width 512 --network stegshi --end_index_train 6000 --end_index_valid 1500 --cover_train_dir /home/zhanghong/data/image/train/512_cover --cover_valid_dir /home/zhanghong/data/image/val/512_cover/ --stego_train_dir /home/zhanghong/data/image/train/512_stego/ --stego_valid_dir /home/zhanghong/data/image/val/512_stego/ --logs_path /home/zhanghong/code/CatKing/steganalysis_CNN/logs/stegshi --models_path /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi
-
+    test:
+    siample 1: sudo python3.5 main.py --mode test_one --carrier image --file_path /home/zhanghong/data/image/test/12138.pgm
+    
+    siample 2: sudo python3.5 main.py --mode test_batch --carrier image --files_path /home/zhanghong/data/image/test/
+    
 **arguments:** <br>
 **Mode:** mode, test, data\_dir <br>
 **Data\_info:** bitrate, relative\_payload, stego\_method, model\_dir, log\_dir <br>
