@@ -46,8 +46,8 @@ def audio_analysis(audio_file_path):
     return audio_info
 
 
-def get_audio_data(audio_file_path, audio_data_begin=0, audio_data_end=-1, 
-                is_normalization=True, channel=None):
+def get_audio_data(audio_file_path, audio_data_begin=0, audio_data_end=-1,
+                   is_normalization=True, channel=None):
     """
     获取音频数据
     :param audio_file_path: 音频文件路径

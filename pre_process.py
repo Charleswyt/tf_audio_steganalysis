@@ -1,25 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 Created on 2018.01.03
-Finished on 
+Finished on 2018.01.03
 @author: Wang Yuntao
 """
 
+import math
 import numpy as np
 
-
 """
-QMDCT系数矩阵预处理:
-    cut(matrix, height_start_idx=0, width_start_idx=0, height_end_idx=-1, width_end_idx=-1)     取子矩阵
-    diff(matrix, direction, order)                                                              差分处理
+The pre-processing of the QMDCT matrix:
     truncate(matrix, threshold)                                                                 截断处理
-    downsampling(matrix, stride)                                                                下采样(200 x 576 -> 50 x 144 x 4)
+    down_sampling(matrix, mode, mode_number)                                                    单一模式下采样
+    get_down_sampling(matrix, mode_number)                                                      混合模式下采样
 """
-
-
-def cut(matrix, height_start_idx=0, width_start_idx=0, height_end_idx=-1, width_end_idx=-1):
-    return matrix[height_start_idx:height_end_idx, width_start_idx:width_end_idx]
 
 
 def truncate(matrix, threshold, threshold_left=None, threshold_right=None):
@@ -41,23 +37,47 @@ def truncate(matrix, threshold, threshold_left=None, threshold_right=None):
     return matrix
 
 
-def downsampling(matrix, stride):
-    shape = np.shape(matrix)
-    matrix = np.reshape(matrix, [shape[0], shape[1]])
-    height = np.shape(matrix)[0]
-    width = np.shape(matrix)[1]
-    height_new = height // stride
-    width_new = width // stride
-    depth = stride ** 2
-
-    output = np.zeros([height_new, width_new, depth], dtype=float)
-
-    i = 0
-    while i < depth:
-        row = i // stride
-        col = i % stride
-        temp = matrix[row:height:stride, col:width:stride]
-        output[:, :, i] = temp
-        i += 1
+def down_sampling(matrix, mode, mode_number):
+    """
+    the downsampling of the matrix (矩阵下采样)
+    :param matrix: the input matrix
+    :param mode: the current mode
+    :param mode_number: the total number of the modes
+    :return: down sampling matrix
+    """
+    stride = int(math.sqrt(mode_number))
+    mask = list(range(mode_number))
+    mask = np.reshape(mask, [stride, stride])
+    index = np.argwhere(mask == mode)[0]
+    i, j = index[0], index[1]
+    output = matrix[i::stride, j::stride]
 
     return output
+
+
+def get_down_sampling(matrix, mode_number):
+    """
+    the downsampling of the matrix (矩阵下采样)
+    :param matrix: the input matrix
+    :param mode_number: the total number of the modes
+    """
+    shape = np.shape(matrix)
+    height, width = shape[0], shape[1]
+    matrix = np.reshape(matrix, [height, width])
+    stride = math.sqrt(mode_number)
+    sub_height, sub_width = int(height // stride), int(width // stride)
+    output = np.zeros([sub_height, sub_width, mode_number])
+    for i in range(mode_number):
+        output[:, :, i] = down_sampling(matrix, i, mode_number)
+
+    return output
+
+
+if __name__ == "__main__":
+    from text_preprocess import read_text
+    file_path = "E:/Myself/2.database/10.QMDCT/1.txt/APS/128_01/wav10s_00689.txt"
+    QMDCT = read_text(file_path, is_abs=True, is_diff=True, order=2, direction=1, is_trunc=True, threshold=3)
+    print(np.shape(QMDCT))
+    hh = get_down_sampling(QMDCT, 4)
+    print(np.shape(hh))
+

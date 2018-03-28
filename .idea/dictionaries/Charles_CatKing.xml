@@ -4,28 +4,45 @@
       <w>adadelta</w>
       <w>adagrad</w>
       <w>argmax</w>
+      <w>atrous</w>
+      <w>balabala</w>
+      <w>balabla</w>
+      <w>caffe</w>
+      <w>cbar</w>
       <w>cifar</w>
       <w>ckpt</w>
+      <w>coeff</w>
       <w>compname</w>
       <w>comptype</w>
       <w>datas</w>
       <w>deepbit</w>
       <w>eecs</w>
+      <w>gpus</w>
       <w>iters</w>
       <w>leakrelu</w>
+      <w>matrixs</w>
       <w>minibatches</w>
+      <w>ndarray</w>
+      <w>noheader</w>
+      <w>nvidia</w>
+      <w>pred</w>
       <w>preprocess</w>
       <w>qmdc</w>
       <w>qmdct</w>
+      <w>sklearn</w>
       <w>sqrt</w>
+      <w>stegshi</w>
       <w>strlist</w>
       <w>subkey</w>
+      <w>sudo</w>
       <w>tfrecord</w>
       <w>tfrecords</w>
       <w>uint</w>
       <w>weigths</w>
       <w>xlabel</w>
+      <w>xtick</w>
       <w>ylabel</w>
+      <w>ytick</w>
       <w>zlabel</w>
     </words>
   </dictionary>

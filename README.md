@@ -11,6 +11,16 @@ HCM(Huffman Code Mapping), EECS(Equal Length Entropy Codes Substitution)
 
 ## Run
 Command: python3 main.py --argument 1 --argument 2 ... --argument N <br>
+
+Namespace(batch_size=128, batch_size_train=128, batch_size_valid=128, bitrate=128, block=2, cover_train_dir=None, cover_valid_dir=None, data_dir='/home/zq/data', decay_rate=0.9, decay_step=5000, direction=0, downsampling=False, end_index_train=16000, end_index_valid=4000, epoch=500, height=200, is_abs=False, is_diff=True, is_regulation=True, is_trunc=True, keep_checkpoint_every_n_hours=0.5, learning_rate=0.001, log_dir='/home/zq/code/CatKing/steganalysis_CNN/logs/myself/train', logs_path='/home/zq/code/CatKing/steganalysis_CNN/logs', max_to_keep=3, mode='train', model_dir='/home/zq/code/CatKing/steganalysis_CNN/models', model_file_name='audio_steganalysis', models_path='/home/zq/code/CatKing/steganalysis_CNN/models', network='network1', order=2, relative_payload='2', seed=1, staircase=False, start_index_train=0, start_index_valid=0, stego_method='EECS', stego_train_dir=None, stego_valid_dir=None, test='one', threshold=15, width=380)
+
+
+Example: <br>
+    
+    simple 1: sudo python3 main.py --mode train --data\_dir \home\\"home_name"\\data --height 200 --width 380
+    
+    simple 2: sudo python3.5 main.py --mode train --carrier image --height 512 --width 512 --network stegshi --end_index_train 6000 --end_index_valid 1500 --cover_train_dir /home/zhanghong/data/image/train/512_cover --cover_valid_dir /home/zhanghong/data/image/val/512_cover/ --stego_train_dir /home/zhanghong/data/image/train/512_stego/ --stego_valid_dir /home/zhanghong/data/image/val/512_stego/ --logs_path /home/zhanghong/code/CatKing/steganalysis_CNN/logs/stegshi --models_path /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi
+
 **arguments:** <br>
 **Mode:** mode, test, data\_dir <br>
 **Data\_info:** bitrate, relative\_payload, stego\_method, model\_dir, log\_dir <br>

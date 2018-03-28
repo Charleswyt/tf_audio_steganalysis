@@ -5,8 +5,8 @@ import os
 import numpy as np
 
 """
-Created on 
-Finished on 
+Created on 2018.01.15
+Finished on 2018.01.15
 @author: Wang Yuntao
 """
 
@@ -62,3 +62,5 @@ def get_file_type(file_path):
         file_type = None
 
     return file_type
+
+

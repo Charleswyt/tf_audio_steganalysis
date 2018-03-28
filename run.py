@@ -221,7 +221,6 @@ def train_image(args):
     print("valid files path(stego): %s" % stego_valid_files_path)
     print("model files path: %s" % model_file_path)
     print("log files path: %s" % log_file_path)
-    time.sleep(3)
 
     # placeholder
     height, width, channel = args.height, args.width, 1                                     # the height, width and channel of the image
@@ -259,7 +258,7 @@ def train_image(args):
 
     # print(logits, logits.eval, logits.get_shape())
     # tv = tf.trainable_variables()
-    # loss = loss_layer(logits, label, is_regulation=False, coeff=1e-4)                       # loss
+    # loss = loss_layer(logits, label, is_regulation=False, coeff=1e-4)                               # loss
     # train_op = optimizer(loss, learning_rate=learning_rate)                                         # the result of the optimizer
     # acc = accuracy_layer(logits, label)                                                             # accuracy
 

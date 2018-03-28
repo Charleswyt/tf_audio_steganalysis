@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
+from filters import kv_kernel
 
 """
 Created on 2017.12.29
@@ -19,7 +20,7 @@ function:
     fc_layer(input_data, output_dim, name, relu_flag=True)
     conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name, activation="relu", 
         padding="SAME", is_pretrain=True)
-    loss(logits, label)
+    loss_layer(logits, label)
     accuracy(logits, label)
     optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
               epsilon=1e-8, initial_accumulator_value=0.1, momentum=0.9, decay=0.9)
@@ -138,7 +139,6 @@ def fc_layer(input_data, output_dim, name, is_bn=True, activation_method="relu",
     :param alpha: leakey relu alpha
     :return: output
     """
-
     shape = input_data.get_shape()
     if len(shape) == 4:
         input_dim = shape[1].value * shape[2].value * shape[3].value
@@ -163,6 +163,8 @@ def fc_layer(input_data, output_dim, name, is_bn=True, activation_method="relu",
         if is_bn is True:
             output = batch_normalization(output, name+"_BN")
 
+        output = activation(output, activation_method, alpha)
+
         if activation_method == "leakrelu":
             print("name: %s, shape: %d -> %d, activation:%s, alpha = %f"
                   % (name, input_dim, output_dim, activation_method, alpha))
@@ -170,12 +172,10 @@ def fc_layer(input_data, output_dim, name, is_bn=True, activation_method="relu",
             print("name: %s, shape: %d -> %d, activation:%s"
                   % (name, input_dim, output_dim, activation_method))
 
-        output = activation(output, activation_method, alpha)
-
         return output
 
 
-def activation(input_data, activation_method=None, alpha=0.2):
+def activation(input_data, activation_method="None", alpha=0.2):
     """
     activation function
     :param input_data: the input data
@@ -211,7 +211,8 @@ def activation(input_data, activation_method=None, alpha=0.2):
 
 
 def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
-               is_bn=True, activation_method="relu", alpha=0.2, padding="SAME", is_pretrain=True):
+               is_bn=True, activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+               init_method="xavier", bias_term=False, is_pretrain=True):
     """
     convolutional layer
     :param input_data: the input data tensor [batch_size, height, width, channels]
@@ -221,50 +222,108 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
     :param y_stride: stride in Y axis
     :param filter_num: the number of the convolutional kernel
     :param name: the name of the layer
-    :param is_bn: whether the BN layer is used
-    :param activation_method: the type of activation function
-    :param alpha: leaky relu alpha
-    :param padding: the padding method, "SAME" | "VALID"
-    :param is_pretrain: whether the parameters are trainable
+    :param is_bn: whether the BN layer is used (default: True)
+    :param activation_method: the type of activation function (default: relu)
+    :param alpha: leaky relu alpha (default: 0.2)
+    :param padding: the padding method, "SAME" | "VALID" (default: "SAME")
+    :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
+    :param init_method: the method of weights initialization (default: xavier)
+    :param bias_term: whether the bias term exists or not (default: False)
+    :param is_pretrain: whether the parameters are trainable (default: True)
 
     :return: 4-D tensor
     """
     channel = input_data.get_shape()[-1]
+
+    # the method of weights initialization
+    if init_method == "xavier":
+        initializer = tf.contrib.layers.xavier_initializer()
+    elif init_method == "gaussian":
+        initializer = tf.random_normal_initializer(stddev=0.01)
+    else:
+        initializer = tf.truncated_normal_initializer(stddev=0.01)
+
+    # the initialization of the weights and biases
     with tf.variable_scope(name):
         weights = tf.get_variable(name="weights",
                                   shape=[height, width, channel, filter_num],
                                   dtype=tf.float32,
-                                  initializer=tf.contrib.layers.xavier_initializer(),
+                                  initializer=initializer,
                                   trainable=is_pretrain)
         biases = tf.get_variable(name="biases",
                                  shape=[filter_num],
                                  dtype=tf.float32,
                                  initializer=tf.constant_initializer(0.0),
                                  trainable=is_pretrain)
-        feature_map = tf.nn.conv2d(input=input_data,
-                                   filter=weights,
-                                   strides=[1, x_stride, y_stride, 1],
-                                   padding=padding,
-                                   name="conv")
-        output = tf.nn.bias_add(value=feature_map,
-                                bias=biases,
-                                name="biases_add")
+
+        # the method of convolution
+        if atrous == 1:
+            feature_map = tf.nn.conv2d(input=input_data,
+                                       filter=weights,
+                                       strides=[1, x_stride, y_stride, 1],
+                                       padding=padding,
+                                       name="conv")
+        else:
+            feature_map = tf.nn.atrous_conv2d(value=input_data,
+                                              filters=weights,
+                                              rate=atrous,
+                                              padding=padding,
+                                              name="atrous_conv")
+        # biases term
+        if bias_term is True:
+            output = tf.nn.bias_add(value=feature_map,
+                                    bias=biases,
+                                    name="biases_add")
+        else:
+            output = feature_map
+
+        # info show
         shape = output.get_shape()
         print("name: %s, shape: (%d, %d, %d, %d), activation: %s"
               % (name, shape[0], shape[1], shape[2], shape[3], activation_method))
 
+        # batch normalization
         if is_bn is True:
             output = batch_normalization(output, name+"_BN")
+
+        # activation
         output = activation(output, activation_method, alpha)
 
         return output
 
 
-def loss(logits, label, method="sparse_softmax_cross_entropy"):
+def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAME"):
+    """
+        convolutional layer with static kernel which can be seen as a HPF
+        :param input_data: the input data tensor [batch_size, height, width, channels]
+        :param kernel: the filter kernel
+        :param x_stride: stride in X axis
+        :param y_stride: stride in Y axis
+        :param name: the name of the layer
+        :param padding: the padding method, "SAME" | "VALID"
+
+        :return: 4-D tensor
+        """
+    with tf.variable_scope(name):
+        feature_map = tf.nn.conv2d(input=input_data,
+                                   filter=kernel,
+                                   strides=[1, x_stride, y_stride, 1],
+                                   padding=padding,
+                                   name="conv")
+        shape = feature_map.get_shape()
+        print("name: %s, shape: (%d, %d, %d, %d)"
+              % (name, shape[0], shape[1], shape[2], shape[3]))
+
+        return feature_map
+
+
+def loss_layer(logits, label, is_regulation, coeff, method="sparse_softmax_cross_entropy"):
     """
     calculate the loss
     :param logits: logits [batch_size, class_num]
     :param label: one hot label
+    :param is_regulation: whether regulation or not
+    :param coeff: the coefficients of the regulation
     :param method: loss method
     :return: loss
     """
@@ -279,21 +338,26 @@ def loss(logits, label, method="sparse_softmax_cross_entropy"):
                                                                     labels=label,
                                                                     name="cross_entropy")
         elif method == "sparse_softmax_cross_entropy":
-            cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,
-                                                                           labels=label,
-                                                                           name="loss")
+            cross_entropy = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=label)
         else:
-            cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,
-                                                                           labels=label,
-                                                                           name="loss")
+            cross_entropy = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=label)
 
-        losses = tf.reduce_mean(cross_entropy, name="loss")
-        tf.summary.scalar(scope.name + "/loss", losses)
+        loss_cross_entropy = tf.reduce_sum(cross_entropy)
 
-        return losses
+        if is_regulation is True:
+            tv = tf.trainable_variables()
+            print(tv)
+            regularization_cost = coeff * tf.reduce_sum([tf.nn.l2_loss(v) for v in tv])
+            loss = loss_cross_entropy + regularization_cost
+        else:
+            loss = loss_cross_entropy
+
+        tf.summary.scalar(scope.name + "/loss", loss)
+
+        return loss
 
 
-def accuracy(logits, label):
+def accuracy_layer(logits, label):
     """
     calculate the accuracy
     :param logits: logits
@@ -301,8 +365,9 @@ def accuracy(logits, label):
     :return: accuracy
     """
     with tf.variable_scope("accuracy") as scope:
-        correct = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
-        # correct = tf.nn.in_top_k(logits,abel, 1)
+        # correct = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
+        correct = tf.nn.in_top_k(logits, label, 1)
+        print(correct)
         correct = tf.cast(correct, tf.float32)
         acc = tf.reduce_mean(correct) * 100.0
         tf.summary.scalar(scope.name + "/accuracy", acc)
@@ -393,13 +458,15 @@ def learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate
     :param cycle: A boolean, whether or not it should cycle beyond decay_steps.
     :return: decayed_learning_rate
     type:
+        fixed               -> decayed_learning_rate = learning_rate
+        step                -> decayed_learning_rate = learning_rate ^ (floor(global_step / decay_steps))
         exponential_decay   -> decayed_learning_rate = learning_rate * decay_rate ^ (global_step / decay_steps)
         inverse_time_decay  -> decayed_learning_rate = learning_rate / (1 + decay_rate * t)
         natural_exp_decay   -> decayed_learning_rate = learning_rate * exp(-decay_rate * global_step)
         polynomial_decay    -> decayed_learning_rate =
                                 (learning_rate - end_learning_rate) * (1 - global_step / decay_steps) ^ (power) + end_learning_rate
     """
-    if decay_method == "constant":
+    if decay_method == "fixed":
         decayed_learning_rate = init_learning_rate
     elif decay_method == "exponential":
         decayed_learning_rate = tf.train.exponential_decay(init_learning_rate, global_step, decay_steps, decay_rate, staircase)
@@ -409,6 +476,8 @@ def learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate
         decayed_learning_rate = tf.train.natural_exp_decay(init_learning_rate, global_step, decay_steps, decay_rate, staircase)
     elif decay_method == "polynomial":
         decayed_learning_rate = tf.train.polynomial_decay(init_learning_rate, global_step, decay_steps, decay_rate, end_learning_rate, power, cycle)
+    elif decay_method == "step":
+        decayed_learning_rate = tf.pow(init_learning_rate * decay_rate, floor(global_step / decay_steps))
     else:
         decayed_learning_rate = init_learning_rate
 
