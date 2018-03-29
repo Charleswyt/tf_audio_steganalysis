@@ -25,19 +25,19 @@ Example: <br>
     
     --train
     
-    simple 1: (sudo) python3 main.py --mode train --data\_dir /home/"home_name"/data --height 200 --width 380
+    simple 1: sudo python3 main.py --mode train --data\_dir /home/"home_name"/data --height 200 --width 380
     
-    simple 2: (sudo) python3.5 main.py --mode train --carrier image --height 512 --width 512 --network stegshi --batch_size 64 --end_index_train 6000 --end_index_valid 1500 --cover_train_dir /home/zhanghong/data/image/train/512_cover --cover_valid_dir /home/zhanghong/data/image/val/512_cover/ --stego_train_dir /home/zhanghong/data/image/train/512_stego/ --stego_valid_dir /home/zhanghong/data/image/val/512_stego/ --logs_path /home/zhanghong/code/CatKing/steganalysis_CNN/logs/stegshi --models_path /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi
+    simple 2: sudo python3.5 main.py --mode train --carrier image --height 512 --width 512 --network stegshi --batch_size 64 --end_index_train 6000 --end_index_valid 1500 --cover_train_dir /home/zhanghong/data/image/train/512_cover --cover_valid_dir /home/zhanghong/data/image/val/512_cover/ --stego_train_dir /home/zhanghong/data/image/train/512_stego/ --stego_valid_dir /home/zhanghong/data/image/val/512_stego/ --logs_path /home/zhanghong/code/CatKing/steganalysis_CNN/logs/stegshi --models_path /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi
 
     --test
     
-    sample 1: (sudo) python3.5 main.py --mode test --submode one --network stegshi --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --file_path /home/zhanghong/data/image/test/12138.pgm
+    sample 1: sudo python3.5 main.py --mode test --submode one --network stegshi --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --file_path /home/zhanghong/data/image/test/12138.pgm
     
-    sample 2: (sudo) python3.5 main.py --mode test --submode one --network stegshi --height 512 --width 512 --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/val/512_cover/7501.pgm
+    sample 2: sudo python3.5 main.py --mode test --submode one --network stegshi --height 512 --width 512 --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/val/512_cover/7501.pgm
     
-    sample 3: (sudo) python3.5 main.py --mode test --submode batch --network stegshi --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/test/ --label_file_path /home/zhanghong/data/image/test/
+    sample 3: sudo python3.5 main.py --mode test --submode batch --network stegshi --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/test/ --label_file_path /home/zhanghong/data/image/test/
     
-    
+    Note: remove "sudo" if run the code in windows system
 **arguments:** <br>
 **Mode:** mode, test, data\_dir <br>
 **Data\_info:** bitrate, relative\_payload, stego\_method, model\_dir, log\_dir <br>
