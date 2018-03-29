@@ -58,7 +58,8 @@ Example: <br>
 The introdction of each network
 
 
-    network1  : The proposed network (最终选定的网络)
+    # network for audio steganalysis
+    network1  : The proposed network (最终选定的网络)
     network1_1: Remove the BN layer (去掉BN层)
     network1_2: Average pooling layer is used for subsampling (将所有的降采样方式改为平均池化方式)
     network1_3: Convolutional layer with stride 2 is used for subsampling (将所有的降采样方式改为卷积池化方式)
@@ -67,9 +68,12 @@ The introdction of each network
     network1_6: Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
     network1_7: Deepen the network to block convolution layers (加深网络)
     network1_8: Design a network to steganalyze audios of arbitrary size (解决可变尺寸输入数据的训练问题)
-    stegshi   : Xu-Net which is used for image steganalysis
     
     Note: HPF and ABS is applied at the pre-processing
+    
+    # network for image steganalysis
+    stegshi   : Xu-Net
+
     
 * The method of pre-processing
     There are positive and negative values in QMDCT coefficients matrix. The values in interval [-15, 15] is modified.
