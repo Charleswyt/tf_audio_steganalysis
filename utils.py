@@ -7,11 +7,17 @@ Finished on 2017.11.20
 @author: Wang Yuntao
 """
 
-from image_preprocess import *
-from PIL import Image
-from matplotlib.pylab import plt
-from text_preprocess import *
 import tensorflow as tf
+from image_preprocess import *
+from text_preprocess import *
+from matplotlib.pylab import plt
+
+"""
+    function:
+        def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True)          获取文件列表与标签列表
+        minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None)   批次读取数据
+        
+"""
 
 
 def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True):
@@ -55,7 +61,6 @@ def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is
     return cover_data_list, cover_label_list, stego_data_list, stego_label_list
 
 
-# 定义一个函数，按批次取数据
 def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None):
     """
     批次读取数据

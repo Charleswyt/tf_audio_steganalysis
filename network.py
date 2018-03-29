@@ -401,35 +401,38 @@ def network1_7(input_data, class_num=2, activation_method="tanh", padding="SAME"
     return logits
 
 
-def stegshi(input_data, class_num=2):
+def stegshi(input_data, class_num=2, is_bn=True):
     # group 0
     conv0 = static_conv_layer(input_data, kv_kernel, 1, 1, "conv0")
 
     # group 1
     conv1_1 = conv_layer(conv0, 5, 5, 1, 1, 8, "conv1_1", is_bn=False, activation_method=None, init_method="gaussian", bias_term=False)
-    conv1_1 = tf.abs(conv1_1, "conv1_abs")
-    conv1_2 = batch_normalization(conv1_1, name="conv1_BN")
-    conv1_3 = activation(conv1_2, "tanh")
-    pool1_4 = pool_layer(conv1_3, 5, 5, 2, 2, "pool1_4", is_max_pool=False)
+    conv1_2 = tf.abs(conv1_1, "conv1_abs")
+    if is_bn is True:
+        conv1_3 = batch_normalization(conv1_2, name="conv1_BN")
+    else:
+        conv1_3 = conv1_2
+    conv1_4 = activation(conv1_3, "tanh")
+    pool1_5 = pool_layer(conv1_4, 5, 5, 2, 2, "pool1_4", is_max_pool=False)
 
     # group 2
-    conv2_1 = conv_layer(pool1_4, 5, 5, 1, 1, 16, "conv2_1", activation_method="tanh", init_method="gaussian", bias_term=False)
+    conv2_1 = conv_layer(pool1_5, 5, 5, 1, 1, 16, "conv2_1", is_bn=is_bn, activation_method="tanh", init_method="gaussian", bias_term=False)
     pool2_2 = pool_layer(conv2_1, 5, 5, 2, 2, "pool2_2", is_max_pool=False)
 
     # group 3
-    conv3_1 = conv_layer(pool2_2, 1, 1, 1, 1, 32, "conv3_1", activation_method="relu", init_method="gaussian", bias_term=False)
+    conv3_1 = conv_layer(pool2_2, 1, 1, 1, 1, 32, "conv3_1", is_bn=is_bn, activation_method="relu", init_method="gaussian", bias_term=False)
     pool3_2 = pool_layer(conv3_1, 5, 5, 2, 2, "pool3_2", is_max_pool=False)
 
     # group 4
-    conv4_1 = conv_layer(pool3_2, 1, 1, 1, 1, 64, "conv4_1", activation_method="relu", init_method="gaussian", bias_term=False)
+    conv4_1 = conv_layer(pool3_2, 1, 1, 1, 1, 64, "conv4_1", is_bn=is_bn, activation_method="relu", init_method="gaussian", bias_term=False)
     pool4_2 = pool_layer(conv4_1, 7, 7, 2, 2, "pool4_2", is_max_pool=False)
 
     # group 5
-    conv5_1 = conv_layer(pool4_2, 1, 1, 1, 1, 128, "conv5_1", activation_method="relu", init_method="gaussian", bias_term=False)
+    conv5_1 = conv_layer(pool4_2, 1, 1, 1, 1, 128, "conv5_1", is_bn=is_bn, activation_method="relu", init_method="gaussian", bias_term=False)
     pool5_2 = pool_layer(conv5_1, 7, 7, 2, 2, "pool5_2", is_max_pool=False)
 
     # group 6
-    conv6_1 = conv_layer(pool5_2, 1, 1, 1, 1, 256, "conv6_1", activation_method="relu", init_method="gaussian", bias_term=False)
+    conv6_1 = conv_layer(pool5_2, 1, 1, 1, 1, 256, "conv6_1", is_bn=is_bn, activation_method="relu", init_method="gaussian", bias_term=False)
     pool6_2 = pool_layer(conv6_1, 16, 16, 16, 16, "pool6_2", is_max_pool=False)
 
     # fc layer

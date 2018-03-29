@@ -7,16 +7,33 @@ Finished on 2018.01.05
 """
 
 import os
+import pip
+import platform
 import argparse
-
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+from subprocess import call
 
 """
 function:
-        command_parse()                                     : command-line arguments parse
-        file_path_setup(args)                               : get the data and model files path
-        get_files_list(file_dir, start_idx=0, end_idx=-1)   : get files list
+        command_parse()                                     命令行解析
+        file_path_setup(args)                               获取文件路径
+        get_files_list(file_dir, start_idx=0, end_idx=-1)   获取文件列表
+        get_packages()                                      获取当前系统安装的库文件
+        show_package(_packages)                             显示当前系统安装的库文件
+        package_download(packages_name)                     如果缺少支持程序运行的包则自动下载
+        package_upgrade(package_name)                       更新当前系统安装的指定库文件
+        packages_upgrade()                                  批量更新当前系统安装的所有库文件
 """
+
+"""
+    在tensorflow的log日志等级如下： 
+    - 0：显示所有日志（默认等级） 
+    - 1：显示info、warning和error日志 
+    - 2：显示warning和error信息 
+    - 3：显示error日志信息 
+"""
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+needed_packages = ["tensorflow-gpu", "numpy", "matplotlib"]
+system = platform.system()
 
 
 def command_parse():
@@ -25,7 +42,7 @@ def command_parse():
     :return:
         args -> Namespace(batch_size, bitrate, data_dir, epoch, gpu, learning_rate, log_dir, mode, model_dir, relative_payload, seed, stego_method)
     """
-    parser = argparse.ArgumentParser(description="Audio steganalysis with CNN")
+    parser = argparse.ArgumentParser(description="Audio/Image steganalysis with CNN")
     print(parser.description)
 
     # get the current path
@@ -35,7 +52,7 @@ def command_parse():
 
     # mode
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
-    parser.add_argument("--test", type=str, default="one", help="one | batch (default one)")
+    parser.add_argument("--submode", type=str, default="one", help="one | batch (default one)")
     parser.add_argument("--carrier", type=str, default="audio", help="image | audio (default audio)")
     parser.add_argument("--network", type=str, default="network1", help="the index of the network (default: network1), "
                                                                         "the detailed introduction of each network is in readme")
@@ -57,6 +74,10 @@ def command_parse():
     parser.add_argument("--model_file_name", type=str, default="audio_steganalysis", help="model file name (default: audio_steganalysis)")
     parser.add_argument("--log_dir", type=str, help="log files path")
 
+    parser.add_argument("--model_file_path", type=str, help="the model file path used for test")
+    parser.add_argument("--test_file_path", type=str, help="the file path used for test")
+    parser.add_argument("--test_files_dir", type=str, help="the files folder path used for test")
+
     # hyper parameters
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
     parser.add_argument("--batch_size_train", type=int, default=128, help="batch size for train (default: 128 (64 cover|stego pairs))")
@@ -71,7 +92,6 @@ def command_parse():
     parser.add_argument("--decay_step", type=int, default=5000, help="the step for learning rate decay (default: 5000)")
     parser.add_argument("--decay_rate", type=float, default=0.9, help="the rate for learning rate decay (default: 0.95)")
     parser.add_argument("--staircase", type=bool, default=False, help="whether the decay the learning rate at discrete intervals or not (default:False)")
-
 
     # path
     parser.add_argument("--cover_train_dir", type=str,
@@ -143,7 +163,7 @@ def file_path_setup(args):
         cover_train_files_path = args.cover_train_dir
         cover_valid_files_path = args.cover_valid_dir
         stego_train_files_path = args.stego_train_dir
-        stego_valid_files_path = args.stego_train_dir
+        stego_valid_files_path = args.stego_valid_dir
         model_file_path = args.models_path
         log_file_path = args.logs_path
 
@@ -175,3 +195,63 @@ def get_files_list(file_dir, start_idx=0, end_idx=10000):
     file_list = file_list[start_idx:end_idx]
 
     return file_list
+
+
+def get_packages():
+    _packages = list()
+    for distribution in pip.get_installed_distributions():
+        package_name = distribution.project_name
+        _packages.append(package_name)
+
+    return _packages
+
+
+def show_package(_packages):
+    for i in range(len(_packages)):
+        print(_packages[i])
+
+
+def package_download(packages_name):
+    _packages = get_packages()
+    if isinstance(packages_name, str) is True:
+        packages_list = list()
+        packages_list.append(packages_name)
+    else:
+        packages_list = packages_name
+    for package in packages_list:
+        if package not in _packages:
+            if system == "Windows":
+                call("pip3 install " + package, shell=True)
+            if system == "Linux":
+                call("sudo pip3 install " + package, shell=True)
+
+
+def package_upgrade(package_name):
+    _input = input("Are you sure to upgrade package %s (Y or N): " % package_name)
+    if _input == "Y" or _input == "y":
+        if system == "Windows":
+            call("pip3 install --upgrade " + package_name, shell=False)
+        if system == "Linux":
+            call("sudo pip3 install --upgrade " + package_name, shell=False)
+    elif _input == "N" or _input == "n":
+        print("upgrade quit.")
+    else:
+        print("input error.")
+
+
+def packages_upgrade():
+    _input = input("Are you sure (Y or N): ")
+    if _input == "Y" or _input == "y":
+        for dist in pip.get_installed_distributions():
+            if system == "Windows":
+                call("pip3 install --upgrade " + dist.project_name, shell=False)
+            if system == "Linux":
+                call("sudo pip3 install --upgrade " + dist.project_name, shell=False)
+    elif _input == "N" or _input == "n":
+        print("upgrade quit.")
+    else:
+        print("input error.")
+
+
+if __name__ == "__main__":
+    print(__doc__)

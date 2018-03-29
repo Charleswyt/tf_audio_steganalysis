@@ -8,10 +8,7 @@ Finished on 2018.03.08
 """
 
 import os
-import pip
-import platform
 import tensorflow as tf
-from subprocess import call
 
 """
 Example:
@@ -19,25 +16,6 @@ gm = GPUManager()
 with gm.auto_choice():
     balabala
 """
-
-
-def packages_download(needed_packages=None):
-    """
-    needed packages: tensorflow-gpu==1.3 numpy matplotlib
-    """
-    if needed_packages is None:
-        needed_packages = ["tensorflow-gpu", "numpy", "matplotlib"]
-
-    package = []
-    system = platform.system()
-    for dist in pip.get_installed_distributions():
-        package.extend(dist.project_name.split(" "))
-
-    for needed_package in needed_packages:
-        if needed_package not in package and system == "Linux":
-            call("sudo pip3 install " + needed_package, shell=False)
-        if needed_package not in package and system == "Windows":
-            call("pip3 install " + needed_package, shell=False)
 
 
 def check_gpus():
@@ -190,15 +168,6 @@ else:
 
 if __name__ == "__main__":
     gm = GPUManager()
-    import time
-    import tensorflow as tf
-
-    with tf.device("/cpu:0"):
-        global_step = tf.Variable(initial_value=0,
-                                  trainable=False,
-                                  name="global_step",
-                                  dtype=tf.int32)  # global step
-
     with gm.auto_choice():
 
         for i in range(20):
@@ -207,5 +176,3 @@ if __name__ == "__main__":
             sess.run(init)
             sess.run(global_step)
             print("%d s" % i)
-
-            time.sleep(1)

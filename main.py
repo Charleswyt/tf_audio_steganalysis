@@ -6,15 +6,21 @@ Finished on 2017.12.19
 @author: Wang Yuntao
 """
 
-from manager import *
+
+import os
 import tensorflow as tf
 from config import command_parse
-from run import train_audio, train_image, test_batch, test
-import os
+from run import train_audio, train_image, steganalysis_one, steganalysis_batch
+
+try:
+    import win_unicode_console
+    win_unicode_console.enable()
+except ImportError:
+    print("win_unicode_console import unsuccessfully.")
 
 
 needed_packages = ["tensorflow-gpu", "numpy", "matplotlib"]
-packages_download(needed_packages)                              # if there is no needed packages, download
+# packages_download(needed_packages)                              # if there is no needed packages, download
 
 # gm = GPUManager()                                               # GPU distribution automatically
 # with gm.auto_choice():
@@ -36,9 +42,12 @@ packages_download(needed_packages)                              # if there is no
 arguments = command_parse()
 print(arguments)
 
+try:
+    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+except:
+    print("No GPU.")
+
 if arguments.mode == "train":                               # train mode
-    config = tf.ConfigProto()
-    config.gpu_options.allow_growth = True
     if arguments.carrier == "audio":
         train_audio(arguments)
     elif arguments.carrier == "image":
@@ -47,9 +56,9 @@ if arguments.mode == "train":                               # train mode
         print("No appropriate network for this type of carrier now, please try again.")
 
 elif arguments.mode == "test":                              # test mode
-    if arguments.test == "one":
-        test(arguments)
-    if arguments.test == "batch":
-        test_batch(arguments)
+    if arguments.submode == "one":
+        steganalysis_one(arguments)
+    if arguments.submode == "batch":
+        steganalysis_one(arguments)
 else:
     print("Mode Error")

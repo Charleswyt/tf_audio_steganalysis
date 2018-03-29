@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import time
-from model import *
 from utils import *
+from network import *
 from config import file_path_setup
 
 """
@@ -14,8 +14,10 @@ Finished on 2017.11.30
 
 """
     function: 
-        test: test
-        test_batch: batch test
+        train_audio(args)                                       # 音频隐写分析网络训练
+        train_image(args)                                       # 图像隐写分析网络训练
+        steganalysis_one(args)                                  # 隐写分析网络测试 (单个文件)
+        steganalysis_batch(args)                                # 隐写分析网络测试 (多个文件)
 """
 
 
@@ -237,6 +239,7 @@ def train_image(args):
     # initialize the network
     command = args.network + "(data, classes_num)"
     logits = eval(command)
+    logits = tf.nn.softmax(logits, 1)
 
     # information output
     print("batch_size: %d, total_epoch: %d, class_num: %d" % (batch_size, n_epoch, classes_num))
@@ -268,7 +271,7 @@ def train_image(args):
                            keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
     sess = tf.InteractiveSession()
     train_writer_train = tf.summary.FileWriter(log_file_path + "/train", tf.get_default_graph())
-    train_writer_val = tf.summary.FileWriter(log_file_path + "/validation", tf.get_default_graph())
+    train_writer_val = tf.summary.FileWriter(log_file_path + "/valid", tf.get_default_graph())
     init = tf.global_variables_initializer()
     sess.run(init)
 
@@ -324,8 +327,7 @@ def train_image(args):
             print("validation_iter-%d: loss: %f, acc: %f" % (n_batch_val, err, ac))
 
         print("epoch: %d, learning_rate: %f -- train loss: %f, train acc: %f, validation loss: %f, validation acc: %f"
-              % (epoch + 1, lr, train_loss / n_batch_train, train_acc / n_batch_train,
-                 val_loss / n_batch_val, val_acc / n_batch_val))
+              % (epoch + 1, lr, train_loss / n_batch_train, train_acc / n_batch_train, val_loss / n_batch_val, val_acc / n_batch_val))
 
         end_time = time.time()
         print("Runtime: %.2fs" % (end_time - start_time))
@@ -341,107 +343,77 @@ def train_image(args):
     sess.close()
 
 
-def test_batch(model_dir, files_dir):
-    """
-    单个文件测试
-    :param model_dir: 模型存储路径
-    :param files_dir: 待检测文件目录
-    :return: NULL
-    """
-    height = 198
-    width = 576
+def steganalysis_one(args):
+    height, width = args.height, args.width
+    model_dir = args.model_dir
+    image_path = args.test_file_path
 
-    # 设定占位符
-    x = tf.placeholder(tf.float32, [1, height, width, 1], name="QMDCTs")
-    y_ = tf.placeholder(tf.int32, [1, ], name="label")
-    network1(x, 2)
+    data = tf.placeholder(tf.float32, [1, height, width, 1], name="image")
 
-    # 加载模型
-    sess = tf.InteractiveSession()
-    sess.run(tf.global_variables_initializer())
-    saver = tf.train.Saver()
-    model_file = tf.train.latest_checkpoint(model_dir)
-    saver.restore(sess, model_file)
+    command = args.network + "(data, 2, is_bn=False)"
+    logits = eval(command)
+    logits = tf.nn.softmax(logits)
 
-    files_list = get_files_list(files_dir)  # 获取文件列表
-    data = np.zeros([1, 198, 576, 1], dtype=np.float32)
-    labels = []
-    for file in files_list:
-        data[0, :, :, :] = read_text(file)
-        # labels.append(file_label)
-        labels = np.asarray(labels, np.float32)
-        ret = sess.run(y_, feed_dict={x: data, y_: labels})
-
-    return ret
-
-
-def test(model_dir, file_path, file_label):
-    """
-    单个文件测试
-    :param model_dir: 模型存储路径
-    :param file_path: 待检测文件路径
-    :param file_label: 待检测文件label
-    :return: NULL
-    """
-    height = 198
-    width = 576
-    label = ["cover", "stego"]
-
-    # 设定占位符
-    x = tf.placeholder(tf.float32, [1, height, width, 1], name="QMDCTs")
-    y_ = tf.placeholder(tf.int32, [1, ], name="label")
-    network1(x, 2)
-
-    # 加载模型
-    sess = tf.InteractiveSession()
-    sess.run(tf.global_variables_initializer())
-    saver = tf.train.Saver()
-    model_file = tf.train.latest_checkpoint(model_dir)
-    saver.restore(sess, model_file)
-
-    # 读取数据
-    data = np.zeros([1, 198, 576, 1], dtype=np.float32)
-    labels = []
-    data[0, :, :, :] = read_text(file_path)
-    labels.append(file_label)
-    labels = np.asarray(labels, np.float32)
-    ret = sess.run(y_, feed_dict={x: data, y_: labels})
-
-    print("测试结果: %s, 实际结果: %s" % (label[ret[0]], label[file_label]))
-
-
-def steganalysis_batch(model_dir, files_dir):
-    """
-    单个文件测试
-    :param model_dir: 模型存储路径
-    :param files_dir: 待检测文件目录
-    :return: NULL
-    """
-    height = 198
-    width = 576
-    label = ["cover", "stego"]
-
-    # 设定占位符
-    x = tf.placeholder(tf.float32, [1, height, width, 1], name="QMDCTs")
-    y = network1(x, 2, is_bn=False)
-    logits = tf.nn.softmax(y, 1)
+    # read image
+    img = io.imread(image_path)
+    img = np.reshape(img, [1, height, width, 1])
 
     # 加载模型
     saver = tf.train.Saver()
-    sess = tf.Session()
-    sess.run(tf.global_variables_initializer())
-    model_file = tf.train.latest_checkpoint(model_dir)
-    saver.restore(sess, model_file)
-    print("The model is loaded successfully.")
+    init = tf.global_variables_initializer()
+    with tf.Session() as sess:
+        sess.run(init)
+        ckpt = tf.train.get_checkpoint_state(model_dir)
+        if ckpt and ckpt.model_checkpoint_path:
+            print("model path: %s" % ckpt.model_checkpoint_path)
+            saver.restore(sess, ckpt.model_checkpoint_path)
+            print("The model is loaded successfully.")
 
-    files_list = get_files_list(files_dir)  # 获取文件列表
-    data = np.zeros([1, 198, 576, 1], dtype=np.float32)
-    for file in files_list:
-        data[0, :, :, :] = read_text(file)
-        ret = sess.run(logits, feed_dict={x: data})
-        print(ret)
-        result = ret.argmax()
-        file_name = file.split(sep="/")[-1]
-        print("文件: %s, 分析结果: %s" % (file_name, label[int(result)]))
+            # predict
+            ret = sess.run(logits, feed_dict={data: img})
+            print(ret)
+            result = np.argmax(ret, 1)
 
-    sess.close()
+            if result == 1:
+                print("stego")
+            if result == 0:
+                print("cover")
+        else:
+            print("The model is failed to be loaded.")
+
+
+def steganalysis_batch(args):
+    height, width = args.height, args.width
+    model_dir = args.model_dir
+    image_files_dir = args.test_files_dir
+    label_list_file = args.label_list_file
+    image_files_list = get_files_list(image_files_dir)
+    images_num = len(image_files_list)
+    images = read_image_batch(image_files_list, height, width)
+
+    # placeholder
+    data = tf.placeholder(tf.float32, [images_num, height, width, 1], name="image")
+    label = tf.placeholder(tf.float32, [images_num, ], name="label")
+
+    command = args.network + "(data, 2, is_bn=False)"
+    logits = eval(command)
+    logits = tf.nn.softmax(logits)
+    correct_pred = tf.equal(logits, tf.argmax(y, 1))
+    accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
+
+    # 加载模型
+    saver = tf.train.Saver()
+    init = tf.global_variables_initializer()
+    with tf.Session() as sess:
+        sess.run(init)
+        ckpt = tf.train.get_checkpoint_state(model_dir)
+        if ckpt and ckpt.model_checkpoint_path:
+            print("model path: %s" % ckpt.model_checkpoint_path)
+            saver.restore(sess, ckpt.model_checkpoint_path)
+            print("The model is loaded successfully.")
+
+            # predict
+            acc = sess.run(accuracy, feed_dict={data: images, label: label_list_file})
+            print("Accuracy:", acc)
+        else:
+            print("The model is failed to be loaded.")
