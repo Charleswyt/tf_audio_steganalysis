@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from skimage import io
-from os.path import exists
-import tensorflow as tf
-
 """
 Created on 
 Finished on 
@@ -18,12 +14,29 @@ import matplotlib.pyplot as plt
 
 """
 function:
+    image_info_show(image_file_path)                                                图像信息显示
     imread(image_path, format=None, channel=3, name='image')                        图像读取
 """
 
 
-def read_image_batch(image_files_list, height=512, width=512):
+def image_info_show(image_file_path):
+    img = io.imread(image_file_path)
+    print("The type of the image is %s" % type(img))
+    print("The height of the image is %d" % img.shape[1])
+    print("The width of the image is %d" % img.shape[0])
+    try:
+        print("The channel of the image is %d" % img.shape[2])
+    except IndexError:
+        print("The channel of the image is 1")
+    print("The size of the image is %d" % img.size)
+    print("The min value of the pixel in the image is %d" % img.min())
+    print("The max value of the pixel in the image is %d" % img.max())
+    print("The mean value of the pixel in the image is %d" % img.mean())
+    plt.imshow(img)
+    plt.show()
 
+
+def read_image_batch(image_files_list, height=512, width=512):
     files_num = len(image_files_list)
     data = np.zeros([files_num, height, width, 1], dtype=np.float32)
 
@@ -39,12 +52,13 @@ def read_image_batch(image_files_list, height=512, width=512):
 
 if __name__ == "__main__":
     image_path = "2501.pgm"
-    image = io.imread(image_path)
-    # util.crop()
-    # image = filters.sobel(image[:, :, 0])
-    print(image[:10, :10])
-    plt.imshow(image)
-    plt.show()
+    image_info_show(image_path)
+    # image = io.imread(image_path)
+    # # util.crop()
+    # # image = filters.sobel(image[:, :, 0])
+    # print(image[:10, :10])
+    # plt.imshow(image)
+    # plt.show()
 
 
 

@@ -1,4 +1,5 @@
 # Audio Steganalysis with CNN
+@ author: Wang Yuntao <br>
 ## Necessary Package
 tensorflow-gpu==1.3, numpy, matplotlib
 
@@ -10,9 +11,14 @@ HCM(Huffman Code Mapping), EECS(Equal Length Entropy Codes Substitution)
 ## Results
 
 ## Run
+* install python3.5 and add the path into environment variable
+* pip install tensorflow==1.3 numpy scikit-image
+* run the code as the example as follows
+
+## Command Parser
 Command: python3 main.py --argument 1 --argument 2 ... --argument N <br>
 
-    Namespace(batch_size=128, batch_size_train=128, batch_size_valid=128, bitrate=128, block=2, cover_train_dir=None, cover_valid_dir=None, data_dir='/home/zq/data', decay_rate=0.9, decay_step=5000, direction=0, downsampling=False, end_index_train=16000, end_index_valid=4000, epoch=500, height=200, is_abs=False, is_diff=True, is_regulation=True, is_trunc=True, keep_checkpoint_every_n_hours=0.5, learning_rate=0.001, log_dir='/home/zq/code/CatKing/steganalysis_CNN/logs/myself/train', logs_path='/home/zq/code/CatKing/steganalysis_CNN/logs', max_to_keep=3, mode='train', model_dir='/home/zq/code/CatKing/steganalysis_CNN/models', model_file_name='audio_steganalysis', models_path='/home/zq/code/CatKing/steganalysis_CNN/models', network='network1', order=2, relative_payload='2', seed=1, staircase=False, start_index_train=0, start_index_valid=0, stego_method='EECS', stego_train_dir=None, stego_valid_dir=None, test='one', threshold=15, width=380)
+    Namespace(batch_size=128, batch_size_train=128, batch_size_valid=128, bitrate=128, block=2, carrier='audio', cover_train_dir=None, cover_valid_dir=None, data_dir=None, decay_method='exponential', decay_rate=0.9, decay_step=5000, direction=0, downsampling=False, end_index_train=-1, end_index_valid=-1, epoch=500, height=512, is_abs=False, is_diff=False, is_regulation=True, is_trunc=False, keep_checkpoint_every_n_hours=0.5, learning_rate=0.001, log_dir=None, logs_path='/home/zhanghong/code/CatKing/steganalysis_CNN/logs', max_to_keep=3, mode='test', model_dir='/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi', model_file_name='audio_steganalysis', model_file_path=None, models_path='/home/zhanghong/code/CatKing/steganalysis_CNN/models', network='stegshi', order=2, relative_payload='2', seed=1, staircase=False, start_index_train=0, start_index_valid=0, stego_method='EECS', stego_train_dir=None, stego_valid_dir=None, submode='one', test_file_path='/home/zhanghong/data/image/val/512_stego/result_7518.pgm', test_files_dir=None, threshold=15, width=512)
 
 
 Example: <br>
@@ -61,7 +67,8 @@ The introdction of each network
     network1_6: Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
     network1_7: Deepen the network to block convolution layers (加深网络)
     network1_8: Design a network to steganalyze audios of arbitrary size (解决可变尺寸输入数据的训练问题)
-        
+    stegshi   : Xu-Net which is used for image steganalysis
+    
     Note: HPF and ABS is applied at the pre-processing
     
 * The method of pre-processing
