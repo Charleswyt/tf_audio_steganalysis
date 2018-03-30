@@ -77,6 +77,7 @@ def command_parse():
     parser.add_argument("--model_file_path", type=str, help="the model file path used for test")
     parser.add_argument("--test_file_path", type=str, help="the file path used for test")
     parser.add_argument("--test_files_dir", type=str, help="the files folder path used for test")
+    parser.add_argument("--label_file_path", type=str, help="the label file path used for test")
 
     # hyper parameters
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")

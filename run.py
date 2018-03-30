@@ -5,6 +5,7 @@ import time
 from utils import *
 from network import *
 from config import file_path_setup
+from file_preprocess import get_file_name
 
 """
 Created on 2017.11.27
@@ -239,7 +240,6 @@ def train_image(args):
     # initialize the network
     command = args.network + "(data, classes_num)"
     logits = eval(command)
-    logits = tf.nn.softmax(logits, 1)
 
     # information output
     print("batch_size: %d, total_epoch: %d, class_num: %d" % (batch_size, n_epoch, classes_num))
@@ -345,7 +345,7 @@ def train_image(args):
 
 def steganalysis_one(args):
     height, width = args.height, args.width
-    model_dir = args.model_dir
+    model_file_path = args.model_file_path
     image_path = args.test_file_path
 
     data = tf.placeholder(tf.float32, [1, height, width, 1], name="image")
@@ -363,60 +363,68 @@ def steganalysis_one(args):
     init = tf.global_variables_initializer()
     with tf.Session() as sess:
         sess.run(init)
-        update_chekpoint_info(model_dir)
-        ckpt = tf.train.get_checkpoint_state(model_dir)
-        if ckpt and ckpt.model_checkpoint_path:
-            print("model path: %s" % ckpt.model_checkpoint_path)
-            saver.restore(sess, ckpt.model_checkpoint_path)
-            print("The model is loaded successfully.")
+        saver.restore(sess, model_file_path)
+        print("The model is loaded successfully.")
 
-            # predict
-            ret = sess.run(logits, feed_dict={data: img})
-            print(ret)
-            result = np.argmax(ret, 1)
+        # predict
+        ret = sess.run(logits, feed_dict={data: img})
+        ret[0][0] = ret[0][0] + 0.071823
+        ret[0][1] = ret[0][1] - 0.071823
+        result = np.argmax(ret, 1)
 
-            if result == 1:
-                print("stego")
-            if result == 0:
-                print("cover")
-        else:
-            print("The model is failed to be loaded.")
+        if result == 1:
+            print("stego")
+        if result == 0:
+            print("cover")
 
 
 def steganalysis_batch(args):
     height, width = args.height, args.width
-    model_dir = args.model_dir
-    image_files_dir = args.test_files_dir
-    image_files_list = get_files_list(image_files_dir)
-    images_num = len(image_files_list)
-    print(images_num)
-    images = read_image_batch(image_files_list, height, width)
-    labels = np.zeros([images_num, 1], np.int32)
+    model_file_path = args.model_file_path
+    image_files_path = args.test_files_dir
+    label_file_path = args.label_file_path
 
-    # placeholder
-    data = tf.placeholder(tf.float32, [images_num, height, width, 1], name="image")
-    label = tf.placeholder(tf.float32, [images_num, 1], name="label")
+    label = list()
+    with open(label_file_path) as file:
+        for line in file.readlines():
+            label.append(line)
+
+    image_list = get_files_list(image_files_path)
+    data = tf.placeholder(tf.float32, [1, height, width, 1], name="image")
 
     command = args.network + "(data, 2, is_bn=False)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
-    correct_pred = tf.equal(tf.cast(tf.argmax(logits, 1), tf.int32), labels)
-    accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
     # 加载模型
     saver = tf.train.Saver()
     init = tf.global_variables_initializer()
     with tf.Session() as sess:
         sess.run(init)
-        update_chekpoint_info(model_dir)
-        ckpt = tf.train.get_checkpoint_state(model_dir)
-        if ckpt and ckpt.model_checkpoint_path:
-            print("model path: %s" % ckpt.model_checkpoint_path)
-            saver.restore(sess, ckpt.model_checkpoint_path)
-            print("The model is loaded successfully.")
+        saver.restore(sess, model_file_path)
+        print("The model is loaded successfully.")
+
+        # read image
+        count, i = 0, 0
+        for image_path in image_list:
+            img = io.imread(image_path)
+            img = np.reshape(img, [1, height, width, 1])
+            image_name = get_file_name(image_path)
 
             # predict
-            acc = sess.run(accuracy, feed_dict={data: images, label: labels})
-            print("Accuracy:", acc)
-        else:
-            print("The model is failed to be loaded.")
+            ret = sess.run(logits, feed_dict={data: img})
+            ret[0][0] = ret[0][0] + 0.071823
+            ret[0][1] = ret[0][1] - 0.071823
+            result = np.argmax(ret, 1)
+
+            if result == 1:
+                print("%s: stego" % image_name)
+                if int(label[i]) == 1:
+                    count = count + 1
+            if result == 0:
+                print("%s: cover" % image_name)
+                if int(label[i]) == 0:
+                    count = count + 1
+            i = i + 1
+
+    print("Accuracy = %.2f" % (count / len(image_list)))

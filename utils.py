@@ -127,14 +127,15 @@ def get_biases(model, name):
 def update_chekpoint_info(model_dir):
     """
     checkpoint format
-        model_checkpoint_path: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-5797"
-        all_model_checkpoint_paths: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-2618"
-        all_model_checkpoint_paths: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-3553"
-        all_model_checkpoint_paths: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-5797"
+        model_checkpoint_path: "Path1/audio_steganalysis-5797"
+        all_model_checkpoint_paths: "Path1/audio_steganalysis-2618"
+        all_model_checkpoint_paths: "Path1/audio_steganalysis-3553"
+        all_model_checkpoint_paths: "Path1/audio_steganalysis-5797"
+                                ->
 
     modify the model files directory
     :param model_dir: model files dir
-    :return:
+    :return: NULL
     """
     check_point_path = os.path.join(model_dir, "checkpoint")
     with open(check_point_path) as file:
@@ -143,17 +144,29 @@ def update_chekpoint_info(model_dir):
             content.append(line)
 
         latest_model_file_name = content[0].split("/")[-1][:-2]                                 # -2 is used to remove the punctuation "
-        original_dir = content[0].replace(latest_model_file_name, "").split(":")[1][2:-2]
+        original_dir = content[0].replace(latest_model_file_name, "").split(":")[1][2:-3]
         if original_dir != model_dir:
             for path in content:
                 new_path = path.replace(original_dir, model_dir)
                 new_content.append(new_path)
 
-            with open(check_point_path, "w") as file:
-                for path in new_content:
-                    file.writelines(path)
+            # with open(check_point_path, "w") as file:
+            #     for path in new_content:
+            #         file.writelines(path)
         else:
             pass
+
+
+def get_model_info(model_dir):
+    with tf.Session() as sess:
+        saver = tf.train.Saver()
+        print(saver)
+        update_chekpoint_info(model_dir)
+        ckpt = tf.train.get_checkpoint_state(model_dir)
+        if ckpt and ckpt.model_checkpoint_path:
+            print("model path: %s" % ckpt.model_checkpoint_path)
+            saver.restore(sess, ckpt.model_checkpoint_path)
+            print("The model is loaded successfully.")
 
 
 if __name__ == "__main__":
