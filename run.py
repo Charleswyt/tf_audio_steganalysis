@@ -384,13 +384,17 @@ def steganalysis_batch(args):
     image_files_path = args.test_files_dir
     label_file_path = args.label_file_path
 
-    label = list()
-    with open(label_file_path) as file:
-        for line in file.readlines():
-            label.append(line)
-
     image_list = get_files_list(image_files_path)
+    image_num = len(image_list)
     data = tf.placeholder(tf.float32, [1, height, width, 1], name="image")
+
+    if label_file_path is not None:
+        label = list()
+        with open(label_file_path) as file:
+            for line in file.readlines():
+                label.append(line)
+    else:
+        label = np.zeros([image_num, 1])
 
     command = args.network + "(data, 2, is_bn=False)"
     logits = eval(command)
@@ -427,4 +431,5 @@ def steganalysis_batch(args):
                     count = count + 1
             i = i + 1
 
-    print("Accuracy = %.2f" % (count / len(image_list)))
+    if label_file_path is not None:
+        print("Accuracy = %.2f" % (count / image_num))
