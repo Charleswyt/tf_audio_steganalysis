@@ -35,7 +35,12 @@ Example: <br>
     
     sample 2: sudo python3.5 main.py --mode test --submode one --network stegshi --height 512 --width 512 --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/val/512_cover/7501.pgm
     
-    sample 3: sudo python3.5 main.py --mode test --submode batch --network stegshi --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/test/ --label_file_path /home/zhanghong/data/image/test/
+    sample 3: python3 main.py --mode test --submode one --network stegshi --height 512 --width 512 --model_file_path stegshi/audio_steganalysis-5797 --test_file_path TEST/7501.pgm
+    
+    sample 4: python3 main.py --mode test --submode batch --network stegshi --height 512 --width 512 --model_file_path stegshi/audio_steganalysis-5797 --test_files_dir TEST/
+    
+    sample 5: python3 main.py --mode test --submode batch --network stegshi --height 512 --width 512 --model_file_path stegshi/audio_steganalysis-5797 --test_files_dir TEST/ --label_file_path label.txt
+
     
     Note: remove "sudo" if run the code in windows system
 **arguments:** <br>

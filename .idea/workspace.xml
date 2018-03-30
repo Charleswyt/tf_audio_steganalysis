@@ -66,12 +66,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="-175">
-                <caret line="17" column="17" lean-forward="false" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+              <first_editor relative-caret-position="245">
+                <caret line="82" column="30" lean-forward="false" selection-start-line="82" selection-start-column="30" selection-end-line="82" selection-end-column="30" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -107,11 +107,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="run.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="run.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/run.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="291">
-              <caret line="427" column="27" lean-forward="true" selection-start-line="427" selection-start-column="27" selection-end-line="427" selection-end-column="27" />
+              <caret line="412" column="23" lean-forward="false" selection-start-line="412" selection-start-column="23" selection-end-line="412" selection-end-column="23" />
               <folding>
                 <element signature="e#47#58#0" expanded="true" />
                 <element signature="e#624#10019#0" expanded="false" />
@@ -134,7 +134,7 @@
         <entry file="file://$PROJECT_DIR$/utils.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="361">
-              <caret line="146" column="89" lean-forward="true" selection-start-line="146" selection-start-column="89" selection-end-line="146" selection-end-column="89" />
+              <caret line="146" column="89" lean-forward="false" selection-start-line="146" selection-start-column="89" selection-end-line="146" selection-end-column="89" />
               <folding>
                 <element signature="e#123#146#0" expanded="true" />
                 <element signature="e#618#2069#0" expanded="false" />
@@ -200,10 +200,10 @@
         <option value="$PROJECT_DIR$/network.py" />
         <option value="$PROJECT_DIR$/image_preprocess.py" />
         <option value="$PROJECT_DIR$/gui.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/config.py" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/run.py" />
       </list>
     </option>
@@ -435,7 +435,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32826087" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2241567" sideWeight="0.49307036" order="9" side_tool="true" content_ui="tabs" />
@@ -444,7 +443,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2687704" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" x="22" y="348" width="1876" height="343" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29053319" sideWeight="0.49520257" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.48639825" sideWeight="0.50692964" order="17" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.48639825" sideWeight="0.50692964" order="17" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18176973" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15351813" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -491,7 +490,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/config.py" />
     <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/ops/variable_scope.py" />
     <entry file="file://$PROJECT_DIR$/utils.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -744,32 +742,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="146" column="89" lean-forward="true" selection-start-line="146" selection-start-column="89" selection-end-line="146" selection-end-column="89" />
-          <folding>
-            <element signature="e#123#146#0" expanded="true" />
-            <element signature="e#618#2069#0" expanded="false" />
-            <element signature="e#2183#2764#0" expanded="false" />
-            <element signature="e#2799#3382#0" expanded="false" />
-            <element signature="e#3419#3593#0" expanded="false" />
-            <element signature="e#3629#3894#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-175">
-            <caret line="17" column="17" lean-forward="false" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/file_preprocess.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="25">
@@ -794,14 +766,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/label.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="146" column="89" lean-forward="false" selection-start-line="146" selection-start-column="89" selection-end-line="146" selection-end-column="89" />
+          <folding>
+            <element signature="e#123#146#0" expanded="true" />
+            <element signature="e#618#2069#0" expanded="false" />
+            <element signature="e#2183#2764#0" expanded="false" />
+            <element signature="e#2799#3382#0" expanded="false" />
+            <element signature="e#3419#3593#0" expanded="false" />
+            <element signature="e#3629#3894#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/run.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="291">
-          <caret line="427" column="27" lean-forward="true" selection-start-line="427" selection-start-column="27" selection-end-line="427" selection-end-column="27" />
+          <caret line="412" column="23" lean-forward="false" selection-start-line="412" selection-start-column="23" selection-end-line="412" selection-end-column="23" />
           <folding>
             <element signature="e#47#58#0" expanded="true" />
             <element signature="e#624#10019#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="245">
+            <caret line="82" column="30" lean-forward="false" selection-start-line="82" selection-start-column="30" selection-end-line="82" selection-end-column="30" />
+            <folding />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>

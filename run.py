@@ -357,6 +357,7 @@ def steganalysis_one(args):
     # read image
     img = io.imread(image_path)
     img = np.reshape(img, [1, height, width, 1])
+    image_name = get_file_name(image_path)
 
     # 加载模型
     saver = tf.train.Saver()
@@ -373,9 +374,9 @@ def steganalysis_one(args):
         result = np.argmax(ret, 1)
 
         if result == 1:
-            print("stego")
+            print("%s: stego" % image_name)
         if result == 0:
-            print("cover")
+            print("%s: cover" % image_name)
 
 
 def steganalysis_batch(args):
