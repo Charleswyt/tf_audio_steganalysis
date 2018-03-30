@@ -124,17 +124,51 @@ def get_biases(model, name):
         return tf.constant(model[name][1], name="biases")
 
 
+def update_chekpoint_info(model_dir):
+    """
+    checkpoint format
+        model_checkpoint_path: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-5797"
+        all_model_checkpoint_paths: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-2618"
+        all_model_checkpoint_paths: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-3553"
+        all_model_checkpoint_paths: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-5797"
+
+    modify the model files directory
+    :param model_dir: model files dir
+    :return:
+    """
+    check_point_path = os.path.join(model_dir, "checkpoint")
+    with open(check_point_path) as file:
+        content, new_content = list(), list()
+        for line in file.readlines():
+            content.append(line)
+
+        latest_model_file_name = content[0].split("/")[-1][:-2]                                 # -2 is used to remove the punctuation "
+        original_dir = content[0].replace(latest_model_file_name, "").split(":")[1][2:-2]
+        if original_dir != model_dir:
+            for path in content:
+                new_path = path.replace(original_dir, model_dir)
+                new_content.append(new_path)
+
+            with open(check_point_path, "w") as file:
+                for path in new_content:
+                    file.writelines(path)
+        else:
+            pass
+
+
 if __name__ == "__main__":
     # train files
-    cover_files_path_train = "/home/zhanghong/data/image/train/512_cover"
-    stego_files_path_train = "/home/zhanghong/data/image/train/512_stego"
+    # cover_files_path_train = "/home/zhanghong/data/image/train/512_cover"
+    # stego_files_path_train = "/home/zhanghong/data/image/train/512_stego"
 
-    cover_data_train_list, cover_label_train_list, stego_data_train_list, stego_label_train_list = read_data(cover_files_path_train, stego_files_path_train)
-    print(len(cover_data_train_list), len(stego_data_train_list))
+    # cover_data_train_list, cover_label_train_list, stego_data_train_list, stego_label_train_list = read_data(cover_files_path_train, stego_files_path_train)
+    # print(len(cover_data_train_list), len(stego_data_train_list))
 
     # valid files
-    cover_files_path_valid = "/home/zhanghong/data/image/val/512_cover"
-    stego_files_path_valid = "/home/zhanghong/data/image/val/512_stego"
+    # cover_files_path_valid = "/home/zhanghong/data/image/val/512_cover"
+    # stego_files_path_valid = "/home/zhanghong/data/image/val/512_stego"
 
-    cover_data_valid_list, cover_label_valid_list, stego_data_valid_list, stego_label_valid_list = read_data(cover_files_path_valid, stego_files_path_valid)
-    print(len(cover_data_valid_list), len(stego_data_valid_list))
+    # cover_data_valid_list, cover_label_valid_list, stego_data_valid_list, stego_label_valid_list = read_data(cover_files_path_valid, stego_files_path_valid)
+    # print(len(cover_data_valid_list), len(stego_data_valid_list))
+
+    update_chekpoint_info("E:/Myself/1.source_code/tf_audio_steganalysis/stegshi/")

@@ -25,19 +25,19 @@ Example: <br>
     
     --train
     
-    simple 1: (sudo) python3 main.py --mode train --data\_dir /home/"home_name"/data --height 200 --width 380
+    simple 1: sudo python3 main.py --mode train --data\_dir /home/"home_name"/data --height 200 --width 380
     
-    simple 2: (sudo) python3.5 main.py --mode train --carrier image --height 512 --width 512 --network stegshi --batch_size 64 --end_index_train 6000 --end_index_valid 1500 --cover_train_dir /home/zhanghong/data/image/train/512_cover --cover_valid_dir /home/zhanghong/data/image/val/512_cover/ --stego_train_dir /home/zhanghong/data/image/train/512_stego/ --stego_valid_dir /home/zhanghong/data/image/val/512_stego/ --logs_path /home/zhanghong/code/CatKing/steganalysis_CNN/logs/stegshi --models_path /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi
+    simple 2: sudo python3.5 main.py --mode train --carrier image --height 512 --width 512 --network stegshi --batch_size 64 --end_index_train 6000 --end_index_valid 1500 --cover_train_dir /home/zhanghong/data/image/train/512_cover --cover_valid_dir /home/zhanghong/data/image/val/512_cover/ --stego_train_dir /home/zhanghong/data/image/train/512_stego/ --stego_valid_dir /home/zhanghong/data/image/val/512_stego/ --logs_path /home/zhanghong/code/CatKing/steganalysis_CNN/logs/stegshi --models_path /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi
 
     --test
     
-    sample 1: (sudo) python3.5 main.py --mode test --submode one --network stegshi --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --file_path /home/zhanghong/data/image/test/12138.pgm
+    sample 1: sudo python3.5 main.py --mode test --submode one --network stegshi --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --file_path /home/zhanghong/data/image/test/12138.pgm
     
-    sample 2: (sudo) python3.5 main.py --mode test --submode one --network stegshi --height 512 --width 512 --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/val/512_cover/7501.pgm
+    sample 2: sudo python3.5 main.py --mode test --submode one --network stegshi --height 512 --width 512 --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/val/512_cover/7501.pgm
     
-    sample 3: (sudo) python3.5 main.py --mode test --submode batch --network stegshi --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/test/ --label_file_path /home/zhanghong/data/image/test/
+    sample 3: sudo python3.5 main.py --mode test --submode batch --network stegshi --model_dir /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi --test_file_path /home/zhanghong/data/image/test/ --label_file_path /home/zhanghong/data/image/test/
     
-    
+    Note: remove "sudo" if run the code in windows system
 **arguments:** <br>
 **Mode:** mode, test, data\_dir <br>
 **Data\_info:** bitrate, relative\_payload, stego\_method, model\_dir, log\_dir <br>
@@ -58,7 +58,8 @@ Example: <br>
 The introdction of each network
 
 
-    network1  : The proposed network (最终选定的网络)
+    # network for audio steganalysis
+    network1  : The proposed network (最终选定的网络)
     network1_1: Remove the BN layer (去掉BN层)
     network1_2: Average pooling layer is used for subsampling (将所有的降采样方式改为平均池化方式)
     network1_3: Convolutional layer with stride 2 is used for subsampling (将所有的降采样方式改为卷积池化方式)
@@ -67,9 +68,12 @@ The introdction of each network
     network1_6: Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
     network1_7: Deepen the network to block convolution layers (加深网络)
     network1_8: Design a network to steganalyze audios of arbitrary size (解决可变尺寸输入数据的训练问题)
-    stegshi   : Xu-Net which is used for image steganalysis
     
     Note: HPF and ABS is applied at the pre-processing
+    
+    # network for image steganalysis
+    stegshi   : Xu-Net
+
     
 * The method of pre-processing
     There are positive and negative values in QMDCT coefficients matrix. The values in interval [-15, 15] is modified.

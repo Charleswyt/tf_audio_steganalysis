@@ -59,6 +59,6 @@ elif arguments.mode == "test":                              # test mode
     if arguments.submode == "one":
         steganalysis_one(arguments)
     if arguments.submode == "batch":
-        steganalysis_one(arguments)
+        steganalysis_batch(arguments)
 else:
     print("Mode Error")

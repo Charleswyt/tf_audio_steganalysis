@@ -363,6 +363,7 @@ def steganalysis_one(args):
     init = tf.global_variables_initializer()
     with tf.Session() as sess:
         sess.run(init)
+        update_chekpoint_info(model_dir)
         ckpt = tf.train.get_checkpoint_state(model_dir)
         if ckpt and ckpt.model_checkpoint_path:
             print("model path: %s" % ckpt.model_checkpoint_path)
@@ -386,19 +387,20 @@ def steganalysis_batch(args):
     height, width = args.height, args.width
     model_dir = args.model_dir
     image_files_dir = args.test_files_dir
-    label_list_file = args.label_list_file
     image_files_list = get_files_list(image_files_dir)
     images_num = len(image_files_list)
+    print(images_num)
     images = read_image_batch(image_files_list, height, width)
+    labels = np.zeros([images_num, 1], np.int32)
 
     # placeholder
     data = tf.placeholder(tf.float32, [images_num, height, width, 1], name="image")
-    label = tf.placeholder(tf.float32, [images_num, ], name="label")
+    label = tf.placeholder(tf.float32, [images_num, 1], name="label")
 
     command = args.network + "(data, 2, is_bn=False)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
-    correct_pred = tf.equal(logits, tf.argmax(y, 1))
+    correct_pred = tf.equal(tf.cast(tf.argmax(logits, 1), tf.int32), labels)
     accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
     # 加载模型
@@ -406,6 +408,7 @@ def steganalysis_batch(args):
     init = tf.global_variables_initializer()
     with tf.Session() as sess:
         sess.run(init)
+        update_chekpoint_info(model_dir)
         ckpt = tf.train.get_checkpoint_state(model_dir)
         if ckpt and ckpt.model_checkpoint_path:
             print("model path: %s" % ckpt.model_checkpoint_path)
@@ -413,7 +416,7 @@ def steganalysis_batch(args):
             print("The model is loaded successfully.")
 
             # predict
-            acc = sess.run(accuracy, feed_dict={data: images, label: label_list_file})
+            acc = sess.run(accuracy, feed_dict={data: images, label: labels})
             print("Accuracy:", acc)
         else:
             print("The model is failed to be loaded.")
