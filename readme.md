@@ -3,7 +3,7 @@
 ## Necessary Package
 tensorflow-gpu==1.3, numpy, matplotlib
 
-## CNN Architecture
+## CNN Architecture (To be perfected)
 
 ## Steganographic Algorithm
 HCM(Huffman Code Mapping), EECS(Equal Length Entropy Codes Substitution)
@@ -48,7 +48,7 @@ HCM(Huffman Code Mapping), EECS(Equal Length Entropy Codes Substitution)
 
 ## file description
 ID      |   File                    |   Function
--       |   :-                      |    :-
+:-      |   :-                      |    :-
 1       |   audio_preprocess.py     |   include some pre-process methods for **audio**
 2       |   text_preprocess.py      |   include some pre-process methods for **test**
 3       |   image_preocess.py       |   include some pre-process methods for **image** 
