@@ -5,6 +5,7 @@ from os.path import exists
 import wave
 import numpy as np
 import matplotlib.pyplot as plt
+from pydub import AudioSegment
 
 """
 Created on 
@@ -17,6 +18,23 @@ function:
     audio_analysis(audio_file_path)                                                 音频文件解析
     get_audio_data(audio_file_path, audio_data_length=-1, is_normalization=True)    获取音频数据
 """
+
+
+def get_audio_info(auido_file_path, )
+
+
+def audio_file_convert(audio_file_path, covert_formation):
+    """
+    audio file convert via pydub
+    :param audio_file_path: the path of original audio
+    :param covert_formation: the formation needed to be coverted
+    :return:
+    """
+    audio = AudioSegment.from_wav(audio_file_path)
+
+
+
+
 
 
 def audio_analysis(audio_file_path):

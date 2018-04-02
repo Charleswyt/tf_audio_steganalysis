@@ -157,16 +157,21 @@ def update_chekpoint_info(model_dir):
             pass
 
 
-def get_model_info(model_dir):
+def get_model_info(model_file_path):
+    graph_file_path = model_file_path + ".meta"
+    saver = tf.train.import_meta_graph(graph_file_path)
     with tf.Session() as sess:
-        saver = tf.train.Saver()
-        print(saver)
-        update_chekpoint_info(model_dir)
-        ckpt = tf.train.get_checkpoint_state(model_dir)
-        if ckpt and ckpt.model_checkpoint_path:
-            print("model path: %s" % ckpt.model_checkpoint_path)
-            saver.restore(sess, ckpt.model_checkpoint_path)
-            print("The model is loaded successfully.")
+        saver.restore(sess, model_file_path)
+        reader = tf.pywrap_tensorflow.NewCheckpointReader("stegshi/audio_steganalysis-5797")
+        var_to_shape_map = reader.get_variable_to_shape_map()
+        keys = var_to_shape_map.keys()
+        var_to_shape_map_keys = sorted(keys)
+        for key in var_to_shape_map_keys:
+            print("tensor_name: ", key)
+            # print(reader.get_tensor(key))
+        print(var_to_shape_map["fc7/weight"])
+
+        print("The model is loaded successfully.")
 
 
 if __name__ == "__main__":
@@ -184,4 +189,4 @@ if __name__ == "__main__":
     # cover_data_valid_list, cover_label_valid_list, stego_data_valid_list, stego_label_valid_list = read_data(cover_files_path_valid, stego_files_path_valid)
     # print(len(cover_data_valid_list), len(stego_data_valid_list))
 
-    update_chekpoint_info("E:/Myself/1.source_code/tf_audio_steganalysis/stegshi/")
+    get_model_info("E:/Myself/1.source_code/tf_audio_steganalysis/stegshi/audio_steganalysis-5797")

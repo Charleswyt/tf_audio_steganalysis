@@ -5,14 +5,75 @@ tensorflow-gpu==1.3, numpy, matplotlib
 
 ## CNN Architecture
 
-## Steganography Algorithm
+## Steganographic Algorithm
 HCM(Huffman Code Mapping), EECS(Equal Length Entropy Codes Substitution)
 
-## Results
+## Results (To be perfected)
+* **HCM-Gao** steganographic algorithm
+<table>
+<tr> <td>Bitrate</td>         <td>RER</td>    <td><B>Ours </B></td>    <td>Ren[1]</td>  <td>Jin[2]</td>     </tr>
+<tr> <td rowspan="3">128 kbps <td>0.1</td>    <td><B>70.72</B></td>    <td>50.13</td>   <td>50.11</td>      </tr>
+<tr>                          <td>0.3</td>    <td><B>75.18</B></td>    <td>51.41</td>   <td>52.34</td>      </tr>
+<tr>                          <td>0.5</td>    <td><B>78.53</B></td>    <td>53.75</td>   <td>52.79</td>      </tr> 
+<tr> <td rowspan="3">320 kbps <td>0.1</td>    <td><B>73.83</B></td>    <td>50.77</td>   <td>50.85</td>      </tr>
+<tr>                          <td>0.3</td>    <td><B>77.27</B></td>    <td>52.18</td>   <td>52.63</td>      </tr>
+<tr>                          <td>0.5</td>    <td><B>80.71</B></td>    <td>55.69</td>   <td>54.42</td>      </tr>
+</table>
+
+* **HCM-Yan** steganographic algorithm
+<table>
+<tr> <td>Bitrate</td>         <td>RER</td>    <td><B>Ours </B></td>    <td>Ren[1]</td>  <td>Jin[2]</td>     </tr>
+<tr> <td rowspan="3">128 kbps <td>0.1</td>    <td><B>75.92</B></td>    <td>50.94</td>   <td>51.25</td>      </tr>
+<tr>                          <td>0.3</td>    <td><B>81.39</B></td>    <td>56.88</td>   <td>60.31</td>      </tr>
+<tr>                          <td>0.5</td>    <td><B>85.88</B></td>    <td>76.56</td>   <td>52.79</td>      </tr> 
+<tr> <td rowspan="3">320 kbps <td>0.1</td>    <td><B>79.35</B></td>    <td>64.38</td>   <td>50.85</td>      </tr>
+<tr>                          <td>0.3</td>    <td><B>83.09</B></td>    <td>66.56</td>   <td>52.63</td>      </tr>
+<tr>                          <td>0.5</td>    <td><B>90.21</B></td>    <td>77.81</td>   <td>54.42</td>      </tr>
+</table>
+
+* **EECS** steganographic algorithm
+<table>
+<tr> <td>Bitrate</td>         <td>RER</td>    <td><B>Ours </B></td>    <td>Ren[1]</td>   <td>Jin[2]</td>    </tr>
+<tr> <td rowspan="5">128 kbps <td> 2 </td>    <td><B>92.39</B></td>    <td>59.42</td>    <td>56.25</td>     </tr>
+<tr>                          <td> 4 </td>    <td><B>83.17</B></td>    <td>51.37</td>    <td>51.81</td>     </tr>
+<tr>                          <td> 6 </td>    <td><B>75.12</B></td>    <td>50.96</td>    <td>50.73</td>     </tr>
+<tr>                          <td> 7 </td>    <td><B>63.78</B></td>    <td>50.56</td>    <td>50.35</td>     </tr>
+<tr>                          <td> 8 </td>    <td><B>51.37</B></td>    <td>50.10</td>    <td>50.07</td>     </tr>
+<tr> <td rowspan="5">320 kbps <td> 2 </td>    <td><B>95.35</B></td>    <td>71.38</td>    <td>69.69</td>     </tr>
+<tr>                          <td> 4 </td>    <td><B>93.09</B></td>    <td>52.81</td>    <td>52.56</td>     </tr>
+<tr>                          <td> 6 </td>    <td><B>85.33</B></td>    <td>51.24</td>    <td>51.13</td>     </tr>
+<tr>                          <td> 7 </td>    <td><B>64.46</B></td>    <td>50.10</td>    <td>50.07</td>     </tr>
+<tr>                          <td> 8 </td>    <td><B>51.42</B></td>    <td>50.00</td>    <td>50.00</td>     </tr>
+</table>
+
+## file description
+ID      |   File                    |   Function
+-       |   :-                      |    :-
+1       |   audio_preprocess.py     |   include some pre-process methods for **audio**
+2       |   text_preprocess.py      |   include some pre-process methods for **test**
+3       |   image_preocess.py       |   include some pre-process methods for **image** 
+4       |   file_preprocess.py      |   get the name, size and type of the **file**
+5       |   pre_process.py          |   some pre-processing method such as **truncation**, **down_sampling**
+6       |   classifier.py           |   machine learning classifiers such as **SVM**, **KNN**, and **model selection**, **ROC** plot, etc.
+7       |   config.py               |   **command parser** and some package management
+8       |   filters.py              |   some **filters** used for pre-processing such as kv kernel or other **rich model**
+9       |   main.py                 |   the main program
+10      |   manager.py              |   **GPU** management (free GPU selection **automatically**)
+11      |   layer.py                |   basic unit in CNN such as **conv layer**, **pooling layer**, **BN layer** and so on
+12      |   network.py              |   various networks including **VGG19**, **LeNet** and **ourselves' network**
+13      |   train.py                |   the **train** of the network
+14      |   test.py                 |   the **test** of the network
+15      |   utils.py                |   some useful tools such as **minibatch**, **get_model_info**, **get_weights**, **get_biases** and so on
+16      |   figure.py               |   visualization analysis
+17      |   TODO                    |   to do list
+18      |   model                   |   model files Folder
+19      |   label.txt               |   label file if batch test
+
 
 ## Run
-* install python3.5 and add the path into environment variable
-* pip install tensorflow==1.3 numpy scikit-image
+* install python3.x and add the path into environment variable
+* GPU run enviroment configure if train the network (optional)
+* pip install tensorflow==1.3 numpy scikit-image, pydub (depend on FFmpeg, optional)
 * run the code as the example as follows
 
 ## Command Parser
@@ -62,22 +123,23 @@ Example: <br>
     1 | 3 | 5, otherwise
 The introdction of each network
 
+* **network for audio steganalysis**
 
-    # network for audio steganalysis
-    network1  : The proposed network (最终选定的网络)
-    network1_1: Remove the BN layer (去掉BN层)
-    network1_2: Average pooling layer is used for subsampling (将所有的降采样方式改为平均池化方式)
-    network1_3: Convolutional layer with stride 2 is used for subsampling (将所有的降采样方式改为卷积池化方式)
-    network1_4: Replace the convolutional kernel with 5x5 kernel (将卷积核尺寸由3 x 3改为5 x 5)
-    network1_5: ReLu is used as the activation function (将激活函数由Tanh改为ReLu)
-    network1_6: Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
-    network1_7: Deepen the network to block convolution layers (加深网络)
-    network1_8: Design a network to steganalyze audios of arbitrary size (解决可变尺寸输入数据的训练问题)
+        network1  : The proposed network (最终选定的网络)
+        network1_1: Remove the BN layer (去掉BN层)
+        network1_2: Average pooling layer is used for subsampling (将所有的降采样方式改为平均池化方式)
+        network1_3: Convolutional layer with stride 2 is used for subsampling (将所有的降采样方式改为卷积池化方式)
+        network1_4: Replace the convolutional kernel with 5x5 kernel (将卷积核尺寸由3 x 3改为5 x 5)
+        network1_5: ReLu is used as the activation function (将激活函数由Tanh改为ReLu)
+        network1_6: Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
+        network1_7: Deepen the network to block convolution layers (加深网络)
+        network1_8: Design a network to steganalyze audios of arbitrary size (解决可变尺寸输入数据的训练问题)
+        
+        Note: HPF and ABS is applied at the pre-processing
     
-    Note: HPF and ABS is applied at the pre-processing
+* network for image steganalysis
     
-    # network for image steganalysis
-    stegshi   : Xu-Net
+        stegshi   : Xu-Net
 
     
 * The method of pre-processing
@@ -87,14 +149,7 @@ The introdction of each network
     * Truncation
     * Down-sampling
 
-* Training <br>
-    `python main.py train -data_dir EECS 128 2 -model_dir -log_dir`
-
-* Test <br>
-    `python main.py test -data_dir EECS 128 2 -model_dir`
-
 * Data Folder Name <br>
-
     
     cover
 
@@ -122,3 +177,7 @@ The introdction of each network
             192_01, 192_03, 192_05, 192_10
             256_01, 256_03, 256_05, 256_10
             320_01, 320_03, 320_05, 320_10
+
+## Reference
+    [1] Yanzhen Ren, Qiaochu Xiong, and Lina Wang. 2017. A Steganalysis Scheme for AAC Audio Based on MDCT Difference Between Intra and Inter Frame. In Digital Forensics and Watermarking - 16th International Workshop, IWDW 2017, Magdeburg, Germany, August 23-25, 2017, Proceedings. 217–231.
+    [2] Chao Jin, Rangding Wang, and Diqun Yan. 2017. Steganalysis of MP3Stego with low embedding-rate using Markov feature. Multimedia Tools and Applications 76, 5 (2017), 6143–6158.

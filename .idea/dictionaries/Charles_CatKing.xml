@@ -15,6 +15,7 @@
       <w>coeff</w>
       <w>compname</w>
       <w>comptype</w>
+      <w>coverted</w>
       <w>datas</w>
       <w>deepbit</w>
       <w>eecs</w>
@@ -28,6 +29,7 @@
       <w>nvidia</w>
       <w>pred</w>
       <w>preprocess</w>
+      <w>pydub</w>
       <w>qmdc</w>
       <w>qmdct</w>
       <w>scikit</w>

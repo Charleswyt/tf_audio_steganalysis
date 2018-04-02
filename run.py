@@ -202,7 +202,7 @@ def train_image(args):
     start_index_train, end_index_train = args.start_index_train, args.end_index_train               # the scale of the dataset (train)
     start_index_valid, end_index_valid = args.start_index_valid, args.end_index_valid               # the scale of the dataset (valid)
     model_file_name = args.model_file_name                                                          # model file name
-    step_train, step_test = 0, 0                                                                    # the step of train and test
+    step_train, step_valid = 0, 0                                                                   # the step of train and test
 
     global_step = tf.Variable(initial_value=0,
                               trainable=False,
@@ -293,41 +293,42 @@ def train_image(args):
         lr = sess.run(learning_rate)
 
         # training (训练)
-        n_batch_train, train_loss, train_acc = 0, 0, 0
+        iters_one_epoch_train, train_loss, train_accuracy = 0, 0, 0
         for x_train_a, y_train_a in minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size):
             # data read and process (数据读取与处理)
             x_train_data = read_image_batch(x_train_a)
 
             # get the accuracy and loss (训练与指标显示)
-            _, err, ac = sess.run([train_op, loss, acc], feed_dict={data: x_train_data, label: y_train_a})
-            train_loss += err
-            train_acc += ac
-            n_batch_train += 1
+            _, iter_loss, iter_accuracy = sess.run([train_op, loss, acc], feed_dict={data: x_train_data, label: y_train_a})
+            train_loss += iter_loss
+            train_accuracy += iter_accuracy
+            iters_one_epoch_train += 1
             step_train += 1
             summary_str_train = sess.run(summary_op, feed_dict={data: x_train_data, label: y_train_a})
             train_writer_train.add_summary(summary_str_train, step_train)
 
-            print("train_iter-%d: train_loss: %f, train_acc: %f" % (n_batch_train, err, ac))
+            print("epoch-%d, train_iter-%d: train_loss: %f, train_acc: %f" % (epoch, iters_one_epoch, iter_loss, iter_accuracy))
 
         # validation (验证)
-        n_batch_val, val_loss, val_acc = 0, 0, 0
+        iters_one_epoch_valid, valid_loss, valid_accuracy = 0, 0, 0
         for x_val_a, y_val_a in minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size):
             # data read and process (数据读取与处理)
             x_val_data = read_image_batch(x_val_a)
 
             # get the accuracy and loss (验证与指标显示)
-            err, ac = sess.run([loss, acc], feed_dict={data: x_val_data, label: y_val_a})
-            val_loss += err
-            val_acc += ac
-            n_batch_val += 1
-            step_test += 1
+            iter_loss, iter_accuracy = sess.run([loss, acc], feed_dict={data: x_val_data, label: y_val_a})
+            valid_loss += iter_loss
+            valid_accuracy += iter_accuracy
+            iters_one_epoch_valid += 1
+            step_valid += 1
             summary_str_val = sess.run(summary_op, feed_dict={data: x_val_data, label: y_val_a})
-            train_writer_val.add_summary(summary_str_val, step_test)
+            train_writer_val.add_summary(summary_str_val, step_valid)
 
-            print("validation_iter-%d: loss: %f, acc: %f" % (n_batch_val, err, ac))
+            print("validation_iter-%d: loss: %f, acc: %f" % (iters_one_epoch_valid, valid_loss, valid_accuracy))
 
         print("epoch: %d, learning_rate: %f -- train loss: %f, train acc: %f, validation loss: %f, validation acc: %f"
-              % (epoch + 1, lr, train_loss / n_batch_train, train_acc / n_batch_train, val_loss / n_batch_val, val_acc / n_batch_val))
+              % (epoch + 1, lr, train_loss / iters_one_epoch_train, train_accuracy / iters_one_epoch_train,
+                 valid_loss / iters_one_epoch_train, valid_accuracy / iters_one_epoch_train))
 
         end_time = time.time()
         print("Runtime: %.2fs" % (end_time - start_time))
@@ -335,7 +336,7 @@ def train_image(args):
         # model save (保存模型)
         if val_acc > max_acc:
             max_acc = val_acc
-            saver.save(sess, os.path.join(model_file_path, model_file_name), global_step=global_step)
+            saver.save(sess, os.path.join(model_file_path, model_file_name), global_step=global_step, latest_filename="best_model.ckpt")
             print("The model is saved successfully.")
 
     train_writer_train.close()
