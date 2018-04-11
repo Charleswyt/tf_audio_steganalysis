@@ -14,16 +14,20 @@ Finished on 2017.12.29
 function:
     build the classified network
 
-    pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=True, padding="SAME")
-    batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3)
-    dropout(input_data, keep_pro=0.5, name="dropout")
-    fc_layer(input_data, output_dim, name, relu_flag=True)
-    conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name, activation="relu", 
-        padding="SAME", is_pretrain=True)
-    loss_layer(logits, label)
-    accuracy(logits, label)
-    optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
+    1.  pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=True, padding="SAME")
+    2.  batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3, activation_method="relu", is_train=True)
+    3.  dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True)
+    4.  fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, is_train=True)
+    5.  activation_layer(input_data, activation_method="None", alpha=0.2)
+    6.  conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name, activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+               init_method="xavier", bias_term=False, is_pretrain=True)
+    7.  static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAME")
+    8.  loss_layer(logits, label)
+    9.  accuracy(logits, label)
+    10. optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
               epsilon=1e-8, initial_accumulator_value=0.1, momentum=0.9, decay=0.9)
+    11. learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
+                        end_learning_rate=0.0001, power=1.0, cycle=False,)
 """
 
 
@@ -38,7 +42,8 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
     :param name: the name of the layer
     :param is_max_pool: if True, max pooling, else average pooling
     :param padding: padding="SAME"
-    :return: 4-D tensor
+    :return:
+        output: 4-D tensor [batch_size, height, width. channel]
     """
 
     if is_max_pool is True:
@@ -63,27 +68,7 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
     return pooling
 
 
-def normalization(input_data, depth_radius, name, bias=1.0, alpha=0.001 / 9.0, beta=0.75):
-    """
-    :param input_data: the input data
-    :param depth_radius: depth radius
-    :param name: name
-    :param bias: bias
-    :param alpha: alpha
-    :param beta: beta
-    :return: tf.nn.lrn
-        sqr_sum[a, b, c, d] = sum(input[a, b, c, d - depth_radius : d + depth_radius + 1] ** 2)
-        output = input / (bias + alpha * sqr_sum) ** beta
-    """
-    return tf.nn.lrn(input=input_data,
-                     depth_radius=depth_radius,
-                     bias=bias,
-                     alpha=alpha,
-                     beta=beta,
-                     name=name)
-
-
-def batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3):
+def batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3, activation_method="relu", is_train=True):
     """
     BN layer
     :param input_data: the input data
@@ -91,93 +76,107 @@ def batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilo
     :param offset: beta
     :param scale: gamma
     :param variance_epsilon: variance_epsilon
-    :return: 4-D tensor
+    :param activation_method: the method of activation function
+    :param is_train: if False, skip this layer, default is True
+    :return:
     """
-
-    batch_mean, batch_var = tf.nn.moments(input_data, [0])
-    output_data = tf.nn.batch_normalization(input_data,
-                                            mean=batch_mean,
-                                            variance=batch_var,
-                                            offset=offset,
-                                            scale=scale,
-                                            variance_epsilon=variance_epsilon,
-                                            name=name)
-    print("name: %s" % name)
+    if is_train is True:
+        batch_mean, batch_var = tf.nn.moments(input_data, [0])
+        output_data = tf.nn.batch_normalization(input_data,
+                                                mean=batch_mean,
+                                                variance=batch_var,
+                                                offset=offset,
+                                                scale=scale,
+                                                variance_epsilon=variance_epsilon,
+                                                name=name)
+        output_data = activation_layer(input_data=output_data,
+                                       activation_method=activation_method)
+        print("name: %s, activation: %s" % (name, activation_method))
+    else:
+        output_data = input_data
 
     return output_data
 
 
-def dropout(input_data, keep_pro=0.5, name="dropout"):
+def dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True):
     """
     dropout layer
     :param input_data: the input data
     :param keep_pro: the probability that each element is kept
     :param name: name
+    :param seed: int or None. An integer or None to create random seed
+    :param is_train: if False, skip this layer, default is True
     :return:
 
     drop率的选择：
         经过交叉验证, 隐含节点dropout率等于0.5的时候效果最好, 原因是0.5的时候dropout随机生成的网络结构最多
         dropout也可被用作一种添加噪声的方法, 直接对input进行操作. 输入层设为更接近1的数, 使得输入变化不会太大(0.8)
     """
-    output = tf.nn.dropout(input_data,
-                           keep_prob=keep_pro,
-                           name=name)
-
-    print("name: %s, keep_pro: %f" % (name, keep_pro))
+    if is_train is True:
+        output = tf.nn.dropout(x=input_data,
+                               keep_prob=keep_pro,
+                               name=name,
+                               seed=seed)
+        print("name: %s, keep_pro: %f" % (name, keep_pro))
+    else:
+        output = input_data
 
     return output
 
 
-def fc_layer(input_data, output_dim, name, is_bn=True, activation_method="relu", alpha=0.1):
+def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, is_train=True):
     """
     fully-connected layer
     :param input_data: the input data
     :param output_dim: the dimension of the output data
     :param name: name
-    :param is_bn: whether the BN layer is used
     :param activation_method: the type of activation function
     :param alpha: leakey relu alpha
-    :return: output
+    :param is_train: if False, skip this layer, default is True
+    :return:
+        output: 4-D tensor [batch_size, height, width. channel]
     """
-    shape = input_data.get_shape()
-    if len(shape) == 4:
-        input_dim = shape[1].value * shape[2].value * shape[3].value
-    else:
-        input_dim = shape[-1].value
-
-    flat_input_data = tf.reshape(input_data, [-1, input_dim])
-
-    with tf.variable_scope(name):
-        weights = tf.get_variable(name="weight",
-                                  shape=[input_dim, output_dim],
-                                  dtype=tf.float32,
-                                  initializer=tf.contrib.layers.xavier_initializer())
-        biases = tf.get_variable(name="biases",
-                                 shape=[output_dim],
-                                 dtype=tf.float32,
-                                 initializer=tf.constant_initializer(0.0))
-        output = tf.nn.bias_add(value=tf.matmul(flat_input_data, weights),
-                                bias=biases,
-                                name="bias_add")
-
-        if is_bn is True:
-            output = batch_normalization(output, name+"_BN")
-
-        output = activation(output, activation_method, alpha)
-
-        if activation_method == "leakrelu":
-            print("name: %s, shape: %d -> %d, activation:%s, alpha = %f"
-                  % (name, input_dim, output_dim, activation_method, alpha))
+    if is_train is True:
+        shape = input_data.get_shape()
+        if len(shape) == 4:
+            input_dim = shape[1].value * shape[2].value * shape[3].value
         else:
-            print("name: %s, shape: %d -> %d, activation:%s"
-                  % (name, input_dim, output_dim, activation_method))
+            input_dim = shape[-1].value
 
-        return output
+        flat_input_data = tf.reshape(input_data, [-1, input_dim])
+
+        with tf.variable_scope(name):
+            weights = tf.get_variable(name="weight",
+                                      shape=[input_dim, output_dim],
+                                      dtype=tf.float32,
+                                      initializer=tf.contrib.layers.xavier_initializer())
+            biases = tf.get_variable(name="biases",
+                                     shape=[output_dim],
+                                     dtype=tf.float32,
+                                     initializer=tf.constant_initializer(0.0))
+            output = tf.nn.bias_add(value=tf.matmul(flat_input_data, weights),
+                                    bias=biases,
+                                    name="fc_bias_add")
+
+            output = activation_layer(input_data=output,
+                                      activation_method=activation_method,
+                                      alpha=alpha)
+
+            if activation_method == "leakrelu":
+                print("name: %s, shape: %d -> %d, activation:%s, alpha = %f"
+                      % (name, input_dim, output_dim, activation_method, alpha))
+            else:
+                print("name: %s, shape: %d -> %d, activation:%s"
+                      % (name, input_dim, output_dim, activation_method))
+    else:
+        output = input_data
+
+    return output
 
 
-def activation(input_data, activation_method="None", alpha=0.2):
+def activation_layer(input_data, activation_method="None", alpha=0.2):
     """
-    activation function
+    activation function layer
     :param input_data: the input data
     :param activation_method: the type of activation function
     :param alpha: for leaky relu
@@ -187,8 +186,11 @@ def activation(input_data, activation_method="None", alpha=0.2):
         "sigmoid": 1 / (1 + exp(-features))
         "softplus": log(exp(features) + 1)
         "elu": exp(features) - 1 if < 0, features otherwise
-        "leakrelu": max(features, leak * features)
+        "crelu": [relu(features), -relu(features)]
+        "leakrelu": leak * features, if < 0, feature, otherwise
+        "softsign": features / (abs(features) + 1)
     :return:
+        output: 4-D tensor [batch_size, height, width. channel]
     """
     if activation_method == "relu":
         output = tf.nn.relu(input_data, name="relu")
@@ -200,10 +202,14 @@ def activation(input_data, activation_method="None", alpha=0.2):
         output = tf.nn.sigmoid(input_data, name="sigmoid")
     elif activation_method == "softplus":
         output = tf.nn.softplus(input_data, name="softplus")
+    elif activation_method == "crelu":
+        output = tf.nn.crelu(input_data, "crelu")
     elif activation_method == "elu":
         output = tf.nn.elu(input_data, name="elu")
+    elif activation_method == "softsign":
+        output = tf.nn.softsign(input_data, "softsign")
     elif activation_method == "leakrelu":
-        output = tf.maximum(alpha * input_data, input_data)
+        output = tf.where(input_data < 0.0, alpha * input_data, input_data)
     else:
         output = input_data
 
@@ -211,7 +217,7 @@ def activation(input_data, activation_method="None", alpha=0.2):
 
 
 def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
-               is_bn=True, activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+               activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
                init_method="xavier", bias_term=False, is_pretrain=True):
     """
     convolutional layer
@@ -222,7 +228,6 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
     :param y_stride: stride in Y axis
     :param filter_num: the number of the convolutional kernel
     :param name: the name of the layer
-    :param is_bn: whether the BN layer is used (default: True)
     :param activation_method: the type of activation function (default: relu)
     :param alpha: leaky relu alpha (default: 0.2)
     :param padding: the padding method, "SAME" | "VALID" (default: "SAME")
@@ -282,12 +287,8 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
         print("name: %s, shape: (%d, %d, %d, %d), activation: %s"
               % (name, shape[0], shape[1], shape[2], shape[3], activation_method))
 
-        # batch normalization
-        if is_bn is True:
-            output = batch_normalization(output, name+"_BN")
-
         # activation
-        output = activation(output, activation_method, alpha)
+        output = activation_layer(output, activation_method, alpha)
 
         return output
 
@@ -317,7 +318,7 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAM
         return feature_map
 
 
-def loss_layer(logits, label, is_regulation, coeff, method="sparse_softmax_cross_entropy"):
+def loss_layer(logits, label, is_regulation, coeff=1e-3, method="sparse_softmax_cross_entropy"):
     """
     calculate the loss
     :param logits: logits [batch_size, class_num]
@@ -346,7 +347,6 @@ def loss_layer(logits, label, is_regulation, coeff, method="sparse_softmax_cross
 
         if is_regulation is True:
             tv = tf.trainable_variables()
-            print(tv)
             regularization_cost = coeff * tf.reduce_sum([tf.nn.l2_loss(v) for v in tv])
             loss = loss_cross_entropy + regularization_cost
         else:
