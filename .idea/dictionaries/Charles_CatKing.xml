@@ -7,6 +7,7 @@
       <w>atrous</w>
       <w>balabala</w>
       <w>balabla</w>
+      <w>bitrate</w>
       <w>caffe</w>
       <w>cbar</w>
       <w>chekpoint</w>
@@ -15,16 +16,22 @@
       <w>coeff</w>
       <w>compname</w>
       <w>comptype</w>
+      <w>convolutional</w>
       <w>coverted</w>
+      <w>crelu</w>
+      <w>cuda</w>
       <w>datas</w>
       <w>deepbit</w>
+      <w>downsampling</w>
       <w>eecs</w>
       <w>gpus</w>
       <w>iters</w>
       <w>leakrelu</w>
+      <w>matplotlib</w>
       <w>matrixs</w>
       <w>minibatches</w>
       <w>ndarray</w>
+      <w>nhwc</w>
       <w>noheader</w>
       <w>nvidia</w>
       <w>pred</w>
@@ -34,12 +41,17 @@
       <w>qmdct</w>
       <w>scikit</w>
       <w>sklearn</w>
+      <w>softsign</w>
       <w>sqrt</w>
+      <w>steganographic</w>
+      <w>steganography</w>
       <w>stegshi</w>
       <w>strlist</w>
       <w>subkey</w>
       <w>submode</w>
+      <w>subsampling</w>
       <w>sudo</w>
+      <w>tensorflow</w>
       <w>tfrecord</w>
       <w>tfrecords</w>
       <w>uint</w>

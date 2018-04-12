@@ -5,14 +5,14 @@
       <paths name="zhanghong">
         <serverdata>
           <mappings>
-            <mapping deploy="code/CatKing/steganalysis_CNN" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/code/CatKing/steganalysis_CNN" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
       <paths name="zq">
         <serverdata>
           <mappings>
-            <mapping deploy="code/CatKing/steganalysis_CNN" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/tmp/pycharm_project_163" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

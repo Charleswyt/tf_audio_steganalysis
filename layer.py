@@ -82,7 +82,7 @@ def batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilo
     """
     if is_train is True:
         batch_mean, batch_var = tf.nn.moments(input_data, [0])
-        output_data = tf.nn.batch_normalization(input_data,
+        output_data = tf.nn.batch_normalization(x=input_data,
                                                 mean=batch_mean,
                                                 variance=batch_var,
                                                 offset=offset,

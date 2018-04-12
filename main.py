@@ -44,7 +44,7 @@ print(arguments)
 
 try:
     os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-except:
+except BaseException:
     print("No GPU.")
 
 if arguments.mode == "train":                               # train mode

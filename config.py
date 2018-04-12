@@ -79,6 +79,20 @@ def command_parse():
     parser.add_argument("--test_files_dir", type=str, help="the files folder path used for test")
     parser.add_argument("--label_file_path", type=str, help="the label file path used for test")
 
+    # path
+    parser.add_argument("--cover_train_dir", type=str,
+                        help="the path of directory containing cover files for train")
+    parser.add_argument("--cover_valid_dir", type=str,
+                        help="the path of directory containing cover files for valid")
+    parser.add_argument("--stego_train_dir", type=str,
+                        help="the path of directory containing stego files for train")
+    parser.add_argument("--stego_valid_dir", type=str,
+                        help="the path of directory containing stego files for valid")
+    parser.add_argument("--models_path", type=str, default=current_path + "/models",
+                        help="the path of directory containing models")
+    parser.add_argument("--logs_path", type=str, default=current_path + "/logs",
+                        help="the path of directory containing logs")
+
     # hyper parameters
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
     parser.add_argument("--batch_size_train", type=int, default=128, help="batch size for train (default: 128 (64 cover|stego pairs))")
@@ -92,25 +106,13 @@ def command_parse():
     parser.add_argument("--decay_method", type=str, default="exponential", help="the method for learning rate decay (default: exponential)")
     parser.add_argument("--decay_step", type=int, default=5000, help="the step for learning rate decay (default: 5000)")
     parser.add_argument("--decay_rate", type=float, default=0.9, help="the rate for learning rate decay (default: 0.95)")
-    parser.add_argument("--staircase", type=bool, default=False, help="whether the decay the learning rate at discrete intervals or not (default:False)")
-
-    # path
-    parser.add_argument("--cover_train_dir", type=str,
-                        help="the path of directory containing cover files for train")
-    parser.add_argument("--cover_valid_dir", type=str,
-                        help="the path of directory containing cover files for valid")
-    parser.add_argument("--stego_train_dir", type=str,
-                        help="the path of directory containing stego files for train")
-    parser.add_argument("--stego_valid_dir", type=str,
-                        help="the path of directory containing stego files for valid")
-    parser.add_argument("--models_path", type=str, default=current_path+"/models",
-                        help="the path of directory containing models")
-    parser.add_argument("--logs_path", type=str, default=current_path+"/logs",
-                        help="the path of directory containing logs")
+    parser.add_argument("--staircase", type=bool, default=False,
+                        help="whether the decay the learning rate at discrete intervals or not (default:False)")
 
     # model
     parser.add_argument("--max_to_keep", type=int, default=3, help="the number needed to be saved (default: 3)")
-    parser.add_argument("--keep_checkpoint_every_n_hours", type=float, default=0.5, help="how often to keep checkpoints (default: 0.5)")
+    parser.add_argument("--keep_checkpoint_every_n_hours", type=float, default=0.5,
+                        help="how often to keep checkpoints (default: 0.5)")
 
     # pre-processing
     parser.add_argument("--is_abs", type=bool, default=False, help="abs or not (default: False)")
@@ -199,6 +201,10 @@ def get_files_list(file_dir, start_idx=0, end_idx=10000):
 
 
 def get_packages():
+    """
+    get the
+    :return:
+    """
     _packages = list()
     for distribution in pip.get_installed_distributions():
         package_name = distribution.project_name

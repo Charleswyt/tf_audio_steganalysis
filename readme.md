@@ -3,6 +3,18 @@
 ## Necessary Package
 tensorflow-gpu==1.3, numpy, matplotlib
 
+## Encoder, Steganographic encoder and QMDCT extractor
+All encoder is placed in the folder of encoder, including lame, HCM-Yan, HCM-Gao and EECS
+
+Name            |   Description         |   command
+:-              |    :-                 |   :-
+lame.exe        |   The lame encoder which is used to make **cover mp3 samples** [The LAME Project](http://lame.sourceforge.net/ "lame")                                                                   | ./lame.exe, blank -b 128 'wav_file_path' 'mp3_file_path'
+HCM_Gao.exe     |   The steganographic encoder which is used to make **HCM-Gao stego mp3 samples**      |
+HCM_Yan.exe     |   The steganographic encoder which is used to make **HCM-Gao stego mp3 samples**      |
+EECS.exe        |   The steganographic encoder which is used to make **EECS stego mp3 samples**         |
+
+All executable file mentioned above is coded by **Kun Yang**.
+
 ## CNN Architecture (To be perfected)
 
 ## Steganographic Algorithm
@@ -86,9 +98,11 @@ Example: <br>
     
     --train
     
-    simple 1: sudo python3 main.py --mode train --data\_dir /home/"home_name"/data --height 200 --width 380
+    template: sudo python3 main.py --mode train --data\_dir /home/"home_name"/data --height 200 --width 380
     
-    simple 2: sudo python3.5 main.py --mode train --carrier image --height 512 --width 512 --network stegshi --batch_size 64 --end_index_train 6000 --end_index_valid 1500 --cover_train_dir /home/zhanghong/data/image/train/512_cover --cover_valid_dir /home/zhanghong/data/image/val/512_cover/ --stego_train_dir /home/zhanghong/data/image/train/512_stego/ --stego_valid_dir /home/zhanghong/data/image/val/512_stego/ --logs_path /home/zhanghong/code/CatKing/steganalysis_CNN/logs/stegshi --models_path /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi
+    sample 2: sudo python3.5 main.py --mode train --carrier image --height 512 --width 512 --network stegshi --batch_size 64 --end_index_train 6000 --end_index_valid 1500 --cover_train_dir /home/zhanghong/data/image/train/512_cover --cover_valid_dir /home/zhanghong/data/image/val/512_cover/ --stego_train_dir /home/zhanghong/data/image/train/512_stego/ --stego_valid_dir /home/zhanghong/data/image/val/512_stego/ --logs_path /home/zhanghong/code/CatKing/steganalysis_CNN/logs/stegshi --models_path /home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi
+
+    sample 3: sudo python3.5 main.py --mode train --network network1 --cover_train_dir /home/zhanghong/data/cover/128/train --cover_valid_dir /home/zhanghong/data/cover/128/valid --stego_train_dir /home/zhanghong/data/stego/EECS/128_W_2_H_7_ER_10/train --stego_valid_dir /home/zhanghong/data/stego/EECS/128_W_2_H_7_ER_10/valid --models_path  /home/zhanghong/code/CatKing/steganalysis_CNN/models/steganalysis --logs_path /home/zhanghong/code/CatKing/steganalysis_CNN/logs/steganalysis
 
     --test
     

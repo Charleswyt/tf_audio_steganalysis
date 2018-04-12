@@ -20,7 +20,7 @@ function:
 """
 
 
-def get_audio_info(auido_file_path, )
+# def get_audio_info(auido_file_path,)
 
 
 def audio_file_convert(audio_file_path, covert_formation):

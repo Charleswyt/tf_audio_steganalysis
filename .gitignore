@@ -1,3 +1,9 @@
 
 *.npy
+
 *.pyc
+
+*.xml
+
+*.iml
+!*.exe
