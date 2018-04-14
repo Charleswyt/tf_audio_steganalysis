@@ -54,7 +54,8 @@ def train_audio(args):
                                         decay_rate=decay_rate)                      # learning rate
 
     # file path (文件路径)
-    cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, model_file_path, log_file_path = file_path_setup(args)
+    cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, \
+        model_file_path, log_file_path = file_path_setup(args)
     print("train files path(cover): %s" % cover_train_files_path)
     print("valid files path(cover): %s" % cover_valid_files_path)
     print("train files path(stego): %s" % stego_train_files_path)
@@ -125,15 +126,17 @@ def train_audio(args):
     for epoch in range(n_epoch):
         start_time = time.time()
 
+        # 读取文件列表(默认shuffle)
         cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_files_path,
                                                                                                                  stego_train_files_path,
                                                                                                                  start_index_train,
-                                                                                                                 end_index_train)   # 读取文件列表(默认shuffle)
+                                                                                                                 end_index_train)
 
+        # 读取文件列表(默认shuffle)
         cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_files_path,
                                                                                                                  stego_valid_files_path,
                                                                                                                  start_index_valid,
-                                                                                                                 end_index_valid)   # 读取文件列表(默认shuffle)
+                                                                                                                 end_index_valid)
         # update the learning rate (学习率更新)
         lr = sess.run(learning_rate)
 

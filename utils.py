@@ -174,6 +174,11 @@ def get_model_info(model_file_path):
         print("The model is loaded successfully.")
 
 
+def train_terminate(sess, termination_type, epoch=500, validation_accuracy=0.9, ):
+    if termination_type == "epoch":
+        pass
+
+
 if __name__ == "__main__":
     # train files
     # cover_files_path_train = "/home/zhanghong/data/image/train/512_cover"

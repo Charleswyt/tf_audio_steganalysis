@@ -2,6 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" serverName="zhanghong" filePermissions="420" folderPermissions="493" autoUploadExternalChanges="true" showNewOnSourceInSync="false">
     <serverData>
+      <paths name="audio">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/code/CatKing/steganalysis_CNN" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="zhanghong">
         <serverdata>
           <mappings>
