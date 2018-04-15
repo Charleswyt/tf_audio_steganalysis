@@ -51,6 +51,7 @@ def command_parse():
     print("The introduction of the parameters -- \"python3 **.py\" -h, more detailed information is in readme.md")
 
     # mode
+    parser.add_argument("--gpu", type=str, default="0", help="the index of GPU")
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
     parser.add_argument("--submode", type=str, default="one", help="one | batch (default one)")
     parser.add_argument("--carrier", type=str, default="audio", help="image | audio (default audio)")
