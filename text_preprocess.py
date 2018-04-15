@@ -127,7 +127,7 @@ def read_text_batch(text_files_list, height=200, width=576,
 
     i = 0
     for text_file in text_files_list:
-        content = read_text(text_file, h, w, is_abs, is_diff, order, direction, is_trunc, threshold)
+        content = read_text(text_file, height, width, is_abs, is_diff, order, direction, is_trunc, threshold)
         data[i] = content
         i = i + 1
 
