@@ -9,7 +9,5 @@
         </list>
       </option>
     </inspection_tool>
-    <inspection_tool class="PyTypeCheckerInspection" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>

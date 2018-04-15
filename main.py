@@ -43,7 +43,8 @@ arguments = command_parse()
 print(arguments)
 
 try:
-    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
 except BaseException:
     print("No GPU.")
 
