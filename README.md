@@ -20,6 +20,9 @@ All executable file mentioned above is coded by **Kun Yang**.
 ## Steganographic Algorithm
 HCM(Huffman Code Mapping), EECS(Equal Length Entropy Codes Substitution)
 
+## dataset
+The dataset url is 
+
 ## Results (To be perfected)
 * **HCM-Gao** steganographic algorithm
 <table>

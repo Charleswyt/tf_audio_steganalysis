@@ -40,7 +40,7 @@ def train_audio(args):
     global_step = tf.Variable(initial_value=0,
                               trainable=False,
                               name="global_step",
-                              dtype=tf.int32)  # global step
+                              dtype=tf.int32)                                               # global step
 
     # pre processing
     is_abs, is_trunc, threshold, is_diff, order, direction, downsampling, block = \
@@ -51,7 +51,7 @@ def train_audio(args):
                                         decay_method="exponential",
                                         global_step=global_step,
                                         decay_steps=decay_steps,
-                                        decay_rate=decay_rate)                      # learning rate
+                                        decay_rate=decay_rate)                              # learning rate
 
     # file path (文件路径)
     cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, \
@@ -117,7 +117,7 @@ def train_audio(args):
                            keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
     sess = tf.InteractiveSession()
     train_writer_train = tf.summary.FileWriter(log_file_path + "/train", tf.get_default_graph())
-    train_writer_val = tf.summary.FileWriter(log_file_path + "/validation", tf.get_default_graph())
+    train_writer_val = tf.summary.FileWriter(log_file_path + "/valid", tf.get_default_graph())
     init = tf.global_variables_initializer()
     sess.run(init)
 
@@ -157,7 +157,7 @@ def train_audio(args):
 
             print("train_iter-%d: train_loss: %f, train_acc: %f" % (n_batch_train, err, ac))
 
-        # validation (验证)
+        # valid (验证)
         n_batch_val, val_loss, val_acc = 0, 0, 0
         for x_val_a, y_val_a in minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size):
             # data read and process (数据读取与处理)
@@ -172,18 +172,18 @@ def train_audio(args):
             summary_str_val = sess.run(summary_op, feed_dict={data: x_val_data, label: y_val_a})
             train_writer_val.add_summary(summary_str_val, step_test)
             
-            print("validation_iter-%d: loss: %f, acc: %f" % (n_batch_val, err, ac))
+            print("valid_iter-%d: loss: %f, acc: %f" % (n_batch_val, err, ac))
 
-        print("epoch: %d, learning_rate: %f -- train loss: %f, train acc: %f, validation loss: %f, validation acc: %f"
+        print("epoch: %d, learning_rate: %f -- train loss: %f, train acc: %f, valid loss: %f, valid acc: %f, max valid acc: %f"
               % (epoch + 1, lr, train_loss / n_batch_train, train_acc / n_batch_train,
-                 val_loss / n_batch_val, val_acc / n_batch_val))
+                 val_loss / n_batch_val, val_acc / n_batch_val, max_acc))
 
         end_time = time.time()
         print("Runtime: %.2fs" % (end_time - start_time))
 
         # model save (保存模型)
         if val_acc > max_acc:
-            max_acc = val_acc
+            max_acc = val_acc / n_batch_val
             saver.save(sess, os.path.join(model_file_path, model_file_name), global_step=global_step)
             print("The model is saved successfully.")
 
@@ -262,12 +262,6 @@ def train_image(args):
     tf.summary.scalar("loss", loss)
     tf.summary.scalar("accuracy", acc)
 
-    # print(logits, logits.eval, logits.get_shape())
-    # tv = tf.trainable_variables()
-    # loss = loss_layer(logits, label, is_regulation=False, coeff=1e-4)                               # loss
-    # train_op = optimizer(loss, learning_rate=learning_rate)                                         # the result of the optimizer
-    # acc = accuracy_layer(logits, label)                                                             # accuracy
-
     # initialize tensorboard
     summary_op = tf.summary.merge_all()
     saver = tf.train.Saver(max_to_keep=max_to_keep,
@@ -310,9 +304,9 @@ def train_image(args):
             summary_str_train = sess.run(summary_op, feed_dict={data: x_train_data, label: y_train_a})
             train_writer_train.add_summary(summary_str_train, step_train)
 
-            print("epoch-%d, train_iter-%d: train_loss: %f, train_acc: %f" % (epoch, iters_one_epoch, iter_loss, iter_accuracy))
+            print("epoch-%d, train_iter-%d: train_loss: %f, train_acc: %f" % (epoch, iters_one_epoch_train, iter_loss, iter_accuracy))
 
-        # validation (验证)
+        # valid (验证)
         iters_one_epoch_valid, valid_loss, valid_accuracy = 0, 0, 0
         for x_val_a, y_val_a in minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size):
             # data read and process (数据读取与处理)
@@ -327,9 +321,9 @@ def train_image(args):
             summary_str_val = sess.run(summary_op, feed_dict={data: x_val_data, label: y_val_a})
             train_writer_val.add_summary(summary_str_val, step_valid)
 
-            print("validation_iter-%d: loss: %f, acc: %f" % (iters_one_epoch_valid, valid_loss, valid_accuracy))
+            print("valid_iter-%d: loss: %f, acc: %f" % (iters_one_epoch_valid, valid_loss, valid_accuracy))
 
-        print("epoch: %d, learning_rate: %f -- train loss: %f, train acc: %f, validation loss: %f, validation acc: %f"
+        print("epoch: %d, learning_rate: %f -- train loss: %f, train acc: %f, valid loss: %f, valid acc: %f"
               % (epoch + 1, lr, train_loss / iters_one_epoch_train, train_accuracy / iters_one_epoch_train,
                  valid_loss / iters_one_epoch_train, valid_accuracy / iters_one_epoch_train))
 
@@ -337,8 +331,8 @@ def train_image(args):
         print("Runtime: %.2fs" % (end_time - start_time))
 
         # model save (保存模型)
-        if val_acc > max_acc:
-            max_acc = val_acc
+        if valid_accuracy > max_acc:
+            max_acc = valid_accuracy
             saver.save(sess, os.path.join(model_file_path, model_file_name), global_step=global_step, latest_filename="best_model.ckpt")
             print("The model is saved successfully.")
 

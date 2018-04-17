@@ -98,7 +98,6 @@ def command_parse():
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
     parser.add_argument("--batch_size_train", type=int, default=128, help="batch size for train (default: 128 (64 cover|stego pairs))")
     parser.add_argument("--batch_size_valid", type=int, default=128, help="batch size for valid (default: 128 (64 cover|stego pairs))")
-    parser.add_argument("--epoch", type=int, default=500, help="the number of epochs for training (default: 500)")
     parser.add_argument("--learning_rate", type=float, default=1e-3, help="the value of initialized learning rate (default: 1e-3 (0.001))")
     parser.add_argument("--seed", type=int, default=1, help="random seed (default: 1)")
     parser.add_argument("--is_regulation", type=bool, default=True, help="whether regulation or not (default: True)")
@@ -114,6 +113,14 @@ def command_parse():
     parser.add_argument("--max_to_keep", type=int, default=3, help="the number needed to be saved (default: 3)")
     parser.add_argument("--keep_checkpoint_every_n_hours", type=float, default=0.5,
                         help="how often to keep checkpoints (default: 0.5)")
+
+    # stop criterion
+    parser.add_argument("--criterion", type=str, default="epoch", help="the criterion for the network stop (default: epoch,"
+                                                                       "other choice: accuracy, max_iteration, still)")
+    parser.add_argument("--epoch", type=int, default=500, help="the number of epochs for network training stop (default: 500)")
+    parser.add_argument("--accuracy", type=float, default=0.8, help="the valid accuracy for the network training stop (default: 0.8)")
+    parser.add_argument("--max_iteration", type=int, default=100000, help="the number of max iteration for network training stop (default: 100000)")
+    parser.add_argument("--still_epoch", type=int, default=3, help="the number of max iteration for network training stop (default: 3, int)")
 
     # pre-processing
     parser.add_argument("--is_abs", type=bool, default=False, help="abs or not (default: False)")
