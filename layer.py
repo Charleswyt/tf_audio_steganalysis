@@ -63,7 +63,7 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
         pooling_type = "average_pooling"
 
     shape = pooling.get_shape()
-    print("name: %s, shape: (%d, %d, %d, %d), type: %s" % (name, shape[0], shape[1], shape[2], shape[3], pooling_type))
+    print("name: %s, shape: (%d, %d, %d), type: %s" % (name, shape[1], shape[2], shape[3], pooling_type))
 
     return pooling
 
@@ -284,8 +284,8 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
 
         # info show
         shape = output.get_shape()
-        print("name: %s, shape: (%d, %d, %d, %d), activation: %s"
-              % (name, shape[0], shape[1], shape[2], shape[3], activation_method))
+        print("name: %s, shape: (%d, %d, %d), activation: %s"
+              % (name, shape[1], shape[2], shape[3], activation_method))
 
         # activation
         output = activation_layer(output, activation_method, alpha)
@@ -312,8 +312,8 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAM
                                    padding=padding,
                                    name="conv")
         shape = feature_map.get_shape()
-        print("name: %s, shape: (%d, %d, %d, %d)"
-              % (name, shape[0], shape[1], shape[2], shape[3]))
+        print("name: %s, shape: (%d, %d, %d)"
+              % (name, shape[1], shape[2], shape[3]))
 
         return feature_map
 
