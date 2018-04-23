@@ -162,7 +162,7 @@ def train_audio(args):
             step_train += 1
             summary_str_train = sess.run(summary_op, feed_dict={data: x_train_data, label: y_train_batch})
             train_writer_train.add_summary(summary_str_train, global_step=step_train)
-            train_accuracy_file.write(str(ac))
+            train_accuracy_file.write("{}\t{}\n".format(str(step_valid), str(ac)))
 
             print("train_iter-%d: train_loss: %f, train_acc: %f" % (n_batch_train, err, ac))
 
@@ -179,10 +179,10 @@ def train_audio(args):
             val_loss += err
             val_acc += ac
             n_batch_val += 1
-            step_test += 1
+            step_valid += 1
             summary_str_val = sess.run(summary_op, feed_dict={data: x_valid_data, label: y_valid_batch})
             train_writer_valid.add_summary(summary_str_val, global_step=step_valid)
-            valid_accuracy_file.write(str(ac))
+            valid_accuracy_file.write("{}\t{}\n".format(str(step_valid), str(ac)))
 
             print("valid_iter-%d: loss: %f, acc: %f" % (n_batch_val, err, ac))
 
@@ -381,8 +381,8 @@ def steganalysis_one(args):
 
         # predict
         ret = sess.run(logits, feed_dict={data: img})
-        ret[0][0] = ret[0][0] + 0.071823
-        ret[0][1] = ret[0][1] - 0.071823
+        ret[0][0] = ret[0][0]
+        ret[0][1] = ret[0][1]
         result = np.argmax(ret, 1)
 
         if result == 1:
@@ -430,8 +430,8 @@ def steganalysis_batch(args):
 
             # predict
             ret = sess.run(logits, feed_dict={data: img})
-            ret[0][0] = ret[0][0] + 0.071823
-            ret[0][1] = ret[0][1] - 0.071823
+            ret[0][0] = ret[0][0]
+            ret[0][1] = ret[0][1]
             result = np.argmax(ret, 1)
 
             if result == 1:
