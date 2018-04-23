@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
-from filters import kv_kernel
+from math import floor
 
 """
 Created on 2017.12.29
@@ -318,7 +318,7 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAM
         return feature_map
 
 
-def loss_layer(logits, label, is_regulation, coeff=1e-3, method="sparse_softmax_cross_entropy"):
+def loss_layer(logits, label, is_regulation=False, coeff=1e-3, method="sparse_softmax_cross_entropy"):
     """
     calculate the loss
     :param logits: logits [batch_size, class_num]
@@ -482,3 +482,21 @@ def learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate
         decayed_learning_rate = init_learning_rate
 
     return decayed_learning_rate
+
+
+def size_tune(input_data):
+    """
+    this function is used to solve the variant size, calculate the mean, variance, max, min and other statistical characteristics of each feature map
+    if the shape of input data is [batch_size, height, width, channel], the shape of output is [batch_size, 1, dim, channel].
+        Herein, the dim rests with the number of statistics.
+    :param input_data: input data, a 4-D tensor [batch_size, height, width, channel]
+    :return:
+        a 4-D tensor [batch_size, 1, dim, channel]
+    """
+    data_max = tf.reduce_max(input_tensor=input_data, axis=[1, 2], keep_dims=True, name="max")
+    data_min = tf.reduce_min(input_tensor=input_data, axis=[1, 2], keep_dims=True, name="min")
+    data_mean, data_variance = tf.nn.moments(x=input_data, axes=[1, 2], keep_dims=True)
+
+    output = tf.concat([data_mean, data_max, data_min, data_variance], 2)
+
+    return output
