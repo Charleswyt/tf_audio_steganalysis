@@ -187,19 +187,19 @@ def network1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
     conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 16, name="conv1_1", activation_method=activation_method, padding=padding)
     conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 32, name="conv1_2", activation_method=None, padding=padding)
     bn1_3 = batch_normalization(conv1_2, name="BN1_3", activation_method=activation_method, is_train=is_bn)
-    conv1_4 = conv_layer(bn1_3, 3, 3, 2, 2, 16, name="conv1_4", activation_method="None", padding="valid")
+    conv1_4 = conv_layer(bn1_3, 3, 3, 2, 2, 16, name="conv1_4", activation_method="None", padding="VALID")
 
     # Group2
     conv2_1 = conv_layer(conv1_4, 3, 3, 1, 1, 32, name="conv2_1", activation_method=activation_method, padding=padding)
     conv2_2 = conv_layer(conv2_1, 1, 1, 1, 1, 64, name="conv2_2", activation_method=None, padding=padding)
     bn2_3 = batch_normalization(conv2_2, name="BN2_3", activation_method=activation_method, is_train=is_bn)
-    conv2_4 = conv_layer(bn2_3, 3, 3, 2, 2, 64, name="conv2_4", activation_method="None", padding="valid")
+    conv2_4 = conv_layer(bn2_3, 3, 3, 2, 2, 64, name="conv2_4", activation_method="None", padding="VALID")
 
     # Group3
     conv3_1 = conv_layer(conv2_4, 3, 3, 1, 1, 64, name="conv3_1", activation_method=activation_method, padding=padding)
     conv3_2 = conv_layer(conv3_1, 1, 1, 1, 1, 128, "conv3_2", activation_method=None, padding=padding)
     bn3_3 = batch_normalization(conv3_2, name="BN3_3", activation_method=activation_method, is_train=is_bn)
-    conv3_3 = conv_layer(bn3_3, 3, 3, 2, 2, 128, name="conv3_4", activation_method="None", padding="valid")
+    conv3_3 = conv_layer(bn3_3, 3, 3, 2, 2, 128, name="conv3_4", activation_method="None", padding="VALID")
 
     # Group4
     conv4_1 = conv_layer(conv3_3, 3, 3, 1, 1, 128, name="conv4_1", activation_method=activation_method, padding=padding)

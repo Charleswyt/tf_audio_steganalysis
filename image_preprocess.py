@@ -2,20 +2,24 @@
 # -*- coding: utf-8 -*-
 
 """
-Created on 
-Finished on 
+Created on
+Finished on
 @author: Wang Yuntao
 """
 
 import numpy as np
+from pre_process import *
 from skimage import io, util
 from skimage import filters
 import matplotlib.pyplot as plt
 
 """
 function:
-    image_info_show(image_file_path)                                                图像信息显示
-    imread(image_path, format=None, channel=3, name='image')                        图像读取
+    image_info_show(image_file_path)                                                                        图像信息显示
+    read_image(image_file_path, height, width, as_grey=False, is_diff=False, order=2, direction=0,
+               is_trunc=False, threshold=128, threshold_left=128, threshold_right=256)                      图像读取
+    read_image_batch(image_files_list, height=512, width=512, is_diff=False, order=2, direction=0,
+                     is_trunc=False, threshold=128, threshold_left=128, threshold_right=256)                批量图像读取
 """
 
 
@@ -36,14 +40,64 @@ def image_info_show(image_file_path):
     plt.show()
 
 
-def read_image_batch(image_files_list, height=512, width=512):
+def read_image(image_file_path, height, width, as_grey=False, is_diff=False, order=2, direction=0,
+               is_trunc=False, threshold=128, threshold_left=128, threshold_right=256):
+    """
+    read image
+    :param image_file_path: the file path of image
+    :param height: the height of image
+    :param width: the width of image
+    :param as_grey: whether grayscale or not (default: False)
+    :param is_diff: whether difference or not (default: False)
+    :param order: the order of difference
+    :param direction: the direction of difference (0 - row | 1 - col)
+    :param is_trunc: whether truncation or not (default: False)
+    :param threshold: the threshold of truncation
+    :param threshold_left: the smaller threshold of truncation
+    :param threshold_right: the bigger threshold of truncation
+    :return:
+    """
+    image = io.imread(image_file_path, as_grey=as_grey)
+    if is_trunc is True:
+        image = truncate(image, threshold=threshold, threshold_left=threshold_left, threshold_right=threshold_right)
+    if is_diff is True:
+        image = np.diff(image, n=order, axis=direction)
+
+    # reshape
+    image_shape = np.shape(image)
+    if len(image_shape) == 2:
+        image = image[:height, :width]
+        image = np.reshape(image, [heigth, width, 1])
+    else:
+        image = image[:height, :width, :]
+
+    return image
+
+
+def read_image_batch(image_files_list, height=512, width=512, is_diff=False, order=2, direction=0,
+                     is_trunc=False, threshold=128, threshold_left=128, threshold_right=256):
+    """
+    read images batch by batch
+    :param image_files_list: image files list
+    :param height: the height of images
+    :param width: the width of images
+    :param is_diff: whether difference or not (default: False)
+    :param order: the order of difference
+    :param direction: the direction of difference (0 - row | 1 - col)
+    :param is_trunc: whether truncation or not (default: False)
+    :param threshold: the threshold of truncation
+    :param threshold_left: the smaller threshold of truncation
+    :param threshold_right: the bigger threshold of truncation
+    :return:
+        data, a 4-D tensor, [batch_size, height, width, channel]
+    """
     files_num = len(image_files_list)
     data = np.zeros([files_num, height, width, 1], dtype=np.float32)
 
     i = 0
     for image_file in image_files_list:
-        img = io.imread(image_file)
-        content = np.reshape(img, [height, width, 1])
+        content = read_image(image_file, height=height, width=width, is_diff=is_diff, order=order, direction=direction,
+                             is_trunc=is_trunc, threshold=threshold, threshold_left=threshold_left, threshold_right=threshold_right)
         data[i] = content
         i = i + 1
 
@@ -54,44 +108,6 @@ if __name__ == "__main__":
     image_path = "2501.pgm"
     image_info_show(image_path)
     # image = io.imread(image_path)
-    # # util.crop()
     # # image = filters.sobel(image[:, :, 0])
-    # print(image[:10, :10])
     # plt.imshow(image)
     # plt.show()
-
-
-
-
-
-
-
-
-
-
-# def data_augment():
-#     pass
-#
-#
-# def tf_imread(image_path, image_format="jpg", channels=3, dtype="tf.uint8"):
-#     """
-#     读取图像
-#     :params: image_path: 图像路径
-#     :params: image_format: 图像格式
-#     :params: channel: 图像通道数
-#     :return: tensor
-#     """
-#     image_contents = tf.read_file(image_path)
-#     if image_format == "bmp":
-#         image = tf.image.decode_bmp(image_contents, channels)
-#     elif image_format == "jpg":
-#         image = tf.image.decode_jpeg(image_contents, channels)
-#     elif image_format == "png":
-#         image = tf.image.decode_png(image_contents, channels, dtype)
-#     elif image_format == "gif":
-#         image = tf.image.decode_gif(image_contents)
-#     else:
-#         image = tf.image.decode_image(image_contents, channels)
-#
-#     return image
-

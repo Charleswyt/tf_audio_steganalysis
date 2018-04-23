@@ -8,13 +8,15 @@ Finished on 2017.11.20
 """
 
 import tensorflow as tf
+from operator import mul
+from functools import reduce
 from image_preprocess import *
 from text_preprocess import *
 from matplotlib.pylab import plt
 
 """
     function:
-        def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True)          获取文件列表与标签列表
+        read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True)              获取文件列表与标签列表
         minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None)   批次读取数据
         
 """
@@ -22,15 +24,15 @@ from matplotlib.pylab import plt
 
 def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True):
     """
-    读取数据(当前数据为文件名)
-    :param cover_files_path: cover文件路径
-    :param stego_files_path: stego文件路径
-    :param start_idx: 起始文件下标
-    :param end_idx: 终止文件下标
-    :param is_shuffle: 是否乱序
+    read file names from the storage
+    :param cover_files_path: the folder name of cover files
+    :param stego_files_path: the folder name of stego files
+    :param start_idx: the start index
+    :param end_idx: the end index
+    :param is_shuffle: whether shuffle or not (default is True)
     :return:
-        data_list: 数据列表
-        label_list: 标签列表
+        data_list: the file name list
+        label_list: the label list
     """
     cover_files_list = get_files_list(cover_files_path)                     # cover文件列表
     stego_files_list = get_files_list(stego_files_path)                     # stego文件列表
@@ -63,13 +65,14 @@ def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is
 
 def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None):
     """
-    批次读取数据
-    :param cover_datas: data list (cover)
-    :param cover_labels: data label (cover)
-    :param stego_datas: data list (stego)
-    :param stego_labels: data label (stego)
+    read data batch by batch
+    :param cover_datas: file name list (cover)
+    :param cover_labels: label list(cover)
+    :param stego_datas: file name list (stego)
+    :param stego_labels: label list (stego)
     :param batchsize: batch size
     :return:
+        yield datas and labels
     """
     for start_idx in range(0, len(cover_datas) - batchsize // 2 + 1, batchsize // 2):
         excerpt = slice(start_idx, start_idx + batchsize // 2)
@@ -77,7 +80,40 @@ def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_lab
         datas.extend(stego_datas[excerpt])
         labels = cover_labels[excerpt]
         labels.extend(stego_labels[excerpt])
+
         yield datas, labels
+
+
+def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, order=2, direction=0,
+             is_trunc=False, threshold=15, threshold_left=0, threshold_right=255):
+    """
+    read data
+    :param files_list: files list (audio | image | text)
+    :param height: the height of the data matrix
+    :param width: the width of the data matrix
+    :param carrier: the type of carrier (audio | image, here if choose audio, use QMDCT matrix)
+    :param is_abs: whether abs or not (default: False)
+    :param is_diff: whether difference or not (default: False)
+    :param order: the order of difference
+    :param direction: the direction of difference (default: row)
+    :param is_trunc: whether truncation or not (default: False)
+    :param threshold: the threshold of truncation
+    :param threshold_left: the threshold of truncation
+    :param threshold_right: the threshold of truncation
+    :return:
+        the data list 4-D tensor [batch_size, height, width, channel]
+    """
+    if carrier == "audio":
+        data = read_text_batch(text_files_list=files_list, height=height, width=width, is_abs=is_abs, is_diff=is_diff, order=order, direction=direction,
+                               is_trunc=is_trunc, threshold=threshold)
+    elif carrier == "image":
+        data = read_image_batch(image_files_list=files_list, height=height, width=width, is_diff=is_diff, order=order, direction=direction,
+                                is_trunc=is_trunc, threshold=threshold, threshold_left=threshold_left, threshold_right=threshold_right)
+    else:
+        data = read_text_batch(text_files_list=files_list, height=height, width=width, is_abs=is_abs, is_diff=is_diff, order=order, direction=direction,
+                               is_trunc=is_trunc, threshold=threshold)
+
+    return data
 
 
 def model_load(model_file):
@@ -99,6 +135,21 @@ def model_load(model_file):
 
         fc6 = get_weights(model, "fc6")
         print(np.shape(fc6))
+
+
+def get_model_parameters():
+    """
+    calculate the number of parameters of the network
+    :return:
+        num_params: the number of parameters of the network
+    """
+
+    num_params = 0
+    for variable in tf.trainable_variables():
+        shape = variable.get_shape()
+        num_params += reduce(mul, [dim.value for dim in shape], 1)
+
+    return num_params
 
 
 def get_weights(model, name):
@@ -174,11 +225,6 @@ def get_model_info(model_file_path):
         print("The model is loaded successfully.")
 
 
-def train_terminate(sess, termination_type, epoch=500, validation_accuracy=0.9, ):
-    if termination_type == "epoch":
-        pass
-
-
 if __name__ == "__main__":
     # train files
     # cover_files_path_train = "/home/zhanghong/data/image/train/512_cover"
@@ -195,5 +241,3 @@ if __name__ == "__main__":
     # print(len(cover_data_valid_list), len(stego_data_valid_list))
 
     get_model_info("E:/Myself/1.source_code/tf_audio_steganalysis/stegshi/audio_steganalysis-5797")
-
-

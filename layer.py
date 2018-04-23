@@ -27,7 +27,8 @@ function:
     10. optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
               epsilon=1e-8, initial_accumulator_value=0.1, momentum=0.9, decay=0.9)
     11. learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
-                        end_learning_rate=0.0001, power=1.0, cycle=False,)
+                        end_learning_rate=0.0001, power=1.0, cycle=False)
+    12. size_tune(input_data)
 """
 
 
@@ -493,9 +494,9 @@ def size_tune(input_data):
     :return:
         a 4-D tensor [batch_size, 1, dim, channel]
     """
-    data_max = tf.reduce_max(input_tensor=input_data, axis=[1, 2], keep_dims=True, name="max")
-    data_min = tf.reduce_min(input_tensor=input_data, axis=[1, 2], keep_dims=True, name="min")
-    data_mean, data_variance = tf.nn.moments(x=input_data, axes=[1, 2], keep_dims=True)
+    data_max = tf.reduce_max(input_tensor=input_data, axis=[1, 2], keep_dims=True, name="max")          # calculate the maximum of the feature map
+    data_min = tf.reduce_min(input_tensor=input_data, axis=[1, 2], keep_dims=True, name="min")          # calculate the minimum of the feature map
+    data_mean, data_variance = tf.nn.moments(x=input_data, axes=[1, 2], keep_dims=True)                 # calculate the mean and variance of the feature map
 
     output = tf.concat([data_mean, data_max, data_min, data_variance], 2)
 

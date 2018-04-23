@@ -18,7 +18,7 @@ The pre-processing of the QMDCT matrix:
 """
 
 
-def truncate(matrix, threshold, threshold_left=None, threshold_right=None):
+def truncate(matrix, threshold=None, threshold_left=None, threshold_right=None):
     """
     truncation (数据截断)
     :param matrix: the input matrix (numpy.ndarray)
