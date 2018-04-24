@@ -3,15 +3,15 @@
 ## Necessary Package
 tensorflow-gpu==1.3 or 1.4, numpy, matplotlib
 
-## CNN Architecture (To be perfected)
+## The architecture of the network
+![The structure of the proposed network](https://i.imgur.com/h0o5lfB.jpg)
 
 ## Steganographic Algorithm
 HCM(Huffman Code Mapping) and EECS(Equal Length Entropy Codes Substitution)
 
 ## dataset
-The dataset url is https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ <br>
-the *extraction password* is "**1fzi**"
-
+The dataset url is **https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ** <br>
+The *extraction password* is "**1fzi**".
 
 ## file description
 ID      |   File                    |   Function
@@ -42,9 +42,14 @@ ID      |   File                    |   Function
 * run the code as the example as follows
 
 ## Command Parser
-Command: python3 main.py --argument 1 --argument 2 ... --argument N <br>
+Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <br>
 
+## How to use
+* Example(**train**): **sudo python3.5 main.py** --**mode** train --**network** network1 --**gpu** 0 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**cover_valid_dir** xxx --**cover_valid_dir** xxx --**stego_train_dir** xxx --**stego_valid_dir** xxx --**model_path** xxx --**logs_path** xxx
 
+* Example(**test**): **sudo python3.5 main.py** --**mode** test --**submode** one --**network** network1 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**file_path** xxx --**model_file_path** xxx
+
+Cope the command line and modify the file path according to your configuration, more descriptions of each variant can be seen in the **config.py**.
 ## The description of each network
 *  **network for audio steganalysis**
 
@@ -71,11 +76,11 @@ Command: python3 main.py --argument 1 --argument 2 ... --argument N <br>
 ## The method of pre-processing
     
 There are positive and negative values in QMDCT coefficients matrix. The values in interval **[-15, 15]** is modified.
-The ratio of values in [-15, 15] is more than **99\%**, as the figure shown.
-* Abs
-* Truncation
-* Down-sampling
+The ratio of values in **[-15, 15]** is more than **99%**, as the figure shown. <br>
+* Abs <br>
+* Truncation <br>
+* Down-sampling <br>
 
 ## Reference
-    [1] Yanzhen Ren, Qiaochu Xiong, and Lina Wang. 2017. A Steganalysis Scheme for AAC Audio Based on MDCT Difference Between Intra and Inter Frame. In Digital Forensics and Watermarking - 16th International Workshop, IWDW 2017, Magdeburg, Germany, August 23-25, 2017, Proceedings. 217–231.
-    [2] Chao Jin, Rangding Wang, and Diqun Yan. 2017. Steganalysis of MP3Stego with low embedding-rate using Markov feature. Multimedia Tools and Applications 76, 5 (2017), 6143–6158.
+[1] Yanzhen Ren, Qiaochu Xiong, and Lina Wang. 2017. A Steganalysis Scheme for AAC Audio Based on MDCT Difference Between Intra and Inter Frame. In Digital Forensics and Watermarking - 16th International Workshop, IWDW 2017, Magdeburg, Germany, August 23-25, 2017, Proceedings. 217–231. <br>
+[2] Chao Jin, Rangding Wang, and Diqun Yan. 2017. Steganalysis of MP3Stego with low embedding-rate using Markov feature. Multimedia Tools and Applications 76, 5 (2017), 6143–6158.
