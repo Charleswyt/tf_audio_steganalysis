@@ -1,19 +1,7 @@
 # Audio Steganalysis with CNN
 @ author: Wang Yuntao <br>
 ## Necessary Package
-tensorflow-gpu==1.3, numpy, matplotlib
-
-## Encoder, Steganographic encoder and QMDCT extractor
-All encoder is placed in the folder of encoder, including lame, HCM-Yan, HCM-Gao and EECS
-
-Name            |   Description         |   command
-:-              |    :-                 |   :-
-lame.exe        |   The lame encoder which is used to make **cover mp3 samples** [The LAME Project](http://lame.sourceforge.net/ "lame")                                                                   | ./lame.exe, blank -b 128 'wav_file_path' 'mp3_file_path'
-HCM_Gao.exe     |   The steganographic encoder which is used to make **HCM-Gao stego mp3 samples**      |
-HCM_Yan.exe     |   The steganographic encoder which is used to make **HCM-Gao stego mp3 samples**      |
-EECS.exe        |   The steganographic encoder which is used to make **EECS stego mp3 samples**         |
-
-All executable file mentioned above is coded by **Kun Yang**.
+tensorflow-gpu==1.3 or 1.4, numpy, matplotlib
 
 ## CNN Architecture (To be perfected)
 
@@ -23,43 +11,6 @@ HCM(Huffman Code Mapping), EECS(Equal Length Entropy Codes Substitution)
 ## dataset
 The dataset url is 
 
-## Results (To be perfected)
-* **HCM-Gao** steganographic algorithm
-<table>
-<tr> <td>Bitrate</td>         <td>RER</td>    <td><B>Ours </B></td>    <td>Ren[1]</td>  <td>Jin[2]</td>     </tr>
-<tr> <td rowspan="3">128 kbps <td>0.1</td>    <td><B>70.72</B></td>    <td>50.13</td>   <td>50.11</td>      </tr>
-<tr>                          <td>0.3</td>    <td><B>75.18</B></td>    <td>51.41</td>   <td>52.34</td>      </tr>
-<tr>                          <td>0.5</td>    <td><B>78.53</B></td>    <td>53.75</td>   <td>52.79</td>      </tr> 
-<tr> <td rowspan="3">320 kbps <td>0.1</td>    <td><B>73.83</B></td>    <td>50.77</td>   <td>50.85</td>      </tr>
-<tr>                          <td>0.3</td>    <td><B>77.27</B></td>    <td>52.18</td>   <td>52.63</td>      </tr>
-<tr>                          <td>0.5</td>    <td><B>80.71</B></td>    <td>55.69</td>   <td>54.42</td>      </tr>
-</table>
-
-* **HCM-Yan** steganographic algorithm
-<table>
-<tr> <td>Bitrate</td>         <td>RER</td>    <td><B>Ours </B></td>    <td>Ren[1]</td>  <td>Jin[2]</td>     </tr>
-<tr> <td rowspan="3">128 kbps <td>0.1</td>    <td><B>75.92</B></td>    <td>50.94</td>   <td>51.25</td>      </tr>
-<tr>                          <td>0.3</td>    <td><B>81.39</B></td>    <td>56.88</td>   <td>60.31</td>      </tr>
-<tr>                          <td>0.5</td>    <td><B>85.88</B></td>    <td>76.56</td>   <td>52.79</td>      </tr> 
-<tr> <td rowspan="3">320 kbps <td>0.1</td>    <td><B>79.35</B></td>    <td>64.38</td>   <td>50.85</td>      </tr>
-<tr>                          <td>0.3</td>    <td><B>83.09</B></td>    <td>66.56</td>   <td>52.63</td>      </tr>
-<tr>                          <td>0.5</td>    <td><B>90.21</B></td>    <td>77.81</td>   <td>54.42</td>      </tr>
-</table>
-
-* **EECS** steganographic algorithm
-<table>
-<tr> <td>Bitrate</td>         <td>RER</td>    <td><B>Ours </B></td>    <td>Ren[1]</td>   <td>Jin[2]</td>    </tr>
-<tr> <td rowspan="5">128 kbps <td> 2 </td>    <td><B>92.39</B></td>    <td>59.42</td>    <td>56.25</td>     </tr>
-<tr>                          <td> 4 </td>    <td><B>83.17</B></td>    <td>51.37</td>    <td>51.81</td>     </tr>
-<tr>                          <td> 6 </td>    <td><B>75.12</B></td>    <td>50.96</td>    <td>50.73</td>     </tr>
-<tr>                          <td> 7 </td>    <td><B>63.78</B></td>    <td>50.56</td>    <td>50.35</td>     </tr>
-<tr>                          <td> 8 </td>    <td><B>51.37</B></td>    <td>50.10</td>    <td>50.07</td>     </tr>
-<tr> <td rowspan="5">320 kbps <td> 2 </td>    <td><B>95.35</B></td>    <td>71.38</td>    <td>69.69</td>     </tr>
-<tr>                          <td> 4 </td>    <td><B>93.09</B></td>    <td>52.81</td>    <td>52.56</td>     </tr>
-<tr>                          <td> 6 </td>    <td><B>85.33</B></td>    <td>51.24</td>    <td>51.13</td>     </tr>
-<tr>                          <td> 7 </td>    <td><B>64.46</B></td>    <td>50.10</td>    <td>50.07</td>     </tr>
-<tr>                          <td> 8 </td>    <td><B>51.42</B></td>    <td>50.00</td>    <td>50.00</td>     </tr>
-</table>
 
 ## file description
 ID      |   File                    |   Function
