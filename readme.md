@@ -37,20 +37,21 @@ ID      |   File                    |   Function
 
 
 ## Run
-* install **python3.x** and add the path into environment variable
+* install **python3.x** and add the path into the environment variable
 * GPU run enviroment configure if train the network (optional)
 * pip install **tensorflow==1.3 or later, numpy, scikit-image, pydub** (depend on FFmpeg, optional)
 * run the code as the example as follows
+* use tensorboard to visualize the train process such as the accuracy and loss curve of train and valid. The command is "tensorboaed --logdir=/path/to/log-directory"
 
 ## Command Parser
-Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <br>
+Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <br> 
 
 ## How to use
 * Example(**train**): **sudo python3.5 main.py** --**mode** train --**network** network1 --**gpu** 0 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**cover_valid_dir** xxx --**cover_valid_dir** xxx --**stego_train_dir** xxx --**stego_valid_dir** xxx --**model_path** xxx --**logs_path** xxx
 
 * Example(**test**): **sudo python3.5 main.py** --**mode** test --**submode** one --**network** network1 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**file_path** xxx --**model_file_path** xxx
 
-Cope the command line and modify the file path according to your configuration, more descriptions of each variant can be seen in the **config.py**.
+Copy the command line and modify the file path according to your configuration, more descriptions of each variant can be seen in the **config.py**.
 ## The description of each network
 *  **network for audio steganalysis**
 
@@ -69,7 +70,7 @@ Cope the command line and modify the file path according to your configuration, 
 
         Note: HPF and ABS is applied at the pre-processing
     
-* network for image steganalysis
+* **network for image steganalysis**
     
         stegshi   : Xu-Net
 
@@ -78,10 +79,11 @@ Cope the command line and modify the file path according to your configuration, 
     
 There are positive and negative values in QMDCT coefficients matrix. The values in interval **[-15, 15]** is modified.
 The ratio of values in **[-15, 15]** is more than **99%**, as the figure shown. <br>
+
 * Abs <br>
 * Truncation <br>
 * Down-sampling <br>
-
+![The distribution of QMDCT coefficients](https://i.imgur.com/vDJ2gWm.jpg)
 
 ## Reference
 **[1]** Haiying Gao. 2007. The MP3 steganography algorithm based on Huffman coding. Acta Scientiarum Naturalium Universitatis Sunyatseni 4 (2007), 009. <br>
