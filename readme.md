@@ -89,3 +89,6 @@ The ratio of values in **[-15, 15]** is more than **99%**, as the figure shown. 
 **[3]** Kun Yang, Xiaowei Yi, Xianfeng Zhao, and Linna Zhou. 2017. Adaptive MP3 Steganography Using Equal Length Entropy Codes Substitution. In Digital Forensics and Watermarking - 16th International Workshop, IWDW 2017, Magdeburg, Germany, August 23-25, 2017, Proceedings. 202–216. <br>
 **[4]** Yanzhen Ren, Qiaochu Xiong, and Lina Wang. 2017. A Steganalysis Scheme for AAC Audio Based on MDCT Difference Between Intra and Inter Frame. In Digital Forensics and Watermarking - 16th International Workshop, IWDW 2017, Magdeburg, Germany, August 23-25, 2017, Proceedings. 217–231. <br>
 **[5]** Chao Jin, Rangding Wang, and Diqun Yan. 2017. Steganalysis of MP3Stego with low embedding-rate using Markov feature. Multimedia Tools and Applications 76, 5 (2017), 6143–6158. <br>
+**[6]** tensorflow API: https://www.tensorflow.org/ <br>
+**[7]** tensorlayer API: http://tensorlayer.readthedocs.io/en/latest/ <br>
+**[8]** tensorboard usage: http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html <br>
