@@ -1,5 +1,6 @@
 # Audio Steganalysis with CNN
-@ author: Wang Yuntao <br>
+@ author: **Wang Yuntao (Charles)** <br>
+
 ## Necessary Package
 tensorflow-gpu==1.3 or 1.4, numpy, matplotlib
 
@@ -8,24 +9,24 @@ tensorflow-gpu==1.3 or 1.4, numpy, matplotlib
 ![The structure of the proposed network](https://i.imgur.com/h0o5lfB.jpg)
 
 ## Steganographic Algorithm
-HCM(Huffman Code Mapping) and EECS(Equal Length Entropy Codes Substitution)
+HCM (Huffman Code Mapping) and EECS (Equal Length Entropy Codes Substitution)
 
-## dataset
+## Dataset
 The dataset url is **https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ** <br>
 The *extraction password* is "**1fzi**".
 
-## file description
+## File description
 ID      |   File                    |   Function
 :-      |   :-                      |    :-
-1       |   audio_preprocess.py     |   include some pre-process methods for **audio**
-2       |   text_preprocess.py      |   include some pre-process methods for **test**
-3       |   image_preocess.py       |   include some pre-process methods for **image** 
-4       |   file_preprocess.py      |   get the name, size and type of the **file**
-5       |   pre_process.py          |   some pre-processing method such as **truncation**, **down_sampling**
-6       |   classifier.py           |   machine learning classifiers such as **SVM**, **KNN**, and **model selection**, **ROC** plot, etc.
-7       |   config.py               |   **command parser** and some package management
-8       |   filters.py              |   some **filters** used for pre-processing such as kv kernel or other **rich model**
-9       |   main.py                 |   the main program
+01      |   audio_preprocess.py     |   include some pre-process methods for **audio**
+02      |   text_preprocess.py      |   include some pre-process methods for **test**
+03      |   image_preocess.py       |   include some pre-process methods for **image** 
+04      |   file_preprocess.py      |   get the name, size and type of the **file**
+05      |   pre_process.py          |   some pre-processing method such as **truncation**, **down_sampling**
+06      |   classifier.py           |   machine learning classifiers such as **SVM**, **KNN**, and **model selection**, **ROC** plot, etc.
+07      |   config.py               |   **command parser** and some package management
+08      |   filters.py              |   some **filters** used for pre-processing such as kv kernel or other **rich model**
+09      |   **main.py**             |   the main program
 10      |   manager.py              |   **GPU** management (free GPU selection **automatically**)
 11      |   layer.py                |   basic unit in CNN such as **conv layer**, **pooling layer**, **BN layer** and so on
 12      |   network.py              |   various networks including **VGG19**, **LeNet** and **ourselves' network**
@@ -84,13 +85,13 @@ The ratio of values in **[-15, 15]** is more than **99%**, as the figure shown. 
 * Truncation <br>
 * Down-sampling <br>
 ![The distribution of QMDCT coefficients](https://i.imgur.com/vDJ2gWm.jpg)
-
+The proportion of zero value is far greater than others, so we remove the zero value in the right figure for better visual effects.
 ## Reference
-**[1]** Haiying Gao. 2007. The MP3 steganography algorithm based on Huffman coding. Acta Scientiarum Naturalium Universitatis Sunyatseni 4 (2007), 009. <br>
-**[2]** Diqun Yan, Rangding Wang, and Li-Guang ZHANG. 2011. A high capacity MP3 steganography based on Huffman coding. Journal of Sichuan University (Natural Science Edition) 6 (2011), 013. <br>
-**[3]** Kun Yang, Xiaowei Yi, Xianfeng Zhao, and Linna Zhou. 2017. Adaptive MP3 Steganography Using Equal Length Entropy Codes Substitution. In Digital Forensics and Watermarking - 16th International Workshop, IWDW 2017, Magdeburg, Germany, August 23-25, 2017, Proceedings. 202–216. <br>
-**[4]** Yanzhen Ren, Qiaochu Xiong, and Lina Wang. 2017. A Steganalysis Scheme for AAC Audio Based on MDCT Difference Between Intra and Inter Frame. In Digital Forensics and Watermarking - 16th International Workshop, IWDW 2017, Magdeburg, Germany, August 23-25, 2017, Proceedings. 217–231. <br>
-**[5]** Chao Jin, Rangding Wang, and Diqun Yan. 2017. Steganalysis of MP3Stego with low embedding-rate using Markov feature. Multimedia Tools and Applications 76, 5 (2017), 6143–6158. <br>
-**[6]** tensorflow API: https://www.tensorflow.org/ <br>
-**[7]** tensorlayer API: http://tensorlayer.readthedocs.io/en/latest/ <br>
-**[8]** tensorboard usage: http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html <br>
+**[1]** Haiying Gao. 2007. **The MP3 steganography algorithm based on Huffman coding**. Acta Scientiarum Naturalium Universitatis Sunyatseni 4 (2007), 009. <br>
+**[2]** Diqun Yan, Rangding Wang, and Li-Guang ZHANG. 2011. **A high capacity MP3 steganography based on Huffman coding**. Journal of Sichuan University (Natural Science Edition) 6 (2011), 013. <br>
+**[3]** Kun Yang, Xiaowei Yi, Xianfeng Zhao, and Linna Zhou. 2017. **Adaptive MP3 Steganography Using Equal Length Entropy Codes Substitution**. In Digital Forensics and Watermarking - 16th International Workshop, IWDW 2017, Magdeburg, Germany, August 23-25, 2017, Proceedings. 202–216. <br>
+**[4]** Yanzhen Ren, Qiaochu Xiong, and Lina Wang. 2017. **A Steganalysis Scheme for AAC Audio Based on MDCT Difference Between Intra and Inter Frame**. In Digital Forensics and Watermarking - 16th International Workshop, IWDW 2017, Magdeburg, Germany, August 23-25, 2017, Proceedings. 217–231. <br>
+**[5]** Chao Jin, Rangding Wang, and Diqun Yan. 2017. **Steganalysis of MP3Stego with low embedding-rate using Markov feature**. Multimedia Tools and Applications 76, 5 (2017), 6143–6158. <br>
+**[6]** **tensorflow** API: https://www.tensorflow.org/ <br>
+**[7]** **tensorlayer** API: http://tensorlayer.readthedocs.io/en/latest/ <br>
+**[8]** **tensorboard** usage: http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html <br>
