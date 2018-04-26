@@ -329,16 +329,11 @@ def loss_layer(logits, label, is_regulation=False, coeff=1e-3, method="sparse_so
     :param method: loss method
     :return: loss
     """
-    with tf.variable_scope("loss") as scope:
+    with tf.variable_scope("loss"):
         if method == "sigmoid_cross_entropy":
-            cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(logits=logits,
-                                                                    labels=label,
-                                                                    name="cross_entropy")
-
+            cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(logits=logits, labels=label)
         elif method == "softmax_cross_entropy":
-            cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits,
-                                                                    labels=label,
-                                                                    name="cross_entropy")
+            cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=label)
         elif method == "sparse_softmax_cross_entropy":
             cross_entropy = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=label)
         else:
@@ -351,9 +346,7 @@ def loss_layer(logits, label, is_regulation=False, coeff=1e-3, method="sparse_so
             regularization_cost = coeff * tf.reduce_sum([tf.nn.l2_loss(v) for v in tv])
             loss = loss_cross_entropy + regularization_cost
         else:
-            loss = loss_cross_entropy
-
-        tf.summary.scalar(scope.name + "/loss", loss)
+            loss = loss_cross_entropy + 0
 
         return loss
 
@@ -365,23 +358,21 @@ def accuracy_layer(logits, label):
     :param label: label
     :return: accuracy
     """
-    with tf.variable_scope("accuracy") as scope:
-        # correct = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
-        correct = tf.nn.in_top_k(logits, label, 1)
-        print(correct)
-        correct = tf.cast(correct, tf.float32)
-        acc = tf.reduce_mean(correct) * 100.0
-        tf.summary.scalar(scope.name + "/accuracy", acc)
+    with tf.variable_scope("accuracy"):
+        # correct = tf.nn.in_top_k(logits, label, 1)
+        correct_prediction = tf.equal(tf.cast(tf.argmax(logits, 1), tf.int32), label)
+        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-        return acc
+        return accuracy
 
 
-def optimizer(losses, learning_rate, optimizer_type="Adam", beta1=0.9, beta2=0.999,
+def optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
               epsilon=1e-8, initial_accumulator_value=0.1, momentum=0.9, decay=0.9):
     """
     optimizer
     :param losses: loss
     :param learning_rate: lr
+    :param global_step: global step
     :param optimizer_type: the type of optimizer
     可选类型:
     GradientDescent                                               -> W += learning_rate * dW
@@ -435,8 +426,7 @@ def optimizer(losses, learning_rate, optimizer_type="Adam", beta1=0.9, beta2=0.9
             opt = tf.train.GradientDescentOptimizer(learning_rate=learning_rate,
                                                     name=optimizer_type)
 
-        global_step = tf.Variable(0, name="global_step", trainable=False)
-        train_op = opt.minimize(losses,
+        train_op = opt.minimize(loss=losses,
                                 global_step=global_step,
                                 name="optimizer")
 
@@ -444,7 +434,7 @@ def optimizer(losses, learning_rate, optimizer_type="Adam", beta1=0.9, beta2=0.9
 
 
 def learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
-                        end_learning_rate=0.0001, power=1.0, cycle=False,):
+                        end_learning_rate=0.0001, power=1.0, cycle=False):
     """
     function: learning rate decay -> constant |  | inverse_time | natural_exp | polynomial
 
@@ -501,3 +491,8 @@ def size_tune(input_data):
     output = tf.concat([data_mean, data_max, data_min, data_variance], 2)
 
     return output
+
+
+def parameter_initialization(shape, dtype, initializer, trainable):
+    pass
+

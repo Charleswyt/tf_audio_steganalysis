@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import csv
 import time
 from utils import *
 from network import *
@@ -21,6 +22,18 @@ Finished on 2017.11.30
 """
 
 
+def run_mode(args):
+    if args.mode == "train":  # train mode
+        train(args)
+    elif args.mode == "test":  # test mode
+        if args.submode == "one":
+            steganalysis_one(args)
+        if args.submode == "batch":
+            steganalysis_batch(args)
+    else:
+        print("Mode Error")
+
+
 def train(args):
     # hyper parameters (超参)
     batch_size_train, batch_size_valid = args.batch_size_train, args.batch_size_valid       # batch size (train and valid)
@@ -28,7 +41,9 @@ def train(args):
     n_epoch = args.epoch                                                                    # epoch
     decay_method = args.decay_method                                                        # decay method
     decay_steps, decay_rate = args.decay_step, args.decay_rate                              # decay steps | decay rate
+    loss_method = args.loss_method                                                          # the calculation method of loss function
     is_regulation = args.is_regulation                                                      # regulation or not
+    coeff_regulation = args.coeff_regulation                                                # the gain of regulation
     classes_num = args.class_num                                                            # classes number
     carrier = args.carrier                                                                  # carrier (audio | image)
 
@@ -40,24 +55,25 @@ def train(args):
     step_train, step_valid = 0, 0                                                           # train step and valid step
     max_accuracy, max_accuracy_epoch = 0, 0                                                 # max valid accuracy and corresponding epoch
 
-    global_step = tf.Variable(initial_value=0,
-                              trainable=False,
-                              name="global_step",
-                              dtype=tf.int32)                                               # global step
+    with tf.device("/cpu:0"):
+        global_step = tf.Variable(initial_value=0,
+                                  trainable=False,
+                                  name="global_step",
+                                  dtype=tf.int32)                                           # global step (Variable 变量不能直接分配GPU资源)
 
     # pre processing
-    is_abs, is_trunc, threshold, is_diff, order, direction, downsampling, block = \
-        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.downsampling, args.block
+    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs, downsampling, block = \
+        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs, args.downsampling, args.block
 
     # learning rate decay (学习率递减方法)
     learning_rate = learning_rate_decay(init_learning_rate=init_learning_rate,
                                         decay_method=decay_method,
                                         global_step=global_step,
                                         decay_steps=decay_steps,
-                                        decay_rate=decay_rate)                              # learning rate
+                                        decay_rate=decay_rate)                             # learning rate
 
     # placeholder
-    height, width, channel = args.height, args.width, 1                                     # the height, width and channel of the QMDCT matrix
+    height, width, channel = args.height, args.width, 1                                    # the height, width and channel of the QMDCT matrix
     if is_diff is True and direction == 0:
         height_new, width_new = height - order, width
     elif is_diff is True and direction == 1:
@@ -69,10 +85,8 @@ def train(args):
     label = tf.placeholder(dtype=tf.int32, shape=(None, ), name="label")
 
     # start session
-    config = tf.ConfigProto(allow_soft_placement=True)
-    config.gpu_options.allow_growth = True
     init = tf.global_variables_initializer()
-    sess = tf.Session(config=config)
+    sess = tf.Session()
     sess.run(init)
 
     # initialize the network
@@ -89,39 +103,29 @@ def train(args):
     print("log files path: %s" % log_file_path)
 
     # information output
-    print("initial learning rate: %f, batch size(train): %d, batch size(valid): %d, total epoch: %d, class number: %d, "
-          "decay method: %s, decay rate: %f, decay steps: %d" % (init_learning_rate, batch_size_train, batch_size_valid, n_epoch, classes_num,
-                                                                 decay_method, decay_rate, decay_steps))
+    print("batch size(train): %d, batch size(valid): %d, total epoch: %d, class number: %d, initial learning rate: %f, "
+          "decay method: %s, decay rate: %f, decay steps: %d" % (batch_size_train, batch_size_valid, n_epoch, classes_num,
+                                                                 init_learning_rate, decay_method, decay_rate, decay_steps))
     print("start load network...")
 
     # evaluation
-    if is_regulation is True:
-        tv = tf.trainable_variables()
-        regularization_cost = 0.001 * tf.reduce_sum([tf.nn.l2_loss(v) for v in tv])
-    else:
-        regularization_cost = 0
-    loss = tf.losses.sparse_softmax_cross_entropy(labels=label, logits=logits) + regularization_cost
-    train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss, global_step=global_step)
-    correct_prediction = tf.equal(tf.cast(tf.argmax(logits, 1), tf.int32), label)
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    loss = loss_layer(logits=logits, label=label, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
+    train_optimizer = optimizer(losses=loss, learning_rate=learning_rate, global_step=global_step)
+    accuracy = accuracy_layer(logits=logits, label=label)
 
-    tf.summary.scalar("loss_train", loss)
-    tf.summary.scalar("accuracy_train", accuracy)
+    with tf.device("/cpu:0"):
+        tf.summary.scalar("loss_train", loss)
+        tf.summary.scalar("accuracy_train", accuracy)
+        summary_op = tf.summary.merge_all()
+        saver = tf.train.Saver(max_to_keep=max_to_keep,
+                               keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
 
-    # initialize tensorboard
-    summary_op = tf.summary.merge_all()
-    saver = tf.train.Saver(max_to_keep=max_to_keep,
-                           keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
+    # initialize
     sess = tf.InteractiveSession()
     train_writer_train = tf.summary.FileWriter(log_file_path + "/train", tf.get_default_graph())
     train_writer_valid = tf.summary.FileWriter(log_file_path + "/valid", tf.get_default_graph())
     init = tf.global_variables_initializer()
     sess.run(init)
-
-    train_accuracy_file_name = "./accuracy_file/train_accuracy_" + args.network + ".csv"
-    valid_accuracy_file_name = "./accuracy_file/valid_accuracy_" + args.network + ".csv"
-    train_accuracy_file = open(train_accuracy_file_name, "w")
-    valid_accuracy_file = open(valid_accuracy_file_name, "w")
 
     print("Start training...")
     for epoch in range(n_epoch):
@@ -142,49 +146,49 @@ def train(args):
         lr = sess.run(learning_rate)
 
         # train (训练)
-        train_loss, train_accuracy = list(), list()
+        train_iterations, train_loss, train_accuracy = 0, 0, 0
         for x_train_batch, y_train_batch in \
                 minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size_train):
             # data read and process (数据读取与处理)
-            x_train_data = get_data(x_train_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction,
+            x_train_data = get_data(x_train_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
                                     is_trunc=is_trunc, threshold=threshold)
 
             # get the accuracy and loss (训练与指标显示)
-            _, err, ac = sess.run([train_op, loss, accuracy], feed_dict={data: x_train_data, label: y_train_batch})
+            _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op], feed_dict={data: x_train_data, label: y_train_batch})
 
-            train_loss.append(err)
-            train_accuracy.append(ac)
+            train_loss += err
+            train_accuracy += ac
             step_train += 1
-            summary_str_train = sess.run(summary_op, feed_dict={data: x_train_data, label: y_train_batch})
+            train_iterations += 1
             train_writer_train.add_summary(summary_str_train, global_step=step_train)
-            train_accuracy_file.write("{}\t{}\n".format(str(step_valid), str(ac)))
 
-            print("epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f" % (epoch + 1, n_batch_train, err, ac))
+            print("epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f" % (epoch + 1, train_iterations, err, ac))
+
+        print("==================================================================================")
 
         # valid (验证)
-        valid_loss, valid_accuracy = list(), list()
+        valid_iterations, valid_loss, valid_accuracy = 0, 0, 0
         for x_valid_batch, y_valid_batch in \
                 minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size_valid):
             # data read and process (数据读取与处理)
-            x_valid_data = get_data(x_valid_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction,
+            x_valid_data = get_data(x_valid_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
                                     is_trunc=is_trunc, threshold=threshold)
 
             # get the accuracy and loss (验证与指标显示)
-            err, ac = sess.run([loss, acc], feed_dict={data: x_valid_data, label: y_valid_batch})
-            valid_loss.append(err)
-            valid_accuracy.append(ac)
+            err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op], feed_dict={data: x_valid_data, label: y_valid_batch})
+            valid_loss += err
+            valid_accuracy += ac
+            valid_iterations += 1
             step_valid += 1
-            summary_str_val = sess.run(summary_op, feed_dict={data: x_valid_data, label: y_valid_batch})
-            train_writer_valid.add_summary(summary_str_val, global_step=step_valid)
-            valid_accuracy_file.write("{}\t{}\n".format(str(step_valid), str(ac)))
+            train_writer_valid.add_summary(summary_str_valid, global_step=step_valid)
 
-            print("epoch: %003d, valid iterations: %003d, valid loss: %f, valid accuracy: %f" % (epoch + 1, n_batch_val, err, ac))
+            print("epoch: %003d, valid iterations: %003d, valid loss: %f, valid accuracy: %f" % (epoch + 1, valid_iterations, err, ac))
 
         # calculate the average in a batch (计算每个batch内的平均值)
-        train_loss_average = sum(train_loss) / len(train_accuracy)
-        valid_loss_average = sum(valid_loss) / len(valid_accuracy)
-        train_accuracy_average = sum(train_accuracy) / len(train_accuracy)
-        valid_accuracy_average = sum(valid_accuracy) / len(valid_accuracy)
+        train_loss_average = valid_loss / train_iterations
+        valid_loss_average = valid_loss / valid_iterations
+        train_accuracy_average = train_accuracy / train_iterations
+        valid_accuracy_average = valid_accuracy / valid_iterations
 
         # model save (保存模型)
         if valid_accuracy_average > max_accuracy:
@@ -195,7 +199,7 @@ def train(args):
 
         print("epoch: %003d, learning rate: %f, train loss: %f, train accuracy: %f, valid loss: %f, valid accuracy: %f, "
               "max valid accuracy: %f, max valid acc epoch: %d" % (epoch + 1, lr, train_loss_average, train_accuracy_average, valid_loss_average,
-                                                                   valid_accuracy_average, max_acc, max_accuracy_epoch))
+                                                                   valid_accuracy_average, max_accuracy, max_accuracy_epoch))
 
         end_time = time.time()
         print("Runtime: %.2fs" % (end_time - start_time))
@@ -231,8 +235,6 @@ def steganalysis_one(args):
 
         # predict
         ret = sess.run(logits, feed_dict={data: img})
-        ret[0][0] = ret[0][0]
-        ret[0][1] = ret[0][1]
         result = np.argmax(ret, 1)
 
         if result == 1:

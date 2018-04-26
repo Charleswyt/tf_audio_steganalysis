@@ -8,6 +8,7 @@ Finished on 2018.03.08
 """
 
 import os
+import platform
 import tensorflow as tf
 
 """
@@ -20,7 +21,7 @@ with gm.auto_choice():
 
 def check_gpus():
     """
-    GPU available check
+    GPU available check (just for Linux now)
     reference : http://feisky.xyz/machine-learning/tensorflow/gpu_list.html
     """
     # ============================================================================================== #
@@ -75,6 +76,7 @@ if check_gpus():
         query_args = ["index", "gpu_name", "memory.free", "memory.total", "power.draw", "power.limit"] + query_args
         cmd = "nvidia-smi --query-gpu={} --format=csv,noheader".format(",".join(query_args))
         results = os.popen(cmd).readlines()
+
         return [parse(line, query_args) for line in results]
 
     def by_power(d):
@@ -135,7 +137,7 @@ if check_gpus():
         def auto_choice(self, mode=0):
             """
             mode:
-                0:(default)sorted by free memory size
+                0: (default)sorted by free memory size
             return:
                 a TF device object
             Auto choice the freest GPU device,not specified
@@ -161,6 +163,7 @@ if check_gpus():
             chosen_gpu["specified"] = True
             index = chosen_gpu["index"]
             print("Using GPU {i}:\n{info}".format(i=index, info="\n".join([str(k) + ":" + str(v) for k, v in chosen_gpu.items()])))
+            print("GPU %s is selected." % index)
             return tf.device("/gpu:{}".format(index))
 else:
     raise ImportError("GPU available check failed.")
@@ -168,8 +171,12 @@ else:
 
 if __name__ == "__main__":
     gm = GPUManager()
+    with tf.device("/gpu:0"):
+        global_step = tf.Variable(initial_value=0,
+                                  trainable=False,
+                                  name="global_step",
+                                  dtype=tf.int32)
     with gm.auto_choice():
-
         for i in range(20):
             sess = tf.Session()
             init = tf.global_variables_initializer()

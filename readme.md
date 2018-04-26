@@ -48,7 +48,7 @@ ID      |   File                    |   Function
 Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <br> 
 
 ## How to use
-* Example(**train**): **sudo python3.5 main.py** --**mode** train --**network** network1 --**gpu** 0 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**cover_valid_dir** xxx --**cover_valid_dir** xxx --**stego_train_dir** xxx --**stego_valid_dir** xxx --**model_path** xxx --**logs_path** xxx
+* Example(**train**): **sudo python3.5 main.py** --**mode** train --**network** network1 --**gpu_selection** None --**gpu** 0 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**cover_valid_dir** xxx --**cover_valid_dir** xxx --**stego_train_dir** xxx --**stego_valid_dir** xxx --**model_path** xxx --**logs_path** xxx
 
 * Example(**test**): **sudo python3.5 main.py** --**mode** test --**submode** one --**network** network1 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**file_path** xxx --**model_file_path** xxx
 

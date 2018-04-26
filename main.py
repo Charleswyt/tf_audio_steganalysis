@@ -6,12 +6,11 @@ Finished on 2017.12.19
 @author: Wang Yuntao
 """
 
-
 import os
 import tensorflow as tf
-from manager import check_gpus
+from manager import *
 from config import command_parse
-from run import train, steganalysis_one, steganalysis_batch
+from run import *
 
 try:
     import win_unicode_console
@@ -20,18 +19,15 @@ except ImportError:
     print("win_unicode_console import unsuccessfully.")
 
 arguments = command_parse()
+gpu_selection = arguments.gpu_selection
 
-if check_gpus():
+if gpu_selection == "auto":
+    gm = GPUManager()
+    with gm.auto_choice():
+        run_mode(arguments)
+else:
     os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
-else:
-    print("No GPU.")
+    run_mode(arguments)
 
-if arguments.mode == "train":                               # train mode
-    train(arguments)
-elif arguments.mode == "test":                              # test mode
-    if arguments.submode == "one":
-        steganalysis_one(arguments)
-    if arguments.submode == "batch":
-        steganalysis_batch(arguments)
-else:
-    print("Mode Error")
+
+

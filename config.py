@@ -8,8 +8,8 @@ Finished on 2018.01.05
 
 import os
 import pip
-import platform
 import argparse
+import platform
 from subprocess import call
 
 """
@@ -40,24 +40,24 @@ def command_parse():
     """
     :param: NULL
     :return:
-        args -> Namespace(batch_size, bitrate, data_dir, epoch, gpu, learning_rate, log_dir, mode, model_dir, relative_payload, seed, stego_method)
+        argument
     """
-    parser = argparse.ArgumentParser(description="Audio/Image steganalysis with CNN")
+    parser = argparse.ArgumentParser(description="Audio/Image steganalysis with CNN based on tensorflow.")
     print(parser.description)
 
     # get the current path
     current_path = os.getcwd()
     print("current path: %s" % current_path)
-    print("The introduction of the parameters -- \"python3 **.py\" -h, more detailed information is in readme.md")
 
     # mode
+    parser.add_argument("--gpu_selection", type=str, default="auto",
+                        help="GPU selection mode, if \"auto\", no serial number is needed, otherwise appoint the serial number (default: auto)")
     parser.add_argument("--gpu", type=str, default="0", help="the index of GPU")
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
     parser.add_argument("--submode", type=str, default="one", help="one | batch (default one)")
     parser.add_argument("--carrier", type=str, default="audio", help="image | audio (default audio)")
     parser.add_argument("--network", type=str, default="network1", help="the index of the network (default: network1), "
                                                                         "the detailed introduction of each network is in readme")
-
     # data info
     parser.add_argument("--data_dir", type=str, help="data set path")
     parser.add_argument("--bitrate", type=int, default=128, help="the bitrate of MP3 files (default:128)")
@@ -68,9 +68,9 @@ def command_parse():
     parser.add_argument("--height", type=int, default=200, help="the height of the QMDCT matrix (default: 200)")
     parser.add_argument("--width", type=int, default=576, help="the width of the QMDCT matrix (default: 576)")
     parser.add_argument("--start_index_train", type=int, default=0, help="the start index of file in train folders (default: 0)")
-    parser.add_argument("--end_index_train", type=int, default=-1, help="the end index of file in train folders (default: 16000)")
+    parser.add_argument("--end_index_train", type=int, default=16000, help="the end index of file in train folders (default: 16000)")
     parser.add_argument("--start_index_valid", type=int, default=0, help="the start index of file in valid folders (default: 0)")
-    parser.add_argument("--end_index_valid", type=int, default=-1, help="the end index of file in valid folders (default: 4000)")
+    parser.add_argument("--end_index_valid", type=int, default=4000, help="the end index of file in valid folders (default: 4000)")
     parser.add_argument("--model_dir", type=str, help="model files path")
     parser.add_argument("--model_file_name", type=str, default="audio_steganalysis", help="model file name (default: audio_steganalysis)")
     parser.add_argument("--log_dir", type=str, help="log files path")
@@ -96,11 +96,15 @@ def command_parse():
 
     # hyper parameters
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
-    parser.add_argument("--batch_size_train", type=int, default=128, help="batch size for train (default: 128 (64 cover|stego pairs))")
-    parser.add_argument("--batch_size_valid", type=int, default=128, help="batch size for valid (default: 128 (64 cover|stego pairs))")
+    parser.add_argument("--batch_size_train", type=int, default=64, help="batch size for train (default: 128 (64 cover|stego pairs))")
+    parser.add_argument("--batch_size_valid", type=int, default=16, help="batch size for valid (default: 128 (64 cover|stego pairs))")
     parser.add_argument("--learning_rate", type=float, default=1e-3, help="the value of initialized learning rate (default: 1e-3 (0.001))")
     parser.add_argument("--seed", type=int, default=1, help="random seed (default: 1)")
     parser.add_argument("--is_regulation", type=bool, default=True, help="whether regulation or not (default: True)")
+    parser.add_argument("--coeff_regulation", type=float, default=1e-3, help="the gain of regulation (default: 1e-3)")
+    parser.add_argument("--loss_method", type=bool, default="sparse_softmax_cross_entropy",
+                        help="the method of loss calculation (default: sparse_softmax_cross_entropy)")
+    parser.add_argument("--class_num", type=int, default=2, help="the class number (default: 2)")
 
     # learning rate parameters
     parser.add_argument("--decay_method", type=str, default="exponential", help="the method for learning rate decay (default: exponential)")
@@ -129,6 +133,7 @@ def command_parse():
     parser.add_argument("--is_diff", type=bool, default=False, help="threshold (default: False)")
     parser.add_argument("--order", type=int, default=2, help="the order of the difference (default: 2)")
     parser.add_argument("--direction", type=int, default=0, help="0 - row, 1 - col (default: 0)")
+    parser.add_argument("--is_diff_abs", type=bool, default=False, help="abs or not after difference (default: False)")
     parser.add_argument("--downsampling", type=bool, default=False, help="downsampling or not (default: False)")
     parser.add_argument("--block", type=int, default=2, help=" (default: 2)")
 

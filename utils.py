@@ -7,6 +7,7 @@ Finished on 2017.11.20
 @author: Wang Yuntao
 """
 
+import csv
 import tensorflow as tf
 from operator import mul
 from functools import reduce
@@ -84,7 +85,7 @@ def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_lab
         yield datas, labels
 
 
-def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, order=2, direction=0,
+def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0,
              is_trunc=False, threshold=15, threshold_left=0, threshold_right=255):
     """
     read data
@@ -94,6 +95,7 @@ def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=F
     :param carrier: the type of carrier (audio | image, here if choose audio, use QMDCT matrix)
     :param is_abs: whether abs or not (default: False)
     :param is_diff: whether difference or not (default: False)
+    :params is_diff_abs: whether abs after difference or not (default: False)
     :param order: the order of difference
     :param direction: the direction of difference (default: row)
     :param is_trunc: whether truncation or not (default: False)
@@ -226,6 +228,8 @@ def get_model_info(model_file_path):
 
 
 if __name__ == "__main__":
+    pass
+
     # train files
     # cover_files_path_train = "/home/zhanghong/data/image/train/512_cover"
     # stego_files_path_train = "/home/zhanghong/data/image/train/512_stego"
@@ -240,4 +244,4 @@ if __name__ == "__main__":
     # cover_data_valid_list, cover_label_valid_list, stego_data_valid_list, stego_label_valid_list = read_data(cover_files_path_valid, stego_files_path_valid)
     # print(len(cover_data_valid_list), len(stego_data_valid_list))
 
-    get_model_info("E:/Myself/1.source_code/tf_audio_steganalysis/stegshi/audio_steganalysis-5797")
+    # get_model_info("E:/Myself/1.source_code/tf_audio_steganalysis/stegshi/audio_steganalysis-5797")
