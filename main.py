@@ -19,15 +19,5 @@ except ImportError:
     print("win_unicode_console import unsuccessfully.")
 
 arguments = command_parse()
-gpu_selection = arguments.gpu_selection
-
-if gpu_selection == "auto":
-    gm = GPUManager()
-    with gm.auto_choice():
-        run_mode(arguments)
-else:
-    os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
-    run_mode(arguments)
-
-
-
+os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
+run_mode(arguments)

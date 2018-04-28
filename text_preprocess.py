@@ -81,7 +81,7 @@ def read_text_all(text_files_dir, height=200, width=576,
     :return: QMDCT matrixs (QMDCT矩阵) shape: [files_num, height, width, 1]
     """
     text_files_list = get_files_list(text_files_dir)                            # get the files list
-    files_num = len(text_files_list)                                            # get the number of files in the foloder
+    files_num = len(text_files_list)                                            # get the number of files in the folder
 
     if is_diff is True and direction == 0:
         h, w = height - order, width
@@ -153,4 +153,3 @@ if __name__ == "__main__":
         print(np.diff(matrix_new[:10, :10, 0], 1, 0))
     else:
         print("This file does not exist.")
-

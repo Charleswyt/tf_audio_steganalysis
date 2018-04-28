@@ -95,7 +95,7 @@ def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=F
     :param carrier: the type of carrier (audio | image, here if choose audio, use QMDCT matrix)
     :param is_abs: whether abs or not (default: False)
     :param is_diff: whether difference or not (default: False)
-    :params is_diff_abs: whether abs after difference or not (default: False)
+    :param is_diff_abs: whether abs after difference or not (default: False)
     :param order: the order of difference
     :param direction: the direction of difference (default: row)
     :param is_trunc: whether truncation or not (default: False)
@@ -107,7 +107,7 @@ def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=F
     """
     if carrier == "audio":
         data = read_text_batch(text_files_list=files_list, height=height, width=width, is_abs=is_abs, is_diff=is_diff, order=order, direction=direction,
-                               is_trunc=is_trunc, threshold=threshold)
+                               is_diff_abs=is_diff_abs, is_trunc=is_trunc, threshold=threshold)
     elif carrier == "image":
         data = read_image_batch(image_files_list=files_list, height=height, width=width, is_diff=is_diff, order=order, direction=direction,
                                 is_trunc=is_trunc, threshold=threshold, threshold_left=threshold_left, threshold_right=threshold_right)
@@ -229,19 +229,3 @@ def get_model_info(model_file_path):
 
 if __name__ == "__main__":
     pass
-
-    # train files
-    # cover_files_path_train = "/home/zhanghong/data/image/train/512_cover"
-    # stego_files_path_train = "/home/zhanghong/data/image/train/512_stego"
-
-    # cover_data_train_list, cover_label_train_list, stego_data_train_list, stego_label_train_list = read_data(cover_files_path_train, stego_files_path_train)
-    # print(len(cover_data_train_list), len(stego_data_train_list))
-
-    # valid files
-    # cover_files_path_valid = "/home/zhanghong/data/image/val/512_cover"
-    # stego_files_path_valid = "/home/zhanghong/data/image/val/512_stego"
-
-    # cover_data_valid_list, cover_label_valid_list, stego_data_valid_list, stego_label_valid_list = read_data(cover_files_path_valid, stego_files_path_valid)
-    # print(len(cover_data_valid_list), len(stego_data_valid_list))
-
-    # get_model_info("E:/Myself/1.source_code/tf_audio_steganalysis/stegshi/audio_steganalysis-5797")

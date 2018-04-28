@@ -50,8 +50,8 @@ def command_parse():
     print("current path: %s" % current_path)
 
     # mode
-    parser.add_argument("--gpu_selection", type=str, default="auto",
-                        help="GPU selection mode, if \"auto\", no serial number is needed, otherwise appoint the serial number (default: auto)")
+    # parser.add_argument("--gpu_selection", type=str, default="auto",
+    #                     help="GPU selection mode, if \"auto\", no serial number is needed, otherwise appoint the serial number (default: auto)")
     parser.add_argument("--gpu", type=str, default="0", help="the index of GPU")
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
     parser.add_argument("--submode", type=str, default="one", help="one | batch (default one)")
@@ -97,7 +97,7 @@ def command_parse():
     # hyper parameters
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
     parser.add_argument("--batch_size_train", type=int, default=64, help="batch size for train (default: 128 (64 cover|stego pairs))")
-    parser.add_argument("--batch_size_valid", type=int, default=16, help="batch size for valid (default: 128 (64 cover|stego pairs))")
+    parser.add_argument("--batch_size_valid", type=int, default=64, help="batch size for valid (default: 128 (64 cover|stego pairs))")
     parser.add_argument("--learning_rate", type=float, default=1e-3, help="the value of initialized learning rate (default: 1e-3 (0.001))")
     parser.add_argument("--seed", type=int, default=1, help="random seed (default: 1)")
     parser.add_argument("--is_regulation", type=bool, default=True, help="whether regulation or not (default: True)")

@@ -491,8 +491,3 @@ def size_tune(input_data):
     output = tf.concat([data_mean, data_max, data_min, data_variance], 2)
 
     return output
-
-
-def parameter_initialization(shape, dtype, initializer, trainable):
-    pass
-
