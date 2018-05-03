@@ -12,8 +12,13 @@ from layer import *
         network1_4: Replace the convolutional kernel with 5x5 kernel (将卷积核尺寸由3 x 3改为5 x 5)
         network1_5: ReLu is used as the activation function (将激活函数由Tanh改为ReLu)
         network1_6: Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
-        network1_7: Deepen the network to block convolution layers (加深网络)
-        
+        network1_7: Deepen the network to block convolutional layers (加深网络)
+        network1_8: Remove the 1x1 convolutional layers (移除1x1卷积层)
+        network1__1: Remove the first BN layer in the first group (移除第一个block内的BN层)
+        network1__2: Remove the first BN layers in the first two groups (移除前两个block内的BN层)
+        network1__3: Remove the first BN layers in the first four groups (移除第四个block内的BN层)
+        network1__4: Add BN layers at the top of 3x3 conv layer (在每个3x3卷积层后添加BN层)
+
         Note: HPF and ABS is applied at the pre-processing
 """
 

@@ -16,7 +16,7 @@ Finished on 2017.11.30
 
 """
     function: 
-        train_audio(args)                                       # 训练
+        train(args)                                             # 训练
         steganalysis_one(args)                                  # 隐写分析网络测试 (单个文件)
         steganalysis_batch(args)                                # 隐写分析网络测试 (多个文件)
 """
@@ -185,7 +185,7 @@ def train(args):
             print("epoch: %003d, valid iterations: %003d, valid loss: %f, valid accuracy: %f" % (epoch + 1, valid_iterations, err, ac))
 
         # calculate the average in a batch (计算每个batch内的平均值)
-        train_loss_average = valid_loss / train_iterations
+        train_loss_average = train_loss / train_iterations
         valid_loss_average = valid_loss / valid_iterations
         train_accuracy_average = train_accuracy / train_iterations
         valid_accuracy_average = valid_accuracy / valid_iterations
