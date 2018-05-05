@@ -219,7 +219,7 @@ def activation_layer(input_data, activation_method="None", alpha=0.2):
 
 def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
                activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
-               init_method="xavier", bias_term=False, is_pretrain=True):
+               init_method="xavier", bias_term=True, is_pretrain=True):
     """
     convolutional layer
     :param input_data: the input data tensor [batch_size, height, width, channels]
@@ -359,7 +359,6 @@ def accuracy_layer(logits, label):
     :return: accuracy
     """
     with tf.variable_scope("accuracy"):
-        # correct = tf.nn.in_top_k(logits, label, 1)
         correct_prediction = tf.equal(tf.cast(tf.argmax(logits, 1), tf.int32), label)
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -489,5 +488,44 @@ def size_tune(input_data):
     data_mean, data_variance = tf.nn.moments(x=input_data, axes=[1, 2], keep_dims=True)                 # calculate the mean and variance of the feature map
 
     output = tf.concat([data_mean, data_max, data_min, data_variance], 2)
+
+    return output
+
+
+def inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+                 init_method="xavier", bias_term=True, is_pretrain=True):
+    """
+    the structure of inception V1
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param filter_num: the number of the convolutional kernel
+    :param name: the name of the layer
+    :param activation_method: the type of activation function (default: relu)
+    :param alpha: leaky relu alpha (default: 0.2)
+    :param padding: the padding method, "SAME" | "VALID" (default: "SAME")
+    :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
+    :param init_method: the method of weights initialization (default: xavier)
+    :param bias_term: whether the bias term exists or not (default: False)
+    :param is_pretrain: whether the parameters are trainable (default: True)
+
+    :return: 4-D tensor
+    """
+    branch1 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name+"_branch_1",
+                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
+
+    branch2 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name+"branch_2_1_1",
+                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
+    branch2 = conv_layer(branch2, 3, 3, 1, 1, filter_num, name+"branch_2_3_3",
+                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
+
+    branch3 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name + "branch_3_1_1",
+                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
+    branch3 = conv_layer(branch3, 5, 5, 1, 1, filter_num, name + "branch_3_5_5",
+                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
+
+    branch4 = pool_layer(input_data, 3, 3, 1, 1, name+"branch_4_pool", False, padding)
+    branch4 = conv_layer(branch4, 1, 1, 1, 1, filter_num, name + "branch_4_1_1",
+                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
+
+    output = tf.concat([branch1, branch2, branch3, branch4], 3)
 
     return output
