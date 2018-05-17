@@ -7,3 +7,8 @@
 
 *.iml
 !*.exe
+*.pyc
+*.pyc
+*.tmp
+*.xml
+*.xml

@@ -58,6 +58,7 @@ def command_parse():
     parser.add_argument("--carrier", type=str, default="audio", help="image | audio (default audio)")
     parser.add_argument("--network", type=str, default="network1", help="the index of the network (default: network1), "
                                                                         "the detailed introduction of each network is in readme")
+
     # data info
     parser.add_argument("--data_dir", type=str, help="data set path")
     parser.add_argument("--bitrate", type=int, default=128, help="the bitrate of MP3 files (default:128)")
@@ -96,8 +97,8 @@ def command_parse():
 
     # hyper parameters
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
-    parser.add_argument("--batch_size_train", type=int, default=64, help="batch size for train (default: 128 (64 cover|stego pairs))")
-    parser.add_argument("--batch_size_valid", type=int, default=64, help="batch size for valid (default: 128 (64 cover|stego pairs))")
+    parser.add_argument("--batch_size_train", type=int, default=64, help="batch size for train (default: 64 (32 cover/stego pairs))")
+    parser.add_argument("--batch_size_valid", type=int, default=64, help="batch size for valid (default: 64 (32 cover/stego pairs))")
     parser.add_argument("--learning_rate", type=float, default=1e-3, help="the value of initialized learning rate (default: 1e-3 (0.001))")
     parser.add_argument("--seed", type=int, default=1, help="random seed (default: 1)")
     parser.add_argument("--is_regulation", type=bool, default=True, help="whether regulation or not (default: True)")
@@ -211,6 +212,20 @@ def get_files_list(file_dir, start_idx=0, end_idx=10000):
     file_list = file_list[start_idx:end_idx]
 
     return file_list
+
+
+def fullfile(file_dir, file_path):
+    """
+    full file path based on os.path.join
+    :param file_dir: dir
+    :param file_path: file path
+    :return:
+        path: final path
+    """
+    path = os.path.join(file_dir, file_path)
+    path = path.replace("\\", "/")
+
+    return path
 
 
 def get_packages():

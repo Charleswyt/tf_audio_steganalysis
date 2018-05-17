@@ -841,4 +841,3 @@ def network1__4(input_data, class_num=2, is_bn=True, activation_method="tanh", p
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
-
