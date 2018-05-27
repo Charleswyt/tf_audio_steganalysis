@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import tensorflow as tf
 from math import floor
+import tensorflow as tf
+from tensorflow.contrib.layers.python.layers import batch_norm, layer_norm
 
 """
 Created on 2017.12.29
@@ -69,33 +70,20 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
     return pooling
 
 
-def batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3, activation_method="relu", is_train=True):
+def batch_normalization(input_data, name, activation_method="relu", is_train=True):
     """
     BN layer
     :param input_data: the input data
     :param name: name
-    :param offset: beta
-    :param scale: gamma
-    :param variance_epsilon: variance_epsilon
     :param activation_method: the method of activation function
     :param is_train: if False, skip this layer, default is True
     :return:
     """
-    if is_train is True:
-        batch_mean, batch_var = tf.nn.moments(input_data, [0])
-        output_data = tf.nn.batch_normalization(x=input_data,
-                                                mean=batch_mean,
-                                                variance=batch_var,
-                                                offset=offset,
-                                                scale=scale,
-                                                variance_epsilon=variance_epsilon,
-                                                name=name)
-        output_data = activation_layer(input_data=output_data,
-                                       activation_method=activation_method)
-        print("name: %s, activation: %s" % (name, activation_method))
-    else:
-        output_data = input_data
-
+    output_data = batch_norm(inputs=input_data, decay=0.9, center=True, scale=True, epsilon=1e-5, scope=name, updates_collections=None,
+                             reuse=False, is_training=is_train, zero_debias_moving_mean=True)
+    output_data = activation_layer(input_data=output_data,
+                                   activation_method=activation_method)
+    print("name: %s, activation: %s, is_training: %r" % (name, activation_method, is_train))
     return output_data
 
 

@@ -14,14 +14,14 @@ from subprocess import call
 
 """
 function:
-        command_parse()                                     命令行解析
-        file_path_setup(args)                               获取文件路径
-        get_files_list(file_dir, start_idx=0, end_idx=-1)   获取文件列表
-        get_packages()                                      获取当前系统安装的库文件
-        show_package(_packages)                             显示当前系统安装的库文件
-        package_download(packages_name)                     如果缺少支持程序运行的包则自动下载
-        package_upgrade(package_name)                       更新当前系统安装的指定库文件
-        packages_upgrade()                                  批量更新当前系统安装的所有库文件
+        command_parse()                                     parse command line parameters (命令行解析)
+        file_path_setup(args)                               get file path (获取文件路径)
+        get_files_list(file_dir, start_idx=0, end_idx=-1)   get file list (获取文件列表)
+        get_packages()                                      get installed packages in the current machine (获取当前系统安装的库文件)
+        show_package(_packages)                             show all installed  packages in the current machine (显示当前系统安装的库文件)
+        package_download(packages_name)                     download defect packages automatically (如果缺少支持程序运行的包则自动下载)
+        package_upgrade(package_name)                       update the package in the current machine (更新当前系统安装的指定库文件)
+        packages_upgrade()                                  update all packages in the current machine (批量更新当前系统安装的所有库文件)
 """
 
 """
@@ -106,6 +106,7 @@ def command_parse():
     parser.add_argument("--loss_method", type=bool, default="sparse_softmax_cross_entropy",
                         help="the method of loss calculation (default: sparse_softmax_cross_entropy)")
     parser.add_argument("--class_num", type=int, default=2, help="the class number (default: 2)")
+    parser.add_argument("--epoch", type=int, default=500, help="the number of epochs for network training stop (default: 500)")
 
     # learning rate parameters
     parser.add_argument("--decay_method", type=str, default="exponential", help="the method for learning rate decay (default: exponential)")
@@ -118,14 +119,6 @@ def command_parse():
     parser.add_argument("--max_to_keep", type=int, default=3, help="the number needed to be saved (default: 3)")
     parser.add_argument("--keep_checkpoint_every_n_hours", type=float, default=0.5,
                         help="how often to keep checkpoints (default: 0.5)")
-
-    # stop criterion
-    parser.add_argument("--criterion", type=str, default="epoch", help="the criterion for the network stop (default: epoch,"
-                                                                       "other choice: accuracy, max_iteration, still)")
-    parser.add_argument("--epoch", type=int, default=500, help="the number of epochs for network training stop (default: 500)")
-    parser.add_argument("--accuracy", type=float, default=0.8, help="the valid accuracy for the network training stop (default: 0.8)")
-    parser.add_argument("--max_iteration", type=int, default=100000, help="the number of max iteration for network training stop (default: 100000)")
-    parser.add_argument("--still_epoch", type=int, default=3, help="the number of max iteration for network training stop (default: 3, int)")
 
     # pre-processing
     parser.add_argument("--is_abs", type=bool, default=False, help="abs or not (default: False)")
