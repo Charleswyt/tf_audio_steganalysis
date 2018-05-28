@@ -18,14 +18,15 @@ function:
 """
 
 
-def get_file_name(file_path):
+def get_file_name(file_path, sep="/"):
     """
     获取文件名
-    :param file_path: 文件路径
-    :return: 文件名
+    :param file_path: file path (文件路径)
+    :param sep: separator (分隔符)
+    :return: file name (文件名)
     """
     if os.path.exists(file_path):
-        file_name = file_path.split(sep='/')[-1]
+        file_name = file_path.split(sep=sep)[-1]
     else:
         file_name = None
     return file_name
