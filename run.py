@@ -7,6 +7,7 @@ from utils import *
 from network import *
 from config import file_path_setup
 from file_preprocess import get_file_name
+from tensorflow.python.ops import control_flow_ops
 
 """
 Created on 2017.11.27
@@ -61,7 +62,7 @@ def train(args):
                                   name="global_step",
                                   dtype=tf.int32)                                           # global step (Variable 变量不能直接分配GPU资源)
 
-    # pre processing
+    # pre processing (输入数据预处理)
     is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs, downsampling, block = \
         args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs, args.downsampling, args.block
 
@@ -72,7 +73,7 @@ def train(args):
                                         decay_steps=decay_steps,
                                         decay_rate=decay_rate)                             # learning rate
 
-    # placeholder
+    # the height and width of input data (确定输入数据的尺寸)
     height, width, channel = args.height, args.width, 1                                    # the height, width and channel of the QMDCT matrix
     if is_diff is True and direction == 0:
         height_new, width_new = height - order, width
@@ -81,17 +82,19 @@ def train(args):
     else:
         height_new, width_new = height, width
 
+    # placeholder (占位符)
     data = tf.placeholder(dtype=tf.float32, shape=(None, height_new, width_new, channel), name="QMDCTs")
     label = tf.placeholder(dtype=tf.int32, shape=(None, ), name="label")
+    is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
-    # start session
-    init = tf.global_variables_initializer()
-    sess = tf.Session()
-    sess.run(init)
-
-    # initialize the network
-    command = args.network + "(data, classes_num)"
+    # initialize the network (网络结构初始化)
+    command = args.network + "(data, classes_num, is_bn)"
     logits = eval(command)
+
+    # evaluation (评估)
+    loss = loss_layer(logits=logits, label=label, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
+    train_optimizer = optimizer(losses=loss, learning_rate=learning_rate, global_step=global_step)
+    accuracy = accuracy_layer(logits=logits, label=label)
 
     # file path (文件路径)
     cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, model_file_path, log_file_path = file_path_setup(args)
@@ -108,11 +111,6 @@ def train(args):
                                                                  init_learning_rate, decay_method, decay_rate, decay_steps))
     print("start load network...")
 
-    # evaluation
-    loss = loss_layer(logits=logits, label=label, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
-    train_optimizer = optimizer(losses=loss, learning_rate=learning_rate, global_step=global_step)
-    accuracy = accuracy_layer(logits=logits, label=label)
-
     with tf.device("/cpu:0"):
         tf.summary.scalar("loss_train", loss)
         tf.summary.scalar("accuracy_train", accuracy)
@@ -120,7 +118,7 @@ def train(args):
         saver = tf.train.Saver(max_to_keep=max_to_keep,
                                keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
 
-    # initialize
+    # initialize (初始化)
     sess = tf.InteractiveSession()
     train_writer_train = tf.summary.FileWriter(log_file_path + "/train", tf.get_default_graph())
     train_writer_valid = tf.summary.FileWriter(log_file_path + "/valid", tf.get_default_graph())
@@ -154,7 +152,8 @@ def train(args):
                                     is_trunc=is_trunc, threshold=threshold)
 
             # get the accuracy and loss (训练与指标显示)
-            _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op], feed_dict={data: x_train_data, label: y_train_batch})
+            _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op],
+                                                     feed_dict={data: x_train_data, label: y_train_batch, is_bn: True})
 
             train_loss += err
             train_accuracy += ac
@@ -175,7 +174,8 @@ def train(args):
                                     is_trunc=is_trunc, threshold=threshold)
 
             # get the accuracy and loss (验证与指标显示)
-            err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op], feed_dict={data: x_valid_data, label: y_valid_batch})
+            err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
+                                                  feed_dict={data: x_valid_data, label: y_valid_batch, is_bn: True})
             valid_loss += err
             valid_accuracy += ac
             valid_iterations += 1
@@ -210,91 +210,157 @@ def train(args):
 
 
 def steganalysis_one(args):
-    height, width = args.height, args.width
-    model_file_path = args.model_file_path
-    image_file_path = args.test_file_path
+    # the info of carrier
+    carrier = args.carrier
+    test_file_path = args.test_file_path
 
-    data = tf.placeholder(tf.float32, [1, height, width, 1], name="image")
+    # pre-process
+    is_diff, order, direction = args.is_diff, args.order, args.direction
 
-    command = args.network + "(data, 2, is_bn=False)"
+    # the height, width and channel of the QMDCT matrix
+    height, width, channel = args.height, args.width, args.channel
+    if is_diff is True and direction == 0:
+        height_new, width_new = height - order, width
+    elif is_diff is True and direction == 1:
+        height_new, width_new = height, width - order
+    else:
+        height_new, width_new = height, width
+
+    # placeholder
+    data = tf.placeholder(tf.float32, [None, height_new, width_new, channel], name="QMDCTs")
+    is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
+
+    # network
+    command = args.network + "(data, 2, is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
-    # read image
-    img = io.imread(image_path)
-    img = np.reshape(img, [1, height, width, 1])
-    image_name = get_file_name(image_file_path)
-
-    # 加载模型
-    saver = tf.train.Saver()
-    init = tf.global_variables_initializer()
+    model = tf.train.Saver()
     with tf.Session() as sess:
-        sess.run(init)
-        saver.restore(sess, model_file_path)
-        print("The model is loaded successfully.")
+        # load model
+        sess.run(tf.global_variables_initializer())
+        if args.model_file_path is None and args.model_dir is not None:
+            model_file_path = tf.train.latest_checkpoint(args.model_dir)
+        elif args.model_file_path is not None:
+            model_file_path = args.model_file_path
+        else:
+            model_file_path = None
 
-        # predict
-        ret = sess.run(logits, feed_dict={data: img})
-        result = np.argmax(ret, 1)
+        if model_file_path is None:
+            print("No model is loaded successfully.")
+        else:
+            model.restore(sess, model_file_path)
+            print("The model is loaded successfully, model file: %s" % model_file_path)
 
-        if result == 1:
-            print("%s: stego" % image_name)
-        if result == 0:
-            print("%s: cover" % image_name)
+            # predict
+            if carrier == "audio":
+                media = read_text(test_file_path, width=width, is_diff=args.is_diff,
+                                  order=args.order, direction=args.direction)
+            elif carrier == "image":
+                media = io.imread(test_file_path)
+            else:
+                media = None
+
+            if media is None:
+                print("No model can be used for this carrier. (need image or audio)")
+            else:
+                media_name = get_file_name(test_file_path, sep="\\")
+                media = np.reshape(media, [1, height_new, width_new, channel])
+                ret = sess.run(logits, feed_dict={data: media, is_bn: False})
+                result = np.argmax(ret, 1)
+                prob = 100 * ret[0][result]
+
+                media_label = args.label
+                if result[0] == 0:
+                    print("file name: %s, result: cover, label: %r, prob: %.2f%%" % (media_name, media_label, prob))
+
+                if result[0] == 1:
+                    print("file name: %s, result: stego, label: %r, prob: %.2f%%" % (media_name, media_label, prob))
 
 
 def steganalysis_batch(args):
-    height, width = args.height, args.width
-    model_file_path = args.model_file_path
-    image_files_path = args.test_files_dir
+    # the info of carrier
+    carrier = args.carrier
+    test_files_path = args.test_files_dir
     label_file_path = args.label_file_path
 
-    image_list = get_files_list(image_files_path)
-    image_num = len(image_list)
-    data = tf.placeholder(tf.float32, [1, height, width, 1], name="image")
+    # pre-process
+    is_diff, order, direction = args.is_diff, args.order, args.direction
 
-    if label_file_path is not None:
-        label = list()
-        with open(label_file_path) as file:
-            for line in file.readlines():
-                label.append(line)
+    # the height, width and channel of the QMDCT matrix
+    height, width, channel = args.height, args.width, args.channel
+    if is_diff is True and direction == 0:
+        height_new, width_new = height - order, width
+    elif is_diff is True and direction == 1:
+        height_new, width_new = height, width - order
     else:
-        label = np.zeros([image_num, 1])
+        height_new, width_new = height, width
 
-    command = args.network + "(data, 2, is_bn=False)"
+    # placeholder
+    data = tf.placeholder(tf.float32, [None, height_new, width_new, channel], name="QMDCTs")
+    is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
+
+    # network
+    command = args.network + "(data, 2, is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
-    # 加载模型
-    saver = tf.train.Saver()
-    init = tf.global_variables_initializer()
+    model = tf.train.Saver()
     with tf.Session() as sess:
-        sess.run(init)
-        saver.restore(sess, model_file_path)
-        print("The model is loaded successfully.")
+        # load model
+        sess.run(tf.global_variables_initializer())
+        if args.model_file_path is None and args.model_dir is not None:
+            model_file_path = tf.train.latest_checkpoint(args.model_dir)
+        elif args.model_file_path is not None:
+            model_file_path = args.model_file_path
+        else:
+            model_file_path = None
 
-        # read image
-        count, i = 0, 0
-        for image_file_path in image_list:
-            img = io.imread(image_path)
-            img = np.reshape(img, [1, height, width, 1])
-            image_name = get_file_name(image_file_path)
+        if model_file_path is None:
+            print("No model is loaded successfully.")
+        else:
+            model.restore(sess, model_file_path)
+            print("The model is loaded successfully, model file: %s" % model_file_path)
 
-            # predict
-            ret = sess.run(logits, feed_dict={data: img})
-            ret[0][0] = ret[0][0]
-            ret[0][1] = ret[0][1]
-            result = np.argmax(ret, 1)
+            test_file_list = get_files_list(test_files_path)
 
-            if result == 1:
-                print("%s: stego" % image_name)
-                if int(label[i]) == 1:
-                    count = count + 1
-            if result == 0:
-                print("%s: cover" % image_name)
-                if int(label[i]) == 0:
-                    count = count + 1
-            i = i + 1
+            # get file label
+            if label_file_path is not None:
+                label = list()
+                with open(label_file_path) as file:
+                    for line in file.readlines():
+                        label.append(int(line))
+            else:
+                label = -np.ones([image_num, 1])
 
-    if label_file_path is not None:
-        print("Accuracy = %.2f" % (count / image_num))
+            results, number = list(), 0
+            for test_file in test_file_list:
+                # predict
+                if carrier == "audio":
+                    media = read_text(test_file, width=width, is_diff=args.is_diff,
+                                      order=args.order, direction=args.direction)
+                elif carrier == "image":
+                    media = io.imread(test_file)
+                else:
+                    media = None
+
+                if media is None:
+                    print("No model can be used for this carrier. (need image or audio)")
+                else:
+                    media_name = get_file_name(test_file, sep="\\")
+                    media = np.reshape(media, [1, height_new, width_new, channel])
+                    ret = sess.run(logits, feed_dict={data: media, is_bn: False})
+                    result = np.argmax(ret, 1)
+                    prob = 100 * ret[0][result]
+                    results.append(result[0])
+
+                    media_label = label[number]
+                    if result[0] == 0:
+                        print("file name: %s, result: cover, label: %r, prob: %.2f%%" % (media_name, media_label, prob))
+
+                    if result[0] == 1:
+                        print("file name: %s, result: stego, label: %r, prob: %.2f%%" % (media_name, media_label, prob))
+
+                    number += 1
+            accuracy = 100 * (np.count_nonzero(np.array(results) == label) / len(results))
+            print("Accuracy = %.2f%%" % accuracy)
