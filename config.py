@@ -68,6 +68,7 @@ def command_parse():
                         help="EECS | HCM-Gao | HCM- Yan (default: EECS)")
     parser.add_argument("--height", type=int, default=200, help="the height of the QMDCT matrix (default: 200)")
     parser.add_argument("--width", type=int, default=576, help="the width of the QMDCT matrix (default: 576)")
+    parser.add_argument("--channel", type=int, default=1, help="the channel of the QMDCT matrix (default: 1)")
     parser.add_argument("--start_index_train", type=int, default=0, help="the start index of file in train folders (default: 0)")
     parser.add_argument("--end_index_train", type=int, default=16000, help="the end index of file in train folders (default: 16000)")
     parser.add_argument("--start_index_valid", type=int, default=0, help="the start index of file in valid folders (default: 0)")
@@ -76,10 +77,11 @@ def command_parse():
     parser.add_argument("--model_file_name", type=str, default="audio_steganalysis", help="model file name (default: audio_steganalysis)")
     parser.add_argument("--log_dir", type=str, help="log files path")
 
-    parser.add_argument("--model_file_path", type=str, help="the model file path used for test")
+    parser.add_argument("--model_file_path", type=str, default=None, help="the model file path used for test (default is None)")
     parser.add_argument("--test_file_path", type=str, help="the file path used for test")
     parser.add_argument("--test_files_dir", type=str, help="the files folder path used for test")
     parser.add_argument("--label_file_path", type=str, help="the label file path used for test")
+    parser.add_argument("--label", type=str, default=None, help="the label of tested file (default is None)")
 
     # path
     parser.add_argument("--cover_train_dir", type=str,
