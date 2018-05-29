@@ -23,6 +23,49 @@ from matplotlib.pylab import plt
 """
 
 
+def fullfile(file_dir, file_name):
+    """
+    fullfile as matlab
+    :param file_dir: file dir
+    :param file_name: file name
+    :return: a full file path
+    """
+    full_file_path = os.path.join(file_dir, file_name)
+    full_file_path = full_file_path.replace("\\", "/")
+
+    return full_file_path
+
+
+def get_time(_unix_time_stamp=None):
+    """
+    unix时间戳 -> "%Y-%m-%d %H:%M:%S"格式的时间
+    e.g. 1522048036 -> 2018-03-26 15:07:16
+    :param _unix_time_stamp: unix时间戳
+    :return:
+        "%Y-%m-%d %H:%M:%S"格式的时间
+    """
+    _format = "%Y-%m-%d %H:%M:%S"
+    if _unix_time_stamp is None:
+        value = time.localtime()
+    else:
+        value = time.localtime(_unix_time_stamp)
+    _time_string = time.strftime(_format, value)
+
+    return _time_string
+
+
+def get_unix_stamp(_time_string="1970-01-01 08:01:51", _format="%Y-%m-%d %H:%M:%S"):
+    """
+    time expression with "%Y-%m-%d %H:%M:%S" format -> unix time stamp
+    :param _time_string: time expression with "%Y-%m-%d %H:%M:%S" format
+    :param _format:
+    :return: unix time stamp
+    """
+    _unix_time_stamp = time.mktime(time.strptime(_time_string, _format))
+
+    return int(_unix_time_stamp)
+
+
 def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True):
     """
     read file names from the storage
@@ -116,27 +159,6 @@ def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=F
                                is_trunc=is_trunc, threshold=threshold)
 
     return data
-
-
-def model_load(model_file):
-    if not os.path.exists(model_file):
-        print("There is no such file, try again please.")
-    else:
-        model = np.load(model_file, encoding="latin1").item()
-        print(type(model))
-        model_keys = model.keys()
-        keys = sorted(model_keys)
-        print(model["fc6"][3])
-
-        for key in keys:
-            weights = model[key][0]
-            biases = model[key][1]
-            print(key)
-            print("weights shape: ", weights.shape)
-            print("biases  shape: ", biases.shape)
-
-        fc6 = get_weights(model, "fc6")
-        print(np.shape(fc6))
 
 
 def get_model_parameters():
