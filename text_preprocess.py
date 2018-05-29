@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import platform
+import pandas as pd
 from pre_process import *
 from config import get_files_list
 
@@ -138,18 +138,18 @@ def read_text_batch(text_files_list, height=200, width=576,
     return data
 
 
-if __name__ == "__main__":
-    system = platform.system()
-    if system == "Linux":
-        file_path = "/home/zq/data/stego/EECS/128_W_2_H_7_ER_10/train/wav10s_00689.txt"
-    else:
-        file_path = "E:/Myself/2.database/10.QMDCT/1.txt/APS/128_01/wav10s_00689.txt"
+def read_csv(csv_file_path):
+    csv_data = pd.read_csv(csv_file_path)
+    csv_data_list = csv_data.values.tolist()
 
-    if os.path.exists(file_path):
-        matrix = read_text(file_path)
-        print(matrix[:10, :10])
-        matrix_new = np.reshape(matrix, [200, 576, 1])
-        print(matrix_new[:10, :10, 0])
-        print(np.diff(matrix_new[:10, :10, 0], 1, 0))
-    else:
-        print("This file does not exist.")
+    data_list, label_list = list(), list()
+    for csv_data in csv_data_list:
+        data_list.append(csv_data[0])
+        label_list.append(csv_data[1])
+
+    return data_list, label_list
+
+
+if __name__ == "__main__":
+    data_list, label_list = read_csv(r"C:\Users\Charles_CatKing\Desktop\123.csv")
+    print(data_list, label_list)
