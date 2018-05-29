@@ -84,14 +84,18 @@ def command_parse():
     parser.add_argument("--label", type=str, default=None, help="the label of tested file (default is None)")
 
     # path
-    parser.add_argument("--cover_train_dir", type=str,
+    parser.add_argument("--cover_train_path", type=str,
                         help="the path of directory containing cover files for train")
-    parser.add_argument("--cover_valid_dir", type=str,
+    parser.add_argument("--cover_valid_path", type=str,
                         help="the path of directory containing cover files for valid")
-    parser.add_argument("--stego_train_dir", type=str,
+    parser.add_argument("--cover_test_path", type=str,
+                        help="the path of directory containing cover files for test")
+    parser.add_argument("--stego_train_path", type=str,
                         help="the path of directory containing stego files for train")
-    parser.add_argument("--stego_valid_dir", type=str,
+    parser.add_argument("--stego_valid_path", type=str,
                         help="the path of directory containing stego files for valid")
+    parser.add_argument("--stego_test_path", type=str,
+                        help="the path of directory containing stego files for test")
     parser.add_argument("--models_path", type=str, default=current_path + "/models",
                         help="the path of directory containing models")
     parser.add_argument("--logs_path", type=str, default=current_path + "/logs",
@@ -101,6 +105,7 @@ def command_parse():
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
     parser.add_argument("--batch_size_train", type=int, default=64, help="batch size for train (default: 64 (32 cover/stego pairs))")
     parser.add_argument("--batch_size_valid", type=int, default=64, help="batch size for valid (default: 64 (32 cover/stego pairs))")
+    parser.add_argument("--batch_size_test", type=int, default=64, help="batch size for test (default: 64 (32 cover/stego pairs))")
     parser.add_argument("--learning_rate", type=float, default=1e-3, help="the value of initialized learning rate (default: 1e-3 (0.001))")
     parser.add_argument("--seed", type=int, default=1, help="random seed (default: 1)")
     parser.add_argument("--is_regulation", type=bool, default=True, help="whether regulation or not (default: True)")
@@ -172,10 +177,10 @@ def file_path_setup(args):
         model_file_path = model_dir + "/" + stego_dir_name
         log_file_path = log_dir + "/" + stego_dir_name
     else:
-        cover_train_files_path = args.cover_train_dir
-        cover_valid_files_path = args.cover_valid_dir
-        stego_train_files_path = args.stego_train_dir
-        stego_valid_files_path = args.stego_valid_dir
+        cover_train_files_path = args.cover_train_path
+        cover_valid_files_path = args.cover_valid_path
+        stego_train_files_path = args.stego_train_path
+        stego_valid_files_path = args.stego_valid_path
         model_file_path = args.models_path
         log_file_path = args.logs_path
 

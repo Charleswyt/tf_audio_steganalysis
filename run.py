@@ -24,9 +24,11 @@ Finished on 2017.11.30
 
 
 def run_mode(args):
-    if args.mode == "train":  # train mode
+    if args.mode == "train":                                    # train mode
         train(args)
-    elif args.mode == "test":  # test mode
+    elif args.mode == "test":                                   # test mode
+        test(args)
+    elif args.mode == "steganalysis":                           # steganalysis mode
         if args.submode == "one":
             steganalysis_one(args)
         if args.submode == "batch":
@@ -209,6 +211,75 @@ def train(args):
     sess.close()
 
 
+def test(args):
+    carrier = args.carrier
+    batch_size_test = args.batch_size_test
+
+    # pre processing (输入数据预处理)
+    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs, downsampling, block = \
+        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs, args.downsampling, args.block
+
+    # the height and width of input data (确定输入数据的尺寸)
+    height, width, channel = args.height, args.width, 1  # the height, width and channel of the QMDCT matrix
+    if is_diff is True and direction == 0:
+        height_new, width_new = height - order, width
+    elif is_diff is True and direction == 1:
+        height_new, width_new = height, width - order
+    else:
+        height_new, width_new = height, width
+
+    # path
+    cover_test_files_path = args.cover_test_path
+    stego_test_files_path = args.stego_test_path
+
+    # placeholder (占位符)
+    data = tf.placeholder(dtype=tf.float32, shape=(None, height_new, width_new, channel), name="QMDCTs")
+    label = tf.placeholder(dtype=tf.int32, shape=(None, ), name="label")
+    is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
+
+    # initialize the network (网络结构初始化)
+    command = args.network + "(data, 2, is_bn)"
+    logits = eval(command)
+    logits = tf.nn.softmax(logits)
+
+    accuracy = accuracy_layer(logits=logits, label=label)
+
+    model = tf.train.Saver()
+    with tf.Session() as sess:
+        # load model
+        sess.run(tf.global_variables_initializer())
+        if args.model_file_path is None and args.model_dir is not None:
+            model_file_path = tf.train.latest_checkpoint(args.model_dir)
+        elif args.model_file_path is not None:
+            model_file_path = args.model_file_path
+        else:
+            model_file_path = None
+
+        if model_file_path is None:
+            print("No model is loaded successfully.")
+        else:
+            model.restore(sess, model_file_path)
+            print("The model is loaded successfully, model file: %s" % model_file_path)
+            cover_test_data_list, cover_test_label_list, stego_test_data_list, stego_test_label_list = read_data(cover_test_files_path,
+                                                                                                                 stego_test_files_path)
+            test_iterations, test_accuracy = 0, 0
+            for x_test_batch, y_test_batch in \
+                    minibatches(cover_test_data_list, cover_test_label_list, stego_test_data_list, stego_test_label_list, batch_size_test):
+                # data read and process (数据读取与处理)
+                x_test_data = get_data(x_test_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
+                                       is_trunc=is_trunc, threshold=threshold)
+
+                # get the accuracy and loss (验证与指标显示)
+                acc = sess.run(accuracy, feed_dict={data: x_test_data, label: y_test_batch, is_bn: True})
+                test_accuracy += acc
+                test_iterations += 1
+
+                print("Batch-%d, accuracy: %f" % (test_iterations, acc))
+
+            test_accuracy_average = test_accuracy / test_iterations
+            print("Test accuracy: %.2f%%" % 100 * test_accuracy_average)
+
+
 def steganalysis_one(args):
     # the info of carrier
     carrier = args.carrier
@@ -272,10 +343,10 @@ def steganalysis_one(args):
 
                 media_label = args.label
                 if result[0] == 0:
-                    print("file name: %s, result: cover, label: %r, prob: %.2f%%" % (media_name, media_label, prob))
+                    print("file name: %s, result: cover, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
 
                 if result[0] == 1:
-                    print("file name: %s, result: stego, label: %r, prob: %.2f%%" % (media_name, media_label, prob))
+                    print("file name: %s, result: stego, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
 
 
 def steganalysis_batch(args):
@@ -356,10 +427,10 @@ def steganalysis_batch(args):
 
                     media_label = label[number]
                     if result[0] == 0:
-                        print("file name: %s, result: cover, label: %r, prob: %.2f%%" % (media_name, media_label, prob))
+                        print("file name: %s, result: cover, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
 
                     if result[0] == 1:
-                        print("file name: %s, result: stego, label: %r, prob: %.2f%%" % (media_name, media_label, prob))
+                        print("file name: %s, result: stego, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
 
                     number += 1
             accuracy = 100 * (np.count_nonzero(np.array(results) == label) / len(results))
