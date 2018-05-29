@@ -7,10 +7,11 @@ Finished on 2017.12.19
 """
 
 import os
-import tensorflow as tf
-from manager import *
-from config import command_parse
 from run import *
+from manager import *
+import tensorflow as tf
+from config import command_parse
+
 
 try:
     import win_unicode_console
@@ -19,5 +20,9 @@ except ImportError:
     print("win_unicode_console import unsuccessfully.")
 
 arguments = command_parse()
-os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
+if arguments.gpu_selection == "auto":
+    gm = GPUManager()
+    os.environ["CUDA_VISIBLE_DEVICES"] = gm.auto_choice()
+else:
+    os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
 run_mode(arguments)

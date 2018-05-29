@@ -50,8 +50,9 @@ def command_parse():
     print("current path: %s" % current_path)
 
     # mode
-    # parser.add_argument("--gpu_selection", type=str, default="auto",
-    #                     help="GPU selection mode, if \"auto\", no serial number is needed, otherwise appoint the serial number (default: auto)")
+    parser.add_argument("--gpu_selection", type=str, default="auto",
+                        help="GPU selection mode, if \"auto\", no serial number is needed, otherwise appoint the serial number "
+                             "(default: auto, other choice is manual)")
     parser.add_argument("--gpu", type=str, default="0", help="the index of GPU")
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
     parser.add_argument("--submode", type=str, default="one", help="one | batch (default one)")
@@ -77,11 +78,12 @@ def command_parse():
     parser.add_argument("--model_file_name", type=str, default="audio_steganalysis", help="model file name (default: audio_steganalysis)")
     parser.add_argument("--log_dir", type=str, help="log files path")
 
+    # test
     parser.add_argument("--model_file_path", type=str, default=None, help="the model file path used for test (default is None)")
     parser.add_argument("--test_file_path", type=str, help="the file path used for test")
-    parser.add_argument("--test_files_dir", type=str, help="the files folder path used for test")
-    parser.add_argument("--label_file_path", type=str, help="the label file path used for test")
     parser.add_argument("--label", type=str, default=None, help="the label of tested file (default is None)")
+    parser.add_argument("--test_files_path", type=str, help="the files folder path used for test")
+    parser.add_argument("--label_file_path", type=str, help="the label file path used for test")
 
     # path
     parser.add_argument("--cover_train_path", type=str,
