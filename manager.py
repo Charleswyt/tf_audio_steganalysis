@@ -36,114 +36,119 @@ def check_gpus():
         elif "NVIDIA System Management" not in os.popen("nvidia-smi -h").read():
             print("nvidia-smi tool not found.")
             return False
-    else:
+        else:
+            return True
+    elif not system == "Linux":
         print("The current system is not Linux.")
         return False
+    else:
+        return True
 
-    return True
+
+def parse(line, query_args):
+    """
+    line:
+        a line of text
+    query_args:
+        query arguments
+    return:
+        a dict of gpu info
+    Parsing a line of csv format text returned by nvidia-smi
+    解析一行nvidia-smi返回的csv格式文本
+    """
+    countable_args = ["memory.free", "memory.total", "power.draw", "power.limit"]               # 可计数的参数
+    power_manage_enable = lambda v: ("Not Support" not in v)                                    # 显卡是否支持power management（笔记本可能不支持）
+    to_countable = lambda v: float(v.upper().strip().replace("MIB", "").replace("W", ""))       # 带单位字符串去掉单位
+    process = lambda k, v: ((int(to_countable(v)) if power_manage_enable(v) else 1) if k in countable_args else v.strip())
+
+    return {k: process(k, v) for k, v in zip(query_args, line.strip().split(","))}
 
 
-if check_gpus():
-    def parse(line, query_args):
-        """
-        line:
-            a line of text
-        query_args:
-            query arguments
-        return:
-            a dict of gpu info
-        Parsing a line of csv format text returned by nvidia-smi
-        解析一行nvidia-smi返回的csv格式文本
-        """
-        countable_args = ["memory.free", "memory.total", "power.draw", "power.limit"]               # 可计数的参数
-        power_manage_enable = lambda v: ("Not Support" not in v)                                    # 显卡是否支持power management（笔记本可能不支持）
-        to_countable = lambda v: float(v.upper().strip().replace("MIB", "").replace("W", ""))       # 带单位字符串去掉单位
-        process = lambda k, v: ((int(to_countable(v)) if power_manage_enable(v) else 1) if k in countable_args else v.strip())
+def query_gpu(query_args=None):
+    """
+    query_args:
+        query arguments
+    return:
+        a list of dict
+    Querying GPUs info
+    查询GPU信息
+    """
+    if query_args is None:
+        query_args = []
+    query_args = ["index", "gpu_name", "memory.free", "memory.total", "power.draw", "power.limit"] + query_args
+    cmd = "nvidia-smi --query-gpu={} --format=csv,noheader".format(",".join(query_args))
+    results = os.popen(cmd).readlines()
 
-        return {k: process(k, v) for k, v in zip(query_args, line.strip().split(","))}
+    return [parse(line, query_args) for line in results]
 
-    def query_gpu(query_args=None):
-        """
-        query_args:
-            query arguments
-        return:
-            a list of dict
-        Querying GPUs info
-        查询GPU信息
-        """
+
+def by_power(d):
+    """
+    helper function for sorting gpus by power
+    """
+    power_info = (d["power.draw"], d["power.limit"])
+    if any(v == 1 for v in power_info):
+        print("Power management unable for GPU {}".format(d["index"]))
+        return 1
+
+    return float(d["power.draw"]) / d["power.limit"]
+
+
+class GPUManager:
+    """
+    query_args:
+        query arguments
+    A manager which can list all available GPU devices
+    and sort them and choice the most free one.Unspecified
+    ones pref.
+    GPU设备管理器, 考虑列举出所有可用GPU设备, 并加以排序，自动选出
+    最空闲的设备. 在一个GPUManager对象内会记录每个GPU是否已被指定,
+    优先选择未指定的GPU.
+    """
+
+    def __init__(self, query_args=None):
         if query_args is None:
             query_args = []
-        query_args = ["index", "gpu_name", "memory.free", "memory.total", "power.draw", "power.limit"] + query_args
-        cmd = "nvidia-smi --query-gpu={} --format=csv,noheader".format(",".join(query_args))
-        results = os.popen(cmd).readlines()
+        self.query_args = query_args
+        self.gpus = query_gpu(query_args)
+        for gpu in self.gpus:
+            gpu["specified"] = False
+        self.gpu_num = len(self.gpus)
 
-        return [parse(line, query_args) for line in results]
+    @staticmethod
+    def _sort_by_memory(gpus, by_size=False):
+        if by_size:
+            print("Sorted by free memory size")
+            return sorted(gpus, key=lambda d: d["memory.free"], reverse=True)
+        else:
+            print("Sorted by free memory rate")
+            return sorted(gpus, key=lambda d: float(d["memory.free"]) / d["memory.total"], reverse=True)
 
-    def by_power(d):
+    @staticmethod
+    def _sort_by_power(gpus):
+        return sorted(gpus, key=by_power)
+
+    @staticmethod
+    def _sort_by_custom(gpus, key, reverse=False, query_args=None):
+        if query_args is None:
+            query_args = []
+        if isinstance(key, str) and (key in query_args):
+            return sorted(gpus, key=lambda d: d[key], reverse=reverse)
+        if isinstance(key, type(lambda a: a)):
+            return sorted(gpus, key=key, reverse=reverse)
+        raise ValueError("The argument 'key' must be a function or a key in query args,please read the documentation of nvidia-smi")
+
+    def auto_choice(self, mode=0):
         """
-        helper function for sorting gpus by power
+        mode:
+            0: (default)sorted by free memory size
+        return:
+            a TF device object
+        Auto choice the freest GPU device,not specified
+        ones
+        自动选择最空闲GPU
         """
-        power_info = (d["power.draw"], d["power.limit"])
-        if any(v == 1 for v in power_info):
-            print("Power management unable for GPU {}".format(d["index"]))
-            return 1
-
-        return float(d["power.draw"]) / d["power.limit"]
-
-    class GPUManager:
-        """
-        query_args:
-            query arguments
-        A manager which can list all available GPU devices
-        and sort them and choice the most free one.Unspecified
-        ones pref.
-        GPU设备管理器, 考虑列举出所有可用GPU设备, 并加以排序，自动选出
-        最空闲的设备. 在一个GPUManager对象内会记录每个GPU是否已被指定,
-        优先选择未指定的GPU.
-        """
-
-        def __init__(self, query_args=None):
-            if query_args is None:
-                query_args = []
-            self.query_args = query_args
-            self.gpus = query_gpu(query_args)
-            for gpu in self.gpus:
-                gpu["specified"] = False
-            self.gpu_num = len(self.gpus)
-
-        @staticmethod
-        def _sort_by_memory(gpus, by_size=False):
-            if by_size:
-                print("Sorted by free memory size")
-                return sorted(gpus, key=lambda d: d["memory.free"], reverse=True)
-            else:
-                print("Sorted by free memory rate")
-                return sorted(gpus, key=lambda d: float(d["memory.free"]) / d["memory.total"], reverse=True)
-
-        @staticmethod
-        def _sort_by_power(gpus):
-            return sorted(gpus, key=by_power)
-
-        @staticmethod
-        def _sort_by_custom(gpus, key, reverse=False, query_args=None):
-            if query_args is None:
-                query_args = []
-            if isinstance(key, str) and (key in query_args):
-                return sorted(gpus, key=lambda d: d[key], reverse=reverse)
-            if isinstance(key, type(lambda a: a)):
-                return sorted(gpus, key=key, reverse=reverse)
-            raise ValueError("The argument 'key' must be a function or a key in query args,please read the documentation of nvidia-smi")
-
-        def auto_choice(self, mode=0):
-            """
-            mode:
-                0: (default)sorted by free memory size
-            return:
-                a TF device object
-            Auto choice the freest GPU device,not specified
-            ones
-            自动选择最空闲GPU
-            """
+        if check_gpus() is True:
             for old_info, new_info in zip(self.gpus, query_gpu(self.query_args)):
                 old_info.update(new_info)
             unspecified_gpus = [gpu for gpu in self.gpus if not gpu["specified"]] or self.gpus
@@ -164,22 +169,8 @@ if check_gpus():
             index = chosen_gpu["index"]
             print("Using GPU {i}:\n{info}".format(i=index, info="\n".join([str(k) + ":" + str(v) for k, v in chosen_gpu.items()])))
             print("GPU %s is selected." % index)
-            return tf.device("/gpu:{}".format(index))
-else:
-    raise ImportError("GPU available check failed.")
+        else:
+            index = -1
+            print("No GPU is selected.")
 
-
-if __name__ == "__main__":
-    gm = GPUManager()
-    with tf.device("/gpu:0"):
-        global_step = tf.Variable(initial_value=0,
-                                  trainable=False,
-                                  name="global_step",
-                                  dtype=tf.int32)
-    with gm.auto_choice():
-        for i in range(20):
-            sess = tf.Session()
-            init = tf.global_variables_initializer()
-            sess.run(init)
-            sess.run(global_step)
-            print("%d s" % i)
+        return index
