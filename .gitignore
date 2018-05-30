@@ -12,3 +12,4 @@
 *.tmp
 *.xml
 *.xml
+*.pyc

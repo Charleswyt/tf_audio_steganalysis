@@ -13,16 +13,23 @@ import tensorflow as tf
 from config import command_parse
 
 
-try:
-    import win_unicode_console
-    win_unicode_console.enable()
-except ImportError:
-    print("win_unicode_console import unsuccessfully.")
+def main():
+    try:
+        import win_unicode_console
+        win_unicode_console.enable()
+    except ImportError:
+        print("win_unicode_console import unsuccessfully.")
 
-arguments = command_parse()
-if arguments.gpu_selection == "auto":
-    gm = GPUManager()
-    os.environ["CUDA_VISIBLE_DEVICES"] = gm.auto_choice()
-else:
-    os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
-run_mode(arguments)
+    arguments = command_parse()
+    if arguments.gpu_selection == "auto":
+        gm = GPUManager()
+        gpu_index = gm.auto_choice()
+        if not gpu_index == -1:
+            os.environ["CUDA_VISIBLE_DEVICES"] = gpu_index
+    else:
+        os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
+    run_mode(arguments)
+
+
+if __name__ == "__main__":
+    main()

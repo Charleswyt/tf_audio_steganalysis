@@ -247,7 +247,3 @@ def get_model_info(model_file_path):
         print(var_to_shape_map["fc7/weight"])
 
         print("The model is loaded successfully.")
-
-
-if __name__ == "__main__":
-    pass

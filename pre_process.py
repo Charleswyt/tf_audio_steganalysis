@@ -80,4 +80,3 @@ if __name__ == "__main__":
     print(np.shape(QMDCT))
     hh = get_down_sampling(QMDCT, 4)
     print(np.shape(hh))
-

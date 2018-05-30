@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-33
 
 from layer import *
+from filters import *
 
 """
     function:
@@ -78,7 +79,7 @@ def network1(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
 
 def network1_1(input_data, class_num=2, is_bn=False, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    去掉BN层
+    remove the batch normalization (去掉BN层)
     """
     print("network1_1: Remove the BN layer")
     print("Network Structure: ")
@@ -841,3 +842,7 @@ def network1__4(input_data, class_num=2, is_bn=True, activation_method="tanh", p
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
+
+
+def siamese_network(input_data1, input_data2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+    pass

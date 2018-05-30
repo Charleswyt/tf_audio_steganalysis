@@ -1,4 +1,0 @@
-model_checkpoint_path: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-5797"
-all_model_checkpoint_paths: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-2618"
-all_model_checkpoint_paths: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-3553"
-all_model_checkpoint_paths: "/home/zhanghong/code/CatKing/steganalysis_CNN/models/stegshi/audio_steganalysis-5797"

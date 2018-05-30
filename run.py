@@ -352,7 +352,7 @@ def steganalysis_one(args):
 def steganalysis_batch(args):
     # the info of carrier
     carrier = args.carrier
-    test_files_path = args.test_files_dir
+    test_files_path = args.test_files_path
     label_file_path = args.label_file_path
 
     # pre-process
