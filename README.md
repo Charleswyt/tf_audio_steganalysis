@@ -1,8 +1,8 @@
 # Audio Steganalysis with CNN
 @ author: **Wang Yuntao (Charles)** <br>
-
+The paper can be downloaded at http://www.media-security.net/?p=809
 ## Necessary Package
-tensorflow-gpu==1.3 or 1.4, numpy, pandas, matplotlib, scikit-image, scikit-learn
+tensorflow-gpu==1.3 or 1.4, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa(depend on FFMPEG)
 
 ## The architecture of the network
 
@@ -35,7 +35,6 @@ ID      |   File                    |   Function
 15      |   run.py                  |   the **train** and **test** of the network **get_weights**, **get_biases** and so on
 16      |   TODO                    |   to do list
 
-
 ## Run
 * install **python3.x** and add the path into the environment variable
 * GPU run enviroment configure if train the network (optional)
@@ -53,13 +52,15 @@ Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <
 
 * Example(**steganalysis**): **sudo python3.5 main.py** --**mode** steganalysis --**submode** one --**network** network1 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**file_path** xxx --**model_file_path** xxx
 
-* Example(**steganalysis**): **sudo python3.5 main.py** --**mode** steganalysis --**submode** batch --**network** network1 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**files_path** xxx --label_file_path xxx --**model_file_path** xxx
+* Example(**steganalysis**): **sudo python3.5 main.py** --**mode** steganalysis --**submode** batch --**network** network1 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**files_path** xxx --**label_file_path** xxx --**model_file_path** xxx
 
 1. Copy the command line and modify the file path according to your configuration, more descriptions of each variant can be seen in the **config.py**.
 2. When you load the model, if you choose the parameter **model_file_path**, write "audio_steganalysis-45000" as the file path, if you choose the parameter **model_files_path**, write the models file path which consists of trained models.
 3. The parameter label_file_path is optional, if the parameter is not selected, all labels are None.
 4. Up to now, the code can be used for audio and image, you can choose the type of carrier via the parameter **carrier**.
 5. The default mode of GPU selection is "auto", the code also can run with CPU or GPU directly.
+6. If you use the trained model, modidf the path in checkpoint accordingly.
+
 Note, the type of preprocessing method must be the **same** at the stage of train, valid, test and steganalysis.
 
 ## The description of each network

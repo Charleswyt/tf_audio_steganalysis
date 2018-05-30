@@ -32,7 +32,7 @@ function:
     - 3：显示error日志信息 
 """
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-needed_packages = ["tensorflow-gpu", "numpy", "matplotlib"]
+needed_packages = ["tensorflow-gpu", "numpy", "matplotlib", "pandas", "scikit-image", "scikit-learn"]
 system = platform.system()
 
 
@@ -74,15 +74,14 @@ def command_parse():
     parser.add_argument("--end_index_train", type=int, default=16000, help="the end index of file in train folders (default: 16000)")
     parser.add_argument("--start_index_valid", type=int, default=0, help="the start index of file in valid folders (default: 0)")
     parser.add_argument("--end_index_valid", type=int, default=4000, help="the end index of file in valid folders (default: 4000)")
-    parser.add_argument("--model_dir", type=str, help="model files path")
     parser.add_argument("--model_file_name", type=str, default="audio_steganalysis", help="model file name (default: audio_steganalysis)")
-    parser.add_argument("--log_dir", type=str, help="log files path")
 
     # test
+    parser.add_argument("--model_files_path", type=str, default=None, help="the model file path used for test (default is None)")
     parser.add_argument("--model_file_path", type=str, default=None, help="the model file path used for test (default is None)")
-    parser.add_argument("--test_file_path", type=str, help="the file path used for test")
+    parser.add_argument("--steganalysis_file_path", type=str, help="the file path used for steganalysis")
     parser.add_argument("--label", type=str, default=None, help="the label of tested file (default is None)")
-    parser.add_argument("--test_files_path", type=str, help="the files folder path used for test")
+    parser.add_argument("--steganalysis_files_path", type=str, help="the files folder path used for steganalysis")
     parser.add_argument("--label_file_path", type=str, help="the label file path used for test")
 
     # path

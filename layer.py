@@ -339,15 +339,16 @@ def loss_layer(logits, label, is_regulation=False, coeff=1e-3, method="sparse_so
         return loss
 
 
-def accuracy_layer(logits, label):
+def accuracy_layer(logits, labels):
     """
     calculate the accuracy
     :param logits: logits
-    :param label: label
+    :param labels: label
     :return: accuracy
     """
     with tf.variable_scope("accuracy"):
-        correct_prediction = tf.equal(tf.cast(tf.argmax(logits, 1), tf.int32), label)
+        results = tf.cast(tf.argmax(logits, 1), tf.int32)
+        correct_prediction = tf.equal(results, labels)
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
         return accuracy

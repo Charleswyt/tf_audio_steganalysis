@@ -6,6 +6,7 @@ import wave
 import numpy as np
 import matplotlib.pyplot as plt
 from pydub import AudioSegment
+import librosa
 
 """
 Created on 
@@ -118,3 +119,10 @@ mp3_path = "E:/Myself/2.database/3.cover/old/128/cover001_b_128.mp3"
 
 audiofile = eyed3.load(mp3_path)
 print(audiofile)
+
+
+def audio_read(audio_file_path, sampling_rate=44100, ):
+    audio = librosa.load(audio_file_path, sr=sampling_rate)
+
+    return audio
+

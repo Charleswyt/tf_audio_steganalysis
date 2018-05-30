@@ -96,7 +96,7 @@ def train(args):
     # evaluation (评估)
     loss = loss_layer(logits=logits, label=label, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
     train_optimizer = optimizer(losses=loss, learning_rate=learning_rate, global_step=global_step)
-    accuracy = accuracy_layer(logits=logits, label=label)
+    accuracy = accuracy_layer(logits=logits, labels=label)
 
     # file path (文件路径)
     cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, model_file_path, log_file_path = file_path_setup(args)
@@ -242,14 +242,14 @@ def test(args):
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
-    accuracy = accuracy_layer(logits=logits, label=label)
+    accuracy = accuracy_layer(logits=logits, labels=label)
 
     model = tf.train.Saver()
     with tf.Session() as sess:
         # load model
         sess.run(tf.global_variables_initializer())
-        if args.model_file_path is None and args.model_dir is not None:
-            model_file_path = tf.train.latest_checkpoint(args.model_dir)
+        if args.model_file_path is None and args.model_files_path is not None:
+            model_file_path = tf.train.latest_checkpoint(args.model_files_path)
         elif args.model_file_path is not None:
             model_file_path = args.model_file_path
         else:
@@ -310,8 +310,8 @@ def steganalysis_one(args):
     with tf.Session() as sess:
         # load model
         sess.run(tf.global_variables_initializer())
-        if args.model_file_path is None and args.model_dir is not None:
-            model_file_path = tf.train.latest_checkpoint(args.model_dir)
+        if args.model_file_path is None and args.model_files_path is not None:
+            model_file_path = tf.train.latest_checkpoint(args.model_files_path)
         elif args.model_file_path is not None:
             model_file_path = args.model_file_path
         else:
@@ -380,8 +380,8 @@ def steganalysis_batch(args):
     with tf.Session() as sess:
         # load model
         sess.run(tf.global_variables_initializer())
-        if args.model_file_path is None and args.model_dir is not None:
-            model_file_path = tf.train.latest_checkpoint(args.model_dir)
+        if args.model_file_path is None and args.model_files_path is not None:
+            model_file_path = tf.train.latest_checkpoint(args.model_files_path)
         elif args.model_file_path is not None:
             model_file_path = args.model_file_path
         else:
