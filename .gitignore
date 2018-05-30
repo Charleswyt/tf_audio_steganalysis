@@ -1,8 +1,15 @@
+
 *.npy
+
 *.pyc
+
 *.xml
+
 *.iml
 !*.exe
+*.pyc
+*.pyc
 *.tmp
-__pycache__/
-.idex/
+*.xml
+*.xml
+*.pyc

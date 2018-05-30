@@ -8,6 +8,7 @@
       <w>balabala</w>
       <w>balabla</w>
       <w>bitrate</w>
+      <w>bitrates</w>
       <w>caffe</w>
       <w>cbar</w>
       <w>chekpoint</w>
@@ -21,12 +22,16 @@
       <w>crelu</w>
       <w>cuda</w>
       <w>datas</w>
+      <w>dataset</w>
       <w>deepbit</w>
       <w>downsampling</w>
+      <w>dtype</w>
       <w>eecs</w>
+      <w>fullfile</w>
       <w>gpus</w>
       <w>iters</w>
       <w>leakrelu</w>
+      <w>matlab</w>
       <w>matplotlib</w>
       <w>matrixs</w>
       <w>minibatches</w>
