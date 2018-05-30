@@ -1,15 +1,15 @@
 # Audio Steganalysis with CNN
 @ author: **Wang Yuntao (Charles)** <br>
-
+The paper can be downloaded at http://www.media-security.net/?p=809
 ## Necessary Package
-tensorflow-gpu==1.3 or 1.4, numpy, matplotlib
+tensorflow-gpu==1.3 or 1.4, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa(depend on FFMPEG)
 
 ## The architecture of the network
 
 ![The structure of the proposed network](https://i.imgur.com/h0o5lfB.jpg)
 
 ## Steganographic Algorithm
-HCM (Huffman Code Mapping) and EECS (Equal Length Entropy Codes Substitution)
+**HCM** (Huffman Code Mapping) and **EECS** (Equal Length Entropy Codes Substitution)
 
 ## Dataset
 The dataset url is **https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ** <br>
@@ -19,40 +19,50 @@ The *extraction password* is "**1fzi**".
 ID      |   File                    |   Function
 :-      |   :-                      |    :-
 01      |   audio_preprocess.py     |   include some pre-process methods for **audio**
-02      |   text_preprocess.py      |   include some pre-process methods for **test**
+02      |   text_preprocess.py      |   include some pre-process methods for **text**
 03      |   image_preocess.py       |   include some pre-process methods for **image** 
 04      |   file_preprocess.py      |   get the name, size and type of the **file**
-05      |   pre_process.py          |   some pre-processing method such as **truncation**, **down_sampling**
-06      |   classifier.py           |   machine learning classifiers such as **SVM**, **KNN**, and **model selection**, **ROC** plot, etc.
-07      |   config.py               |   **command parser** and some package management
-08      |   filters.py              |   some **filters** used for pre-processing such as kv kernel or other **rich model**
-09      |   **main.py**             |   the main program
-10      |   manager.py              |   **GPU** management (free GPU selection **automatically**)
-11      |   layer.py                |   basic unit in CNN such as **conv layer**, **pooling layer**, **BN layer** and so on
-12      |   network.py              |   various networks including **VGG19**, **LeNet** and **ourselves' network**
-13      |   run.py                  |   the **train** and **test** of the network
-14      |   utils.py                |   some useful tools such as **minibatch**, **get_model_info**, **get_weights**, **get_biases** and so on
-15      |   TODO                    |   to do list
-16      |   model                   |   model files Folder
-17      |   label.txt               |   label file if batch test
-
+05      |   samples_make.py         |   samples make script
+06      |   pre_process.py          |   some pre-processing method such as **truncation**, **down_sampling**
+07      |   classifier.py           |   machine learning classifiers such as **SVM**, **KNN**, and **model selection**, **ROC** plot, etc.
+08      |   config.py               |   **command parser** and some package management
+09      |   filters.py              |   some **filters** used for pre-processing such as kv kernel or other **rich model**
+10      |   **main.py**             |   the main program
+11      |   manager.py              |   **GPU** management (free GPU selection **automatically**)
+12      |   layer.py                |   basic unit in CNN such as **conv layer**, **pooling layer**, **BN layer** and so on
+13      |   network.py              |   various networks including **VGG19**, **LeNet** and **ourselves' network**
+14      |   utils.py                |   some useful tools such as **minibatch**, **get_model_info**, 
+15      |   run.py                  |   the **train** and **test** of the network **get_weights**, **get_biases** and so on
+16      |   TODO                    |   to do list
 
 ## Run
 * install **python3.x** and add the path into the environment variable
 * GPU run enviroment configure if train the network (optional)
-* pip install **tensorflow==1.3 or later, numpy, scikit-image, pydub** (depend on FFmpeg, optional)
+* pip install **tensorflow==1.3 or later, numpy, pandas, scikit-learn, scikit-image, pydub** (depend on FFmpeg, optional)
 * run the code as the example as follows
 * use tensorboard to visualize the train process such as the accuracy and loss curve of train and valid. The command is "tensorboaed --logdir=/path/to/log-directory"
 
 ## Command Parser
-Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <br> 
+Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <br>
 
 ## How to use
-* Example(**train**): **sudo python3.5 main.py** --**mode** train --**network** network1 --**gpu_selection** None --**gpu** 0 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**cover_valid_dir** xxx --**cover_valid_dir** xxx --**stego_train_dir** xxx --**stego_valid_dir** xxx --**model_path** xxx --**logs_path** xxx
+* Example(**train**): **sudo python3.5 main.py** --**mode** train --**network** network1 --**gpu_selection** auto --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**cover_valid_path** xxx --**cover_valid_path** xxx --**stego_train_path** xxx --**stego_valid_path** xxx --**models_path** xxx --**logs_path** xxx
 
-* Example(**test**): **sudo python3.5 main.py** --**mode** test --**submode** one --**network** network1 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**file_path** xxx --**model_file_path** xxx
+* Example(**test**): **sudo python3.5 main.py** --**mode** test --**network** network1 --**width** 380 --**batch_size_test** 64 --**is_diff** True --**order** 2 --**direction** 0 --**model_files_path** xxx --**cover_test_path** xxx --**stego_test_path** xxx
 
-Copy the command line and modify the file path according to your configuration, more descriptions of each variant can be seen in the **config.py**.
+* Example(**steganalysis**): **sudo python3.5 main.py** --**mode** steganalysis --**submode** one --**network** network1 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**file_path** xxx --**model_file_path** xxx
+
+* Example(**steganalysis**): **sudo python3.5 main.py** --**mode** steganalysis --**submode** batch --**network** network1 --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**files_path** xxx --**label_file_path** xxx --**model_file_path** xxx
+
+1. Copy the command line and modify the file path according to your configuration, more descriptions of each variant can be seen in the **config.py**.
+2. When you load the model, if you choose the parameter **model_file_path**, write "audio_steganalysis-45000" as the file path, if you choose the parameter **model_files_path**, write the models file path which consists of trained models.
+3. The parameter label_file_path is optional, if the parameter is not selected, all labels are None.
+4. Up to now, the code can be used for audio and image, you can choose the type of carrier via the parameter **carrier**.
+5. The default mode of GPU selection is "auto", the code also can run with CPU or GPU directly.
+6. If you use the trained model, modidf the path in checkpoint accordingly.
+
+Note, the type of preprocessing method must be the **same** at the stage of train, valid, test and steganalysis.
+
 ## The description of each network
 *  **network for audio steganalysis**
 
