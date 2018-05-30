@@ -38,7 +38,7 @@ ID      |   File                    |   Function
 ## Run
 * install **python3.x** and add the path into the environment variable
 * GPU run enviroment configure if train the network (optional)
-* pip install **tensorflow==1.3 or later, numpy, pandas, scikit-learn, scikit-image, pydub** (depend on FFmpeg, optional)
+* pip install **tensorflow==1.3 or later, numpy, pandas, scikit-learn, scikit-image, librosa** (depend on FFmpeg, optional)
 * run the code as the example as follows
 * use tensorboard to visualize the train process such as the accuracy and loss curve of train and valid. The command is "tensorboaed --logdir=/path/to/log-directory"
 
@@ -66,15 +66,15 @@ Note, the type of preprocessing method must be the **same** at the stage of trai
 ## The description of each network
 *  **network for audio steganalysis**
 
-        network1  : The proposed network (最终选定的网络)
-        network1_1: Remove all BN layers (去掉所有BN层)
-        network1_2: Average pooling layer is used for subsampling (将所有的降采样方式改为平均池化方式)
-        network1_3: Convolutional layer with stride 2 is used for subsampling (将所有的降采样方式改为卷积池化方式)
-        network1_4: Replace the convolutional kernel with 5x5 kernel (将卷积核尺寸由3 x 3改为5 x 5)
-        network1_5: ReLu is used as the activation function (将激活函数由Tanh改为ReLu)
-        network1_6: Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
-        network1_7: Deepen the network to block convolution layers (加深网络)
-        network1_8: Design a network to steganalyze audios of arbitrary size (解决可变尺寸输入数据的训练问题)
+        network1   : The proposed network (最终选定的网络)
+        network1_1 : Remove all BN layers (去掉所有BN层)
+        network1_2 : Average pooling layer is used for subsampling (将所有的降采样方式改为平均池化方式)
+        network1_3 : Convolutional layer with stride 2 is used for subsampling (将所有的降采样方式改为卷积池化方式)
+        network1_4 : Replace the convolutional kernel with 5x5 kernel (将卷积核尺寸由3 x 3改为5 x 5)
+        network1_5 : ReLu is used as the activation function (将激活函数由Tanh改为ReLu)
+        network1_6 : Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
+        network1_7 : Deepen the network to block convolution layers (加深网络)
+        network1_8 : Design a network to steganalyze audios of arbitrary size (解决可变尺寸输入数据的训练问题)
         network1__1: Remove the BN layer in the first group (去除第一个卷积块中的BN层)
         network1__2: Remove the BN layers in the first two groups (去除前两个卷积块中的BN层)
         network1__4: Remove the BN layers in the first four groups (去除前四个卷积块中的BN层)
