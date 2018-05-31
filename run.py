@@ -86,7 +86,7 @@ def train(args):
 
     # placeholder (占位符)
     data = tf.placeholder(dtype=tf.float32, shape=(None, height_new, width_new, channel), name="QMDCTs")
-    label = tf.placeholder(dtype=tf.int32, shape=(None, ), name="label")
+    labels = tf.placeholder(dtype=tf.int32, shape=(None, ), name="labels")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network (网络结构初始化)
@@ -94,9 +94,9 @@ def train(args):
     logits = eval(command)
 
     # evaluation (评估)
-    loss = loss_layer(logits=logits, label=label, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
+    loss = loss_layer(logits=logits, labels=labels, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
     train_optimizer = optimizer(losses=loss, learning_rate=learning_rate, global_step=global_step)
-    accuracy = accuracy_layer(logits=logits, labels=label)
+    accuracy = accuracy_layer(logits=logits, labels=labels)
 
     # file path (文件路径)
     cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, model_file_path, log_file_path = file_path_setup(args)
@@ -150,12 +150,12 @@ def train(args):
         for x_train_batch, y_train_batch in \
                 minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size_train):
             # data read and process (数据读取与处理)
-            x_train_data = get_data(x_train_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
-                                    is_trunc=is_trunc, threshold=threshold)
+            x_train_data = get_data_batch(x_train_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
+                                          is_trunc=is_trunc, threshold=threshold)
 
             # get the accuracy and loss (训练与指标显示)
             _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op],
-                                                     feed_dict={data: x_train_data, label: y_train_batch, is_bn: True})
+                                                     feed_dict={data: x_train_data, labels: y_train_batch, is_bn: True})
 
             train_loss += err
             train_accuracy += ac
@@ -172,12 +172,12 @@ def train(args):
         for x_valid_batch, y_valid_batch in \
                 minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size_valid):
             # data read and process (数据读取与处理)
-            x_valid_data = get_data(x_valid_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
-                                    is_trunc=is_trunc, threshold=threshold)
+            x_valid_data = get_data_batch(x_valid_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
+                                          is_trunc=is_trunc, threshold=threshold)
 
             # get the accuracy and loss (验证与指标显示)
             err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
-                                                  feed_dict={data: x_valid_data, label: y_valid_batch, is_bn: True})
+                                                  feed_dict={data: x_valid_data, labels: y_valid_batch, is_bn: True})
             valid_loss += err
             valid_accuracy += ac
             valid_iterations += 1
@@ -234,7 +234,7 @@ def test(args):
 
     # placeholder (占位符)
     data = tf.placeholder(dtype=tf.float32, shape=(None, height_new, width_new, channel), name="QMDCTs")
-    label = tf.placeholder(dtype=tf.int32, shape=(None, ), name="label")
+    labels = tf.placeholder(dtype=tf.int32, shape=(None, ), name="labels")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network (网络结构初始化)
@@ -242,7 +242,7 @@ def test(args):
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
-    accuracy = accuracy_layer(logits=logits, labels=label)
+    accuracy = accuracy_layer(logits=logits, labels=labels)
 
     model = tf.train.Saver()
     with tf.Session() as sess:
@@ -270,7 +270,7 @@ def test(args):
                                        is_trunc=is_trunc, threshold=threshold)
 
                 # get the accuracy and loss (验证与指标显示)
-                acc = sess.run(accuracy, feed_dict={data: x_test_data, label: y_test_batch, is_bn: True})
+                acc = sess.run(accuracy, feed_dict={data: x_test_data, labels: y_test_batch, is_bn: True})
                 test_accuracy += acc
                 test_iterations += 1
 

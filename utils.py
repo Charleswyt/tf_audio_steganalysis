@@ -9,17 +9,23 @@ Finished on 2017.11.20
 
 import csv
 import tensorflow as tf
-from operator import mul
-from functools import reduce
-from image_preprocess import *
 from text_preprocess import *
+from image_preprocess import *
+from audio_preprocess import *
 from matplotlib.pylab import plt
 
 """
     function:
-        read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True)              获取文件列表与标签列表
-        minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None)   批次读取数据
+        fullfile(file_dir, file_name)                                                                           concatenate the file path (实现路径连接，功能类似于matlab中的fullfile)
+        get_time(_unix_time_stamp=None)                                                                         get calender time via unix time stamp (根据Unix时间戳获取日历时间)
+        get_unix_stamp(_time_string="1970-01-01 08:01:51", _format="%Y-%m-%d %H:%M:%S")                         get unix time stamp via calender time (根据日历时间获取Unix时间戳)
+        read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True)              get file list and  corresponding label list (获取文件列表与标签列表)
+        minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None)   get minibatch for training (批次读取数据, 此处的数据仍为文件列表)
+        get_data_batch(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0,
+                       is_trunc=False, threshold=15, threshold_left=0, threshold_right=255)                     read a batch of data (批次读取数据)
         
+        tfrecord_write(files_path_list, file_type, tfrecord_file_name)                                          write the data info into tfrecord (制备tfrecord文件)
+        tfrecord_read(tfrecord_file_name)                                                                       read the data info from tfrecord (读取tfrecord文件)
 """
 
 
@@ -66,7 +72,7 @@ def get_unix_stamp(_time_string="1970-01-01 08:01:51", _format="%Y-%m-%d %H:%M:%
     return int(_unix_time_stamp)
 
 
-def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True):
+def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=1000000, is_shuffle=True):
     """
     read file names from the storage
     :param cover_files_path: the folder name of cover files
@@ -128,10 +134,10 @@ def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_lab
         yield datas, labels
 
 
-def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0,
-             is_trunc=False, threshold=15, threshold_left=0, threshold_right=255):
+def get_data_batch(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0,
+                   is_trunc=False, threshold=15, threshold_left=0, threshold_right=255):
     """
-    read data
+    read data batch by batch
     :param files_list: files list (audio | image | text)
     :param height: the height of the data matrix
     :param width: the width of the data matrix
@@ -149,10 +155,10 @@ def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=F
         the data list 4-D tensor [batch_size, height, width, channel]
     """
     if carrier == "audio":
-        data = read_text_batch(text_files_list=files_list, height=height, width=width, is_abs=is_abs, is_diff=is_diff, order=order, direction=direction,
+        data = text_read_batch(text_files_list=files_list, height=height, width=width, is_abs=is_abs, is_diff=is_diff, order=order, direction=direction,
                                is_diff_abs=is_diff_abs, is_trunc=is_trunc, threshold=threshold)
     elif carrier == "image":
-        data = read_image_batch(image_files_list=files_list, height=height, width=width, is_diff=is_diff, order=order, direction=direction,
+        data = image_read_batch(image_files_list=files_list, height=height, width=width, is_diff=is_diff, order=order, direction=direction,
                                 is_trunc=is_trunc, threshold=threshold, threshold_left=threshold_left, threshold_right=threshold_right)
     else:
         data = read_text_batch(text_files_list=files_list, height=height, width=width, is_abs=is_abs, is_diff=is_diff, order=order, direction=direction,
@@ -161,56 +167,62 @@ def get_data(files_list, height, width, carrier="audio", is_abs=False, is_diff=F
     return data
 
 
-def get_model_parameters():
+def media_read(media_file_path, media_file_type, height, width, as_grey=False, sampling_rate=44100, to_mono=False,
+               is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15):
     """
-    calculate the number of parameters of the network
+    read media according to the file path and file type
+    :param media_file_path: the path of media file
+    :param media_file_type: the type of media file
+    :param height: the output height of media file
+    :param width: the output width of media file
     :return:
-        num_params: the number of parameters of the network
+        media in ndarry format
     """
-
-    num_params = 0
-    for variable in tf.trainable_variables():
-        shape = variable.get_shape()
-        num_params += reduce(mul, [dim.value for dim in shape], 1)
-
-    return num_params
-
-
-def get_weights(model, name):
-    """
-    get the weights
-    :param model: model
-    :param name: the name of the layer
-    :return: the weights
-    """
-    return tf.constant(model[name][0], name="weights")
-
-
-def get_biases(model, name):
-    """
-    get the biases
-    :param model: model
-    :param name: the name of the layer
-    :return: the biases
-    """
-    if np.shape(model[name]) == 1:
-        return tf.constant(0, name="biases")
+    if media_file_type == "image":
+        media = io.imread(media_file_path, as_grey=as_grey)
+    elif media_file_type == "audio":
+        media = audio_read(media_file_path, sampling_rate=sampling_rate, to_mono=to_mono)
+    elif media_file_path == "text":
+        media = text_read(media_file_path)
     else:
-        return tf.constant(model[name][1], name="biases")
+        media = None
+
+    return media
 
 
-def get_model_info(model_file_path):
-    graph_file_path = model_file_path + ".meta"
-    saver = tf.train.import_meta_graph(graph_file_path)
-    with tf.Session() as sess:
-        saver.restore(sess, model_file_path)
-        reader = tf.pywrap_tensorflow.NewCheckpointReader("stegshi/audio_steganalysis-5797")
-        var_to_shape_map = reader.get_variable_to_shape_map()
-        keys = var_to_shape_map.keys()
-        var_to_shape_map_keys = sorted(keys)
-        for key in var_to_shape_map_keys:
-            print("tensor_name: ", key)
-            # print(reader.get_tensor(key))
-        print(var_to_shape_map["fc7/weight"])
+def tfrecord_write(files_path_list, file_type, tfrecord_file_name):
+    writer = tf.python_io.TFRecordWriter(tfrecord_file_name)
+    for index, files_path in enumerate(files_path_list):
+        files_list = get_files_list(files_path)
+        for file in files_list:
+            image = io.imread(file)
+            image_raw = image.tobytes()
+            example = tf.train.Example(features=tf.train.Features(
+                feature={
+                    "label": tf.train.Feature(int64_list=tf.train.Int64List(value=[index])),
+                    "media": tf.train.Feature(bytes_list=tf.train.BytesList(value=[image_raw]))
+                }))
+            writer.write(example.SerializeToString())
+    writer.close()
 
-        print("The model is loaded successfully.")
+
+def tfrecord_read(tfrecord_file_name):
+    filename_queue = tf.train.string_input_producer([tfrecord_file_name])
+    reader = tf.TFRecordReader()
+    _, serialized_example = reader.read(filename_queue)
+    features = tf.parse_single_example(serialized_example,
+                                       features={
+                                           "label": tf.FixedLenFeature([], tf.int64),
+                                           "media": tf.FixedLenFeature([], tf.string),
+                                       })
+    img = tf.decode_raw(features['media'], tf.uint8)
+    img = tf.reshape(img, [128, 128, 3])  # reshape为128*128的3通道图片
+    img = tf.cast(img, tf.float32) * (1. / 255) - 0.5  # 在流中抛出img张量
+    label = tf.cast(features["label"], tf.int32)  # 在流中抛出label张量
+
+    return img, label
+
+
+if __name__ == "__main__":
+    write_tfrecord("123", "4456", "hhh")
+

@@ -73,10 +73,14 @@ def get_down_sampling(matrix, mode_number):
     return output
 
 
-if __name__ == "__main__":
-    from text_preprocess import read_text
-    file_path = "E:/Myself/2.database/10.QMDCT/1.txt/APS/128_01/wav10s_00689.txt"
-    QMDCT = read_text(file_path, is_abs=True, is_diff=True, order=2, direction=1, is_trunc=True, threshold=3)
-    print(np.shape(QMDCT))
-    hh = get_down_sampling(QMDCT, 4)
-    print(np.shape(hh))
+def preprocess(content, is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15):
+    if is_abs is True:
+        content = abs(content)
+    if is_trunc is True:
+        content = truncate(content, threshold=threshold)
+    if is_diff is True:
+        content = np.diff(content, n=order, axis=direction)
+        if is_diff_abs is True:
+            content = abs(content)
+
+    return content

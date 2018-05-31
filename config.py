@@ -194,7 +194,7 @@ def file_path_setup(args):
     return cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, model_file_path, log_file_path
 
 
-def get_files_list(file_dir, start_idx=0, end_idx=10000):
+def get_files_list(file_dir, start_idx=0, end_idx=10000000):
     """
     get the files list
     :param file_dir: file directory

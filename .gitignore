@@ -13,3 +13,5 @@
 *.xml
 *.xml
 *.pyc
+*.ckpt
+*.meta

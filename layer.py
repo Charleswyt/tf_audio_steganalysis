@@ -307,11 +307,11 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAM
         return feature_map
 
 
-def loss_layer(logits, label, is_regulation=False, coeff=1e-3, method="sparse_softmax_cross_entropy"):
+def loss_layer(logits, labels, is_regulation=False, coeff=1e-3, method="sparse_softmax_cross_entropy"):
     """
     calculate the loss
     :param logits: logits [batch_size, class_num]
-    :param label: one hot label
+    :param labels: labels [batch_size, class_num]
     :param is_regulation: whether regulation or not
     :param coeff: the coefficients of the regulation
     :param method: loss method
@@ -319,13 +319,13 @@ def loss_layer(logits, label, is_regulation=False, coeff=1e-3, method="sparse_so
     """
     with tf.variable_scope("loss"):
         if method == "sigmoid_cross_entropy":
-            cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(logits=logits, labels=label)
+            cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(logits=logits, labels=labels)
         elif method == "softmax_cross_entropy":
-            cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=label)
+            cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels)
         elif method == "sparse_softmax_cross_entropy":
-            cross_entropy = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=label)
+            cross_entropy = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=labels)
         else:
-            cross_entropy = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=label)
+            cross_entropy = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=labels)
 
         loss_cross_entropy = tf.reduce_sum(cross_entropy)
 

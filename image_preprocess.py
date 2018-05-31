@@ -40,7 +40,7 @@ def image_info_show(image_file_path):
     plt.show()
 
 
-def read_image(image_file_path, height, width, as_grey=False, is_diff=False, order=2, direction=0,
+def image_read(image_file_path, height, width, as_grey=False, is_diff=False, order=2, direction=0,
                is_trunc=False, threshold=128, threshold_left=128, threshold_right=256):
     """
     read image
@@ -74,7 +74,7 @@ def read_image(image_file_path, height, width, as_grey=False, is_diff=False, ord
     return image
 
 
-def read_image_batch(image_files_list, height=512, width=512, is_diff=False, order=2, direction=0,
+def image_read_batch(image_files_list, height=512, width=512, is_diff=False, order=2, direction=0,
                      is_trunc=False, threshold=128, threshold_left=128, threshold_right=256):
     """
     read images batch by batch
@@ -96,7 +96,7 @@ def read_image_batch(image_files_list, height=512, width=512, is_diff=False, ord
 
     i = 0
     for image_file in image_files_list:
-        content = read_image(image_file, height=height, width=width, is_diff=is_diff, order=order, direction=direction,
+        content = image_read(image_file, height=height, width=width, is_diff=is_diff, order=order, direction=direction,
                              is_trunc=is_trunc, threshold=threshold, threshold_left=threshold_left, threshold_right=threshold_right)
         data[i] = content
         i = i + 1
@@ -105,9 +105,4 @@ def read_image_batch(image_files_list, height=512, width=512, is_diff=False, ord
 
 
 if __name__ == "__main__":
-    image_path = "2501.pgm"
-    image_info_show(image_path)
-    # image = io.imread(image_path)
-    # # image = filters.sobel(image[:, :, 0])
-    # plt.imshow(image)
-    # plt.show()
+    pass

@@ -13,7 +13,7 @@ Finished on 2017.11.27
 """
 
 
-def read_text(text_file_path, height=200, width=576,
+def text_read(text_file_path, height=200, width=576,
               is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15):
     """
     data read from one text file (从单个txt文本中读取数据)
@@ -62,7 +62,7 @@ def read_text(text_file_path, height=200, width=576,
     return content
 
 
-def read_text_all(text_files_dir, height=200, width=576,
+def text_read_all(text_files_dir, height=200, width=576,
                   is_abs=False, is_diff=False, order=2, direction=0, is_trunc=False, threshold=15):
     """
     read all txt files into the memory (not recommend)
@@ -93,14 +93,14 @@ def read_text_all(text_files_dir, height=200, width=576,
 
     i = 0
     for text_file in text_files_list:
-        content = read_text(text_file, height, width, is_abs, is_diff, is_diff_abs, order, direction, is_trunc, threshold)
+        content = text_read(text_file, height, width, is_abs, is_diff, is_diff_abs, order, direction, is_trunc, threshold)
         data[i] = content
         i = i + 1
     
     return data
 
 
-def read_text_batch(text_files_list, height=200, width=576,
+def text_read_batch(text_files_list, height=200, width=576,
                     is_abs=False, is_diff=False, order=2, direction=0, is_diff_abs=True, is_trunc=False, threshold=15):
     """
     read all txt files into the memory (not recommend)
@@ -131,7 +131,7 @@ def read_text_batch(text_files_list, height=200, width=576,
 
     i = 0
     for text_file in text_files_list:
-        content = read_text(text_file, height, width, is_abs, is_diff, is_diff_abs, order, direction, is_trunc, threshold)
+        content = text_read(text_file, height, width, is_abs, is_diff, is_diff_abs, order, direction, is_trunc, threshold)
         data[i] = content
         i = i + 1
 

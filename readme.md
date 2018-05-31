@@ -1,6 +1,6 @@
 # Audio Steganalysis with CNN
 @ author: **Wang Yuntao (Charles)** <br>
-The paper can be downloaded from http://www.media-security.net/?p=809
+The paper is available at http://www.media-security.net/?p=809
 ## Necessary Package
 tensorflow-gpu==1.3 or 1.4, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa(depend on FFmpeg)
 
@@ -109,3 +109,5 @@ The proportion of zero value is far greater than others, so we remove the zero v
 **[9]** **FFmpeg**: http://www.ffmpeg.org/download.html <br>
 **[10]** **Python**: https://www.python.org/ <br>
 **[11]** **Anaconda**: https://repo.continuum.io/archive/ <br>
+**[12]** **librosa API**: http://librosa.github.io/librosa/core.html <br>
+**[13]** **librosa introduction (Chinese)**: https://www.cnblogs.com/xingshansi/p/6816308.html <br>
