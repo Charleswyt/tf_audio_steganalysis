@@ -84,12 +84,12 @@ def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=1000000, 
         data_list: the file name list
         label_list: the label list
     """
-    cover_files_list = get_files_list(cover_files_path)                     # cover文件列表
-    stego_files_list = get_files_list(stego_files_path)                     # stego文件列表
-    sample_num = len(cover_files_list)                                      # 样本对数
-    cover_label_list = np.zeros(sample_num, np.int32)                       # cover标签列表
-    stego_label_list = np.ones(sample_num, np.int32)                        # stego标签列表
-    
+    cover_files_list = get_files_list(cover_files_path)  # cover文件列表
+    stego_files_list = get_files_list(stego_files_path)  # stego文件列表
+    sample_num = len(cover_files_list)  # 样本对数
+    cover_label_list = np.zeros(sample_num, np.int32)  # cover标签列表
+    stego_label_list = np.ones(sample_num, np.int32)  # stego标签列表
+
     temp_cover = np.array([cover_files_list, cover_label_list])
     temp_cover = temp_cover.transpose()
 
@@ -223,6 +223,48 @@ def tfrecord_read(tfrecord_file_name):
     return img, label
 
 
-if __name__ == "__main__":
-    write_tfrecord("123", "4456", "hhh")
+def evaluation(logits, labels):
+    """
+    calculate the false positive rate, false negative rate, accuracy rate, precision rate and recall rate
+    :param logits: prediction
+    :param labels: label
+    :return:
+        false_positive_rate, false_negative_rate, accuracy_rate, precision_rate, recall_rate
+    """
+    # format exchange
+    if isinstance(logits, list):
+        logits = np.array(logits)
+        labels = np.array(labels)
 
+    if isinstance(logits, type(tf.constant([0]))):
+        sess = tf.Session()
+        logits = logits.eval(session=sess)
+        labels = labels.eval(session=sess)
+
+    # calculate
+    correct_false_num, correct_true_num, false_positive_num, false_negative_num = 0, 0, 0, 0
+    for logit, label in zip(logits, labels):
+        if logit == 0 and label == 0:
+            correct_false_num += 1
+        if logit == 1 and label == 0:
+            false_positive_num += 1
+        if logit == 0 and label == 1:
+            false_negative_num += 1
+        if logit == 1 and label == 1:
+            correct_true_num += 1
+
+    false_positive_rate = false_positive_num / str(labels.tolist()).count("1")
+    false_negative_rate = false_negative_num / str(labels.tolist()).count("0")
+    accuracy_rate = 1 - (false_positive_rate + false_negative_rate) / 2
+    precision_rate = correct_true_num / str(logits.tolist()).count("1")
+    recall_rate = correct_true_num / str(labels.tolist()).count("1")
+
+    return false_positive_rate, false_negative_rate, accuracy_rate, precision_rate, recall_rate
+
+
+if __name__ == "__main__":
+    a = tf.constant([1, 0, 1, 1, 0, 0, 1])
+    b = tf.constant([1, 1, 1, 0, 1, 0, 0])
+    c = [1, 2, 3]
+    x, y, z, _, __ = evaluation(a, b)
+    print(x, y, z, _, __)
