@@ -159,8 +159,8 @@ def file_path_setup(args):
     bitrate = args.bitrate                                              # bitrate, e.g. 128
     stego_method = args.stego_method                                    # stego_method, e.g. EECS
     relative_payload = args.relative_payload                            # relative payload, e.g. 2
-    model_dir = args.model_dir                                          # model dir
-    log_dir = args.log_dir                                              # log dir
+    models_path = args.models_path                                      # models path
+    logs_path = args.logs_path                                          # logs path
 
     if stego_method == "EECS":
         stego_dir_name = str(bitrate) + "_W_" + relative_payload + "_H_7_ER_10"
@@ -175,8 +175,8 @@ def file_path_setup(args):
         cover_valid_files_path = data_dir + "/" + "cover/" + str(bitrate) + "/" + "valid"
         stego_train_files_path = data_dir + "/stego/" + stego_method + "/" + stego_dir_name + "/" + "train"
         stego_valid_files_path = data_dir + "/stego/" + stego_method + "/" + stego_dir_name + "/" + "valid"
-        model_file_path = model_dir + "/" + stego_dir_name
-        log_file_path = log_dir + "/" + stego_dir_name
+        model_file_path = models_path + "/" + stego_dir_name
+        log_file_path = logs_path + "/" + stego_dir_name
     else:
         cover_train_files_path = args.cover_train_path
         cover_valid_files_path = args.cover_valid_path

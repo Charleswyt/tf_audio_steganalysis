@@ -397,12 +397,12 @@ def steganalysis_batch(args):
 
             # get file label
             if label_file_path is not None:
-                label = list()
+                labels = list()
                 with open(label_file_path) as file:
                     for line in file.readlines():
-                        label.append(int(line))
+                        labels.append(int(line))
             else:
-                label = -np.ones([image_num, 1])
+                labels = -np.ones([image_num, 1])
 
             results, number = list(), 0
             for test_file in test_file_list:
@@ -425,7 +425,7 @@ def steganalysis_batch(args):
                     prob = 100 * ret[0][result]
                     results.append(result[0])
 
-                    media_label = label[number]
+                    media_label = labels[number]
                     if result[0] == 0:
                         print("file name: %s, result: cover, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
 
@@ -433,5 +433,5 @@ def steganalysis_batch(args):
                         print("file name: %s, result: stego, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
 
                     number += 1
-            accuracy = 100 * (np.count_nonzero(np.array(results) == label) / len(results))
+            accuracy = 100 * (np.count_nonzero(np.array(results) == labels) / len(results))
             print("Accuracy = %.2f%%" % accuracy)
