@@ -32,7 +32,7 @@ def truncate(matrix, threshold=None, threshold_left=None, threshold_right=None):
         matrix[matrix > threshold_right] = threshold_right
     else:
         matrix[matrix > threshold] = threshold
-        matrix[matrix < threshold] = -threshold
+        matrix[matrix < -threshold] = -threshold
 
     return matrix
 
