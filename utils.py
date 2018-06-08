@@ -8,6 +8,7 @@ Finished on 2017.11.20
 """
 
 import csv
+from ctypes import *
 import tensorflow as tf
 from text_preprocess import *
 from image_preprocess import *
@@ -26,6 +27,7 @@ from matplotlib.pylab import plt
         
         tfrecord_write(files_path_list, file_type, tfrecord_file_name)                                          write the data info into tfrecord (制备tfrecord文件)
         tfrecord_read(tfrecord_file_name)                                                                       read the data info from tfrecord (读取tfrecord文件)
+        qmdct_extractor(mp3_file_path, height=200, width=576, frame_num=50, coeff_num=576)                      qmdct coefficients extraction (提取音频的QMDCT)
 """
 
 
@@ -277,6 +279,29 @@ def evaluation(logits, labels):
     recall_rate = correct_true_num / str(labels.tolist()).count("1")
 
     return false_positive_rate, false_negative_rate, accuracy_rate, precision_rate, recall_rate
+
+
+def qmdct_extractor(mp3_file_path, height=200, width=576, frame_num=50, coeff_num=576):
+    """
+    qmdct coefficients extraction
+    :param mp3_file_path: mp3 file path
+    :param height: the height of QMDCT coefficients matrix
+    :param width: the width of QMDCT coefficients matrix
+    :param frame_num: the frame num of QMDCT coefficients extraction
+    :param coeff_num: the num of coefficients in a channel
+    :return:
+        QMDCT coefficients matrix, size: (4 * frame_num) * coeff_num -> 200 * 576
+    """
+    wav_file_path = mp3_file_path.replace(".mp3", ".wav")
+    txt_file_path = mp3_file_path.replace(".mp3", ".txt")
+
+    command = "lame_qmdct.exe " + mp3_file_path + " -framenum " + str(frame_num) + " -startind 0 " + " -coeffnum " + str(coeff_num) + " --decode"
+    os.system(command)
+    os.remove(wav_file_path)
+    content = text_read(text_file_path=txt_file_path, height=height, width=width)
+    os.remove(txt_file_path)
+
+    return content
 
 
 if __name__ == "__main__":
