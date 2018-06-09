@@ -846,3 +846,11 @@ def network1__4(input_data, class_num=2, is_bn=True, activation_method="tanh", p
 
 def siamese_network(input_data1, input_data2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     pass
+
+
+def resnet(input_data, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+    pass
+
+
+def dense_net(input_data, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+    pass
