@@ -124,9 +124,12 @@ def stego_make_eecs(wav_files_path, mp3_files_path, bitrate, width, height="7",
             file_name = get_file_name(wav_file_path)
             mp3_file_name = file_name.replace(".wav", ".mp3")
             mp3_file_path = fullfile(mp3_files_path, mp3_file_name)
-            command = "encode_eecs.exe -b " + bitrate + " -embed " + embed + " -width " + width + " -height " + height + " -er " + embedding_rate \
-                      + " -framenumber " + frame_num + " " + wav_file_path + " " + mp3_file_path
-            os.system(command)
+            if not os.path.exists(mp3_file_path):
+                command = "encode_eecs.exe -b " + bitrate + " -embed " + embed + " -width " + width + " -height " + height + " -er " + embedding_rate \
+                          + " -framenumber " + frame_num + " " + wav_file_path + " " + mp3_file_path
+                os.system(command)
+            else:
+                pass
 
 
 def stego_make_eecs_batch(wav_files_path, mp3_files_path, frame_num="50",
@@ -242,9 +245,12 @@ if __name__ == "__main__":
     mp3_calibration_cover_files_path = "E:/Myself/2.database/IS_database/calibration/cover"
 
     cover_make_batch(wav_audio_files_path, mp3_audio_cover_files_path, 0, audio_num)
-    calibration("E:/Myself/2.database/IS_database/origin/cover/128", "E:/Myself/2.database/IS_database/calibration/cover/128", "128", 0, audio_num)
-    calibration("E:/Myself/2.database/IS_database/origin/cover/192", "E:/Myself/2.database/IS_database/calibration/cover/192", "192", 0, audio_num)
-    calibration("E:/Myself/2.database/IS_database/origin/cover/256", "E:/Myself/2.database/IS_database/calibration/cover/256", "256", 0, audio_num)
-    calibration("E:/Myself/2.database/IS_database/origin/cover/320", "E:/Myself/2.database/IS_database/calibration/cover/320", "320", 0, audio_num)
-
-    stego_make_eecs_batch(wav_audio_files_path, mp3_audio_stego_files_path)
+    calibration("E:/Myself/2.database/IS_database/origin/stego/EECS/EECS_B_128_W_2_H_7_ER_10",
+                "E:/Myself/2.database/IS_database/calibration/stego/EECS/EECS_B_128_W_2_H_7_ER_10", "128", 0, audio_num)
+    calibration("E:/Myself/2.database/IS_database/origin/stego/EECS/EECS_B_192_W_2_H_7_ER_10",
+                "E:/Myself/2.database/IS_database/calibration/stego/EECS/EECS_B_192_W_2_H_7_ER_10", "192", 0, audio_num)
+    calibration("E:/Myself/2.database/IS_database/origin/stego/EECS/EECS_B_256_W_2_H_7_ER_10",
+                "E:/Myself/2.database/IS_database/calibration/stego/EECS/EECS_B_256_W_2_H_7_ER_10", "256", 0, audio_num)
+    calibration("E:/Myself/2.database/IS_database/origin/stego/EECS/EECS_B_320_W_2_H_7_ER_10",
+                "E:/Myself/2.database/IS_database/calibration/stego/EECS/EECS_B_320_W_2_H_7_ER_10", "320", 0, audio_num)
+    stego_make_eecs_batch(wav_audio_files_path, mp3_audio_stego_files_path, start_idx=0, end_idx=audio_num)
