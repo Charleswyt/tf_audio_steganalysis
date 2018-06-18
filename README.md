@@ -1,6 +1,7 @@
 # Audio Steganalysis with CNN
 @ author: **Wang Yuntao (Charles)** <br>
-The paper is available at http://www.media-security.net/?p=809
+The paper is available at [CNN-based Steganalysis of MP3 Steganography in the Entropy
+Code Domain](http://www.media-security.net/?p=809)
 ## Necessary Package
 tensorflow-gpu==1.3 or 1.4, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa(depend on FFmpeg)
 
@@ -12,7 +13,7 @@ tensorflow-gpu==1.3 or 1.4, numpy, pandas, matplotlib, scikit-image, scikit-lear
 **HCM** (Huffman Code Mapping) and **EECS** (Equal Length Entropy Codes Substitution)
 
 ## Dataset
-The dataset url is **https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ** <br>
+The dataset can be downloaded from [**Audio Steganalysis Dataset (ASD)**](https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ) <br>
 The *extraction password* is "**1fzi**".
 
 ## File description
