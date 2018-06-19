@@ -11,6 +11,7 @@ tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-le
 
 ## Steganographic Algorithm
 **HCM** (Huffman Code Mapping) and **EECS** (Equal Length Entropy Codes Substitution, an adaptive MP3 steganographic algorithm with STC and distortion function based on psychological acoustics model (PAM))
+
 Note: All built-in MP3 algorithms embeds secret messages in the process of MP3 encoding, which will change QMDCT coefficients of MP3. So, this network can be applied to detect all data hiding methods which have impact on the QMDCT coefficients.
 
 ## Dataset
