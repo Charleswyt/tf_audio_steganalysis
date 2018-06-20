@@ -15,7 +15,7 @@ tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-le
 Note: All built-in MP3 algorithms embeds secret messages in the process of MP3 encoding, which will change QMDCT coefficients of MP3. So, this network can be applied to detect all data hiding methods which have impact on the QMDCT coefficients.
 
 ## Dataset
-The dataset can be downloaded from [**Audio Steganalysis Dataset (ASD)**](https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ) <br>
+The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ) <br>
 The *extraction password* is "**1fzi**".
 
 ## File description
