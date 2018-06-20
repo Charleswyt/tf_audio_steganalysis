@@ -1,16 +1,18 @@
 # Audio Steganalysis with CNN
 @ author: **Wang Yuntao (Charles_wyt)** <br>
 This project is a tensorflow implementation of recent work [CNN-based Steganalysis of MP3 Steganography in the Entropy
-Code Domain](http://www.media-security.net/?p=809).
+Code Domain](http://www.media-security.net/?p=809). Hope we can have a friendly communication.
 ## Necessary Package
-tensorflow-gpu==1.3 or 1.4, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa(depend on FFmpeg)
+tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa(depend on FFmpeg)
 
 ## The architecture of the network
 
 ![The structure of the proposed network](https://i.imgur.com/h0o5lfB.jpg)
 
 ## Steganographic Algorithm
-**HCM** (Huffman Code Mapping) and **EECS** (Equal Length Entropy Codes Substitution)
+**HCM** (Huffman Code Mapping) and **EECS** (Equal Length Entropy Codes Substitution, an adaptive MP3 steganographic algorithm with STC and distortion function based on psychological acoustics model (PAM))
+
+Note: All built-in MP3 algorithms embeds secret messages in the process of MP3 encoding, which will change QMDCT coefficients of MP3. So, this network can be applied to detect all data hiding methods which have impact on the QMDCT coefficients.
 
 ## Dataset
 The dataset can be downloaded from [**Audio Steganalysis Dataset (ASD)**](https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ) <br>
