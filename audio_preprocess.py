@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 """
 Created on 2018.03.05
-Finished on 208.03.10
+Finished on 2018.03.10
 @author: Wang Yuntao
 """
 
