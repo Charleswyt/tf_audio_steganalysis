@@ -1,7 +1,8 @@
 # Audio Steganalysis with CNN
 @ author: **Wang Yuntao (Charles_wyt)** <br>
 This project is a tensorflow implementation of recent work [CNN-based Steganalysis of MP3 Steganography in the Entropy
-Code Domain](http://www.media-security.net/?p=809). Hope we can have a friendly communication.
+Code Domain](http://www.media-security.net/?p=809). <br>
+Hope we can have a friendly communication.
 
 Email: wangyuntao2@iie.ac.cn
 
@@ -13,9 +14,9 @@ tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-le
 ![The structure of the proposed network](https://i.imgur.com/h0o5lfB.jpg)
 
 ## Steganographic Algorithm
-**HCM** (Huffman Code Mapping) and **EECS** (Equal Length Entropy Codes Substitution, an adaptive MP3 steganographic algorithm with STC and distortion function based on psychological acoustics model (PAM))
+**HCM** (Huffman Code Mapping) and **EECS** (Equal Length Entropy Codes Substitution, an adaptive MP3 steganographic algorithm with **STC** and **distortion function** based on **psychological acoustics model** (**PAM**)).
 
-Note: All built-in MP3 algorithms embeds secret messages in the process of MP3 encoding, which will change QMDCT coefficients of MP3. So, this network can be applied to detect all data hiding methods which have impact on the QMDCT coefficients.
+Note: All **built-in** MP3 algorithms embeds secret messages in the process of MP3 encoding, which will change QMDCT coefficients of MP3. So, this network can be applied to detect all data hiding methods which have impact on the QMDCT coefficients.
 
 ## Dataset
 The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ) <br>
@@ -39,14 +40,15 @@ ID      |   File                    |   Function
 13      |   network.py              |   various networks including **VGG19**, **LeNet** and **ourselves' network**
 14      |   utils.py                |   some useful tools such as **minibatch**, **get_model_info**, 
 15      |   run.py                  |   the **train** and **test** of the network **get_weights**, **get_biases** and so on
-16      |   TODO                    |   to do list (used by myself)
+16      |   dataset.py              |   some functions of dataset make
+17      |   TODO                    |   to do list (used by myself)
 
 ## Run
 * install **python3.x** or **Anaconda** and add the path into the environment variable
 * GPU run environment configure if train the network (optional)
-* pip install **tensorflow==1.3 or later, numpy, pandas, scikit-learn, scikit-image, librosa** (depend on FFmpeg, optional)
+* pip install **tensorflow==1.3 or later, numpy, pandas, scikit-learn, scikit-image, librosa** (depend on **FFmpeg**, optional)
 * run the code as the example as follows
-* use tensorboard to visualize the train process such as the accuracy and loss curve of train and valid. The command is "tensorboard --logdir=/path/to/log-directory"
+* use **tensorboard** to visualize the train process such as the accuracy and loss curve of train and valid. The command is "tensorboard --logdir=/path/to/log-directory"
 
 ## Command Parser
 Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <br>
@@ -71,7 +73,7 @@ Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <
 Note, the type of pre-processing method must be the **same** at the stage of train, valid, test and steganalysis.
 
 ## The description of each network
-*  **network for audio steganalysis**
+*  **network for _audio_ steganalysis**
 
         network1   : The proposed network (最终选定的网络)
         network1_1 : Remove all BN layers (去掉所有BN层)
@@ -88,11 +90,10 @@ Note, the type of pre-processing method must be the **same** at the stage of tra
 
         Note: HPF and ABS is applied at the pre-processing
     
-* **network for image steganalysis**
+* **network for _image_ steganalysis**
     
         stegshi   : Xu-Net
 
-    
 ## The method of pre-processing
     
 There are positive and negative values in QMDCT coefficients matrix. The values in interval **[-15, 15]** is modified.
