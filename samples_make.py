@@ -307,17 +307,10 @@ def calibration(mp3_files_path, calibration_files_path, bitrate, start_idx=0, en
 if __name__ == "__main__":
     audio_num = 200
     wav_audio_files_path = "E:/Myself/2.database/2.wav_cut/wav_10s"
-    mp3_audio_cover_files_path = "E:/Myself/2.database/IS_database/origin/cover"
-    mp3_audio_stego_files_path = "E:/Myself/2.database/IS_database/origin/stego"
-    mp3_calibration_cover_files_path = "E:/Myself/2.database/IS_database/calibration/cover"
+    mp3_audio_files_path = "E:/Myself/2.database/IS_database"
+    mp3_audio_cover_files_path = fullfile(mp3_audio_files_path, "origin/cover")
+    mp3_audio_stego_files_path = fullfile(mp3_audio_files_path, "origin/stego")
+    mp3_calibration_cover_files_path = fullfile(mp3_audio_files_path, "calibration/cover")
+    mp3_calibration_stego_files_path = fullfile(mp3_audio_files_path, "calibration/stego")
 
-    cover_make_batch(wav_audio_files_path, mp3_audio_cover_files_path, 0, audio_num)
-    calibration("E:/Myself/2.database/IS_database/origin/stego/EECS/EECS_B_128_W_2_H_7_ER_10",
-                "E:/Myself/2.database/IS_database/calibration/stego/EECS/EECS_B_128_W_2_H_7_ER_10", "128", 0, audio_num)
-    calibration("E:/Myself/2.database/IS_database/origin/stego/EECS/EECS_B_192_W_2_H_7_ER_10",
-                "E:/Myself/2.database/IS_database/calibration/stego/EECS/EECS_B_192_W_2_H_7_ER_10", "192", 0, audio_num)
-    calibration("E:/Myself/2.database/IS_database/origin/stego/EECS/EECS_B_256_W_2_H_7_ER_10",
-                "E:/Myself/2.database/IS_database/calibration/stego/EECS/EECS_B_256_W_2_H_7_ER_10", "256", 0, audio_num)
-    calibration("E:/Myself/2.database/IS_database/origin/stego/EECS/EECS_B_320_W_2_H_7_ER_10",
-                "E:/Myself/2.database/IS_database/calibration/stego/EECS/EECS_B_320_W_2_H_7_ER_10", "320", 0, audio_num)
-    stego_make_eecs_batch(wav_audio_files_path, mp3_audio_stego_files_path, start_idx=0, end_idx=audio_num)
+    # cover_make_batch(wav_audio_files_path, mp3_audio_cover_files_path, 0, audio_num)

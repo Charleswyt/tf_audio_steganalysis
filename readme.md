@@ -45,9 +45,9 @@ ID      |   File                    |   Function
 
 ## Run
 * install **python3.x** or **Anaconda** and add the path into the environment variable
-* GPU run environment configure if train the network (optional)
+* **GPU** run environment configure if train the network (optional)
 * pip install **tensorflow==1.3 or later, numpy, pandas, scikit-learn, scikit-image, librosa** (depend on **FFmpeg**, optional)
-* run the code as the example as follows
+* **run** the code as the example as follows
 * use **tensorboard** to visualize the train process such as the accuracy and loss curve of train and valid. The command is "tensorboard --logdir=/path/to/log-directory"
 
 ## Command Parser
