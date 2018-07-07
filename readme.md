@@ -41,7 +41,7 @@ ID      |   File                    |   Function
 14      |   utils.py                |   some useful tools such as **minibatch**, **get_model_info**, 
 15      |   run.py                  |   the **train** and **test** of the network **get_weights**, **get_biases** and so on
 16      |   dataset.py              |   some functions of dataset make
-17      |   lstm                    |   lstm network which uesd for steganalysis
+17      |   lstm.py                 |   lstm network which uesd for steganalysis
 18      |   TODO                    |   to do list (used by myself)
 
 ## Run
@@ -53,7 +53,7 @@ ID      |   File                    |   Function
 
 ## Command Parser
 Command: (sudo) python3(.5) main.py --argument 1 --argument 2 ... --argument N <br>
-the item is optional in parentheses
+The item is optional in parentheses.
 
 ## How to use
 * Example(**train**): **sudo python3.5 main.py** --**mode** train --**network** network1 --**gpu_selection** auto --**width** 380 --**is_diff** True --**order** 2 --**direction** 0 --**cover_valid_path** xxx --**cover_valid_path** xxx --**stego_train_path** xxx --**stego_valid_path** xxx --**models_path** xxx --**logs_path** xxx
