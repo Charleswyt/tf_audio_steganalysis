@@ -16,18 +16,18 @@ from sklearn.metrics import confusion_matrix
 from sklearn.feature_selection import SelectKBest
 
 
-def feature_selection(data, label, k=50):
+def best_k_selection(feature, label, k=50):
     """
     select the best k feature
-    :param data: feature data
+    :param feature: feature data
     :param label: feature label
     :param k: the best k feature
     :return:
-        a selected feature
+        the selected feature
     """
-    data_new = SelectKBest(chi2, k=k).fit_transform(data, label)
+    feature_new = SelectKBest(chi2, k=k).fit_transform(feature, label)
 
-    return data_new
+    return feature_new
 
 
 def pca_selection(data):
