@@ -21,14 +21,15 @@ function:
 
 # global variable
 embedding_file_path = "E:/Myself/2.database/5.stego_info/stego_info_full.txt"
+embedding_files_mp3stego_path = "E:/Myself/2.database/5.stego_info/MP3Stego"
 
 
-def cover_make_lame(wav_files_path, mp3_files_path, bitrate, start_idx=0, end_idx=10000):
+def cover_make_lame(wav_files_path, mp3_files_path, bitrate, start_idx=0, end_idx=1000000):
     """
     make mp3 cover samples via lame encoder
     :param wav_files_path: path of wav audio files
     :param mp3_files_path:path of mp3 audio files
-    :param bitrate: bitrate
+    :param bitrate: bitrate (128, 192, 256, 320)
     :param start_idx: the start index of audio files to be processed
     :param end_idx: the end index of audio files to be processed
     :return: NULL
@@ -56,7 +57,7 @@ def cover_make_mp3stego(wav_files_path, mp3_files_path, bitrate, start_idx=0, en
     make mp3 cover samples via mp3stego encoder
     :param wav_files_path: path of wav audio files
     :param mp3_files_path:path of mp3 audio files
-    :param bitrate: bitrate
+    :param bitrate: bitrate (128, 192, 256, 320)
     :param start_idx: the start index of audio files to be processed
     :param end_idx: the end index of audio files to be processed
     :return: NULL
@@ -72,7 +73,7 @@ def cover_make_mp3stego(wav_files_path, mp3_files_path, bitrate, start_idx=0, en
             mp3_file_name = file_name.replace(".wav", ".mp3")
             mp3_file_path = fullfile(mp3_files_path, mp3_file_name)
             if not os.path.exists(mp3_file_path):
-                command = "encode_MP3Stego.exe -b " + bitrate + " " + wav_file_path + " " + mp3_file_path
+                command = "Encode__mp3stego.exe -b " + bitrate + " " + wav_file_path + " " + mp3_file_path
                 os.system(command)
             else:
                 pass
@@ -80,22 +81,41 @@ def cover_make_mp3stego(wav_files_path, mp3_files_path, bitrate, start_idx=0, en
 
 
 def stego_make_mp3stego(wav_files_path, mp3_files_path, bitrate, start_idx=0, end_idx=10000):
-
+    """
+    make stego samples via MP3Stego
+    for 10s wav audio, secret messages of 1528 bits (191 Bytes) will be embedded, and the length of secret messages is independent of bitrate
+    analysis unit: 50 frames (for 10s mp3 audio, there are 384 frames), 24.83 bytes messages will be embedded
+    relative embedding rate         secret messages length
+             10%                           3  Bytes
+             30%                           8  Bytes
+             50%                           13 Bytes
+             80%                           20 Bytes
+             100%                          24 Bytes
+    in the process of MP3stego, the messages are compressed
+    :param wav_files_path: path of wav audio files
+    :param mp3_files_path:path of mp3 audio files
+    :param bitrate: bitrate (128, 192, 256, 320)
+    :param start_idx: the start index of audio files to be processed
+    :param end_idx: the end index of audio files to be processed
+    :return: NULL
+    """
     if not os.path.exists(wav_files_path):
         print("The wav files path does not exist.")
     else:
         wav_files_list = get_files_list(file_dir=wav_files_path, start_idx=start_idx, end_idx=end_idx)
-        embedding_rates = ["01", "03", "05", "08", "10"]
+        embedding_rates = ["1", "3", "5", "8", "10"]
         if not os.path.exists(mp3_files_path):
             os.mkdir(mp3_files_path)
-        for wav_file_path in wav_files_list:
-            for embedding_rate in embedding_rates:
+        for embedding_rate in embedding_rates:
+            embedding_file_name = "stego_0" + embedding_rate + ".txt" if len(embedding_rate) == 1 else "stego_" + embedding_rate + ".txt"
+            embedding_file = fullfile(embedding_files_mp3stego_path, embedding_file_name)
+            for wav_file_path in wav_files_list:
                 file_name = get_file_name(wav_file_path)
                 mp3_file_name = file_name.replace(".wav", ".mp3")
                 mp3_file_path = fullfile(mp3_files_path, mp3_file_name)
-                command = "encode_HCM.exe -b " + bitrate + " -E " + embedding_file_path + " --ER " + embedding_rate + " " + wav_file_path + " " + mp3_file_path
-                eval(command)
-        print("stego samples are made completely, bitrate %s, stego algorithm %s." % (bitrate, "HCM"))
+                command = "Encode__mp3stego.exe -b " + bitrate + " -E " + embedding_file + " -P pass" + " " + wav_file_path + " " + mp3_file_path
+                os.system(command)
+        print("stego samples are made completely, bitrate %s, stego algorithm %s." % (bitrate, "MP3Stego"))
 
 
 def stego_make_eecs(wav_files_path, mp3_files_path, bitrate, width, height="7",
@@ -158,11 +178,39 @@ def stego_make_hcm(wav_files_path, mp3_files_path, bitrate, cost="2",
             mp3_file_name = file_name.replace(".wav", ".mp3")
             mp3_file_path = fullfile(mp3_files_path, mp3_file_name)
             if not os.path.exists(mp3_file_path):
-                command = "encode_EECS.exe -b " + bitrate + " -embed " + embed + " -cost " + cost + " -er " + embedding_rate \
+                command = "encode_HCM.exe -b " + bitrate + " -embed " + embed + " -cost " + cost + " -er " + embedding_rate \
                           + " -framenumber " + frame_num + " " + wav_file_path + " " + mp3_file_path
                 os.system(command)
             else:
                 pass
+
+
+def stego_make_mp3stego_batch(wav_files_path, mp3_files_path, start_idx=0, end_idx=1000000):
+    """
+    make stego samples (MP3Stego)
+    :param wav_files_path: path of wav audio files
+    :param mp3_files_path: path of mp3 audio files
+    :param start_idx: start index of audio files
+    :param end_idx: end index of audio files
+    :return: NULL
+    """
+    if not os.path.exists(wav_files_path):
+        print("The wav files path does not exist.")
+    else:
+        stego_files_dir = fullfile(mp3_files_path, "MP3Stego")
+        if not os.path.exists(stego_files_dir):
+            os.mkdir(stego_files_dir)
+        bitrates = ["128", "192", "256", "320"]
+        embedding_rates = ["1", "3", "5", "8", "10"]
+        if not os.path.exists(mp3_files_path):
+            os.mkdir(mp3_files_path)
+        for bitrate in bitrates:
+            for embedding_rate in embedding_rates:
+                folder_name = "MP3Stego_B_" + bitrate + "_ER_" + embedding_rate
+                mp3_files_sub_path = fullfile(stego_files_dir, folder_name)
+                stego_make_mp3stego(wav_files_path, mp3_files_sub_path, bitrate=bitrate, start_idx=start_idx, end_idx=end_idx)
+
+        print("stego samples are made completely, stego algorithm MP3Stego.")
 
 
 def stego_make_hcm_batch(wav_files_path, mp3_files_path, frame_num="50",
@@ -180,7 +228,7 @@ def stego_make_hcm_batch(wav_files_path, mp3_files_path, frame_num="50",
     if not os.path.exists(wav_files_path):
         print("The wav files path does not exist.")
     else:
-        stego_files_dir = fullfile(mp3_files_path, "EECS")
+        stego_files_dir = fullfile(mp3_files_path, "HCM")
         if not os.path.exists(stego_files_dir):
             os.mkdir(stego_files_dir)
         bitrates = ["128", "192", "256", "320"]
@@ -191,7 +239,7 @@ def stego_make_hcm_batch(wav_files_path, mp3_files_path, frame_num="50",
         for bitrate in bitrates:
             for cost in costs:
                 for embedding_rate in embedding_rates:
-                    folder_name = "HCM_B_" + bitrate + "_C_" + cost + "_ER_" + embedding_rate
+                    folder_name = "HCM_B_" + bitrate + "_ER_" + embedding_rate
                     mp3_files_sub_path = fullfile(stego_files_dir, folder_name)
                     stego_make_hcm(wav_files_path, mp3_files_sub_path, bitrate=bitrate, cost=cost,
                                    embed=embed, frame_num=frame_num, embedding_rate=embedding_rate, start_idx=start_idx, end_idx=end_idx)
@@ -265,7 +313,7 @@ def cover_make_batch(wav_files_path, mp3_files_path, start_idx=0, end_idx=10000)
         origin: cover_make(wav_files_path, mp3_files_path, bitrate, cover_types="lame", start_idx=0, end_idx=10000000):
     """
     bitrates = ["128", "192", "256", "320"]
-    cover_types = ["lame", "mp3stego"]
+    cover_types = ["mp3stego"]
     if not os.path.exists(mp3_files_path):
         os.mkdir(mp3_files_path)
     else:
@@ -305,12 +353,10 @@ def calibration(mp3_files_path, calibration_files_path, bitrate, start_idx=0, en
 
 
 if __name__ == "__main__":
-    audio_num = 200
-    wav_audio_files_path = "E:/Myself/2.database/2.wav_cut/wav_10s"
-    mp3_audio_files_path = "E:/Myself/2.database/IS_database"
-    mp3_audio_cover_files_path = fullfile(mp3_audio_files_path, "origin/cover")
-    mp3_audio_stego_files_path = fullfile(mp3_audio_files_path, "origin/stego")
-    mp3_calibration_cover_files_path = fullfile(mp3_audio_files_path, "calibration/cover")
-    mp3_calibration_stego_files_path = fullfile(mp3_audio_files_path, "calibration/stego")
+    wav_audio_files_path = "E:/Myself/2.database/mtap/wav"
+    mp3_audio_files_path = "E:/Myself/2.database/mtap/mp3"
+    mp3_audio_cover_files_path = fullfile(mp3_audio_files_path, "cover")
+    mp3_audio_stego_files_path = fullfile(mp3_audio_files_path, "stego")
 
-    # cover_make_batch(wav_audio_files_path, mp3_audio_cover_files_path, 0, audio_num)
+    # cover_make_batch(wav_audio_files_path, mp3_audio_cover_files_path, start_idx=0, end_idx=10000)
+    stego_make_mp3stego_batch(wav_audio_files_path, mp3_audio_stego_files_path)
