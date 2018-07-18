@@ -113,7 +113,7 @@ def stego_make_mp3stego(wav_files_path, mp3_files_path, bitrate, embedding_rate=
             mp3_file_name = file_name.replace(".wav", ".mp3")
             mp3_file_path = fullfile(mp3_files_path, mp3_file_name)
             if not os.path.exists(mp3_file_path):
-                command = "encode_MP3Stego.exe -b " + bitrate + " -E " + embedding_file + " -P pass" + " " + wav_file_path + " " + mp3_file_path
+                command = "encode_MP3Stego.exe -b " + bitrate + " -E " + embedding_file + " -P pass " + wav_file_path + " " + mp3_file_path
                 os.system(command)
             else:
                 pass
@@ -202,8 +202,8 @@ def stego_make_mp3stego_batch(wav_files_path, mp3_files_path, start_idx=0, end_i
         stego_files_dir = fullfile(mp3_files_path, "MP3Stego")
         if not os.path.exists(stego_files_dir):
             os.mkdir(stego_files_dir)
-        bitrates = ["128", "192", "256", "320"]
-        embedding_rates = ["1", "3", "5", "8", "10"]
+        bitrates = ["320", "256", "192", "128"]
+        embedding_rates = ["3", "5", "8", "10"]
         if not os.path.exists(mp3_files_path):
             os.mkdir(mp3_files_path)
         for bitrate in bitrates:

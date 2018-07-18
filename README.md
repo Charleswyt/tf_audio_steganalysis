@@ -14,10 +14,11 @@ tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-le
 ![The structure of the proposed network](https://i.imgur.com/h0o5lfB.jpg)
 
 ## Steganographic Algorithm
-**HCM** (Huffman Code Mapping) and **EECS** (Equal Length Entropy Codes Substitution, an adaptive MP3 steganographic algorithm with **STC** and **distortion function** based on **psychological acoustics model** (**PAM**)).
+**HCM** (Huffman Code Mapping) and **EECS** (Equal Length Entropy Codes Substitution, an adaptive MP3 steganographic algorithm with [**STC**](http://dde.binghamton.edu/download/syndrome/) and **distortion function** based on **psychological acoustics model** (**PAM**)).
 
 Note: All **built-in** MP3 algorithms embeds secret messages in the process of MP3 encoding, which will change QMDCT coefficients of MP3. So, this network can be applied to detect all data hiding methods which have impact on the QMDCT coefficients.
 
+All steganographic algorithms are coded by Kun Yang (E-Mail: yangkun9076@iie.ac.cn)
 ## Dataset
 The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ) <br>
 The *extraction password* is "**1fzi**".
@@ -45,9 +46,9 @@ ID      |   File                    |   Function
 18      |   TODO                    |   to do list (used by myself)
 
 ## Run
-* install **python3.x** or **Anaconda** and add the path into the environment variable
-* **GPU** run environment configure if train the network (optional)
-* pip install **tensorflow==1.3 or later, numpy, pandas, scikit-learn, scikit-image, librosa** (depend on **FFmpeg**, optional)
+* install [**python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/) and add the path into the environment variable
+* **GPU** run environment [configure](https://blog.csdn.net/yhaolpz/article/details/71375762?locationNum=14&fps=1) if train the network (optional)
+* pip install **tensorflow==1.3 or later, numpy, pandas, scikit-learn, scikit-image, librosa** (depend on [**FFmpeg**](http://www.ffmpeg.org/download.html), optional)
 * **run** the code as the example as follows
 * use **tensorboard** to visualize the train process such as the accuracy and loss curve of train and valid. The command is "tensorboard --logdir=/path/to/log-directory"
 
