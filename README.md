@@ -1,15 +1,15 @@
 # Audio Steganalysis with CNN
 @ author: **Wang Yuntao (Charles_wyt)** <br>
 This project is a tensorflow implementation of recent work [CNN-based Steganalysis of MP3 Steganography in the Entropy
-Code Domain](http://www.media-security.net/?p=809). <br>
+Code Domain](https://dl.acm.org/citation.cfm?id=3206011). If you could not download this paper through ACM, this [url](http://www.media-security.net/?p=809) can be used.<br>
 Hope we can have a friendly communication.
 
 Email: wangyuntao2@iie.ac.cn
 
 ## Necessary Package
-tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa (depend on FFmpeg)
+tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa (depend on **FFmpeg**)
 
-## The architecture of the network
+## The architecture of the network (Wang Audio Steganalysis Deep Network, WASDN)
 
 ![The structure of the proposed network](https://i.imgur.com/h0o5lfB.jpg)
 
