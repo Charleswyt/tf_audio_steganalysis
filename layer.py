@@ -37,11 +37,11 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
     """
     pooling layer
     :param input_data: the input data
-    :param height: the height of the convolutional kernel
+    :param height: the height of the convolutional kernel, no pooling operation in the dimension of "batch_size" and "channel", so default value is 1
     :param width: the width of the convolutional kernel
     :param x_stride: stride in X axis
     :param y_stride: stride in Y axis
-    :param name: the name of the layer
+    :param name: the name of the pooling layer
     :param is_max_pool: if True, max pooling, else average pooling
     :param padding: padding="SAME"
     :return:
@@ -65,6 +65,7 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
         pooling_type = "average_pooling"
 
     shape = pooling.get_shape()
+
     print("name: %s, shape: (%d, %d, %d), type: %s" % (name, shape[1], shape[2], shape[3], pooling_type))
 
     return pooling
