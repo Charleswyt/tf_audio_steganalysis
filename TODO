@@ -3,5 +3,6 @@
 tensor < - > ndarray
 特征图可视化
 孪生网络
-LSTM（单层，双层）
+LSTM
 残差网络
+多尺度
