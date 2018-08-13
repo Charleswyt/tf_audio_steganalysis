@@ -6,20 +6,21 @@ from filters import *
 
 """
     function:
-        network1  : The proposed network (最终选定的网络)
-        network1_1: Remove the BN layer (去掉BN层)
-        network1_2: Average pooling layer is used for subsampling (将所有的降采样方式改为平均池化方式)
-        network1_3: Convolutional layer with stride 2 is used for subsampling (将所有的降采样方式改为卷积池化方式)
-        network1_4: Replace the convolutional kernel with 5x5 kernel (将卷积核尺寸由3 x 3改为5 x 5)
-        network1_5: ReLu is used as the activation function (将激活函数由Tanh改为ReLu)
-        network1_6: Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
-        network1_7: Deepen the network to block convolutional layers (加深网络)
-        network1_8: Remove the 1x1 convolutional layers (移除1x1卷积层)
+        network1   : The proposed network (最终选定的网络)
+        network1_1 : Remove the BN layer (去掉BN层)
+        network1_2 : Average pooling layer is used for subsampling (将所有的降采样方式改为平均池化方式)
+        network1_3 : Convolutional layer with stride 2 is used for subsampling (将所有的降采样方式改为卷积池化方式)
+        network1_4 : Replace the convolutional kernel with 5x5 kernel (将卷积核尺寸由3 x 3改为5 x 5)
+        network1_5 : ReLu is used as the activation function (将激活函数由Tanh改为ReLu)
+        network1_6 : Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
+        network1_7 : Deepen the network to block convolutional layers (加深网络)
+        network1_8 : Remove the 1x1 convolutional layers (移除1x1卷积层)
         network1__1: Remove the first BN layer in the first group (移除第一个block内的BN层)
         network1__2: Remove the first BN layers in the first two groups (移除前两个block内的BN层)
         network1__3: Remove the first BN layers in the first four groups (移除第四个block内的BN层)
         network1__4: Add BN layers at the top of 3x3 conv layer (在每个3x3卷积层后添加BN层)
-
+        
+        stegshi    : Xu-Net for image steganalysis (图像隐写分析, Xu-Net)
         Note: HPF and ABS is applied at the pre-processing
 """
 
@@ -844,8 +845,21 @@ def network1__4(input_data, class_num=2, is_bn=True, activation_method="tanh", p
     return logits
 
 
-def siamese_network(input_data1, input_data2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
-    pass
+def siamese_network(input_data1, input_data2, network=None, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+    """
+        Siamese network for steganalysis
+    """
+    print("Siamese Network, Two input, Shared parameters")
+    print("Network Structure: ")
+
+    command1 = network + "(input_data1, classes_num, is_bn)"
+    command2 = network + "(input_data2, classes_num, is_bn)"
+
+    output1 = eval(command1)
+    output2 = eval(command2)
+
+    return output1, output2
+
 
 
 def resnet(input_data, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):

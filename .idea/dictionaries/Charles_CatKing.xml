@@ -4,6 +4,7 @@
       <w>adadelta</w>
       <w>adagrad</w>
       <w>argmax</w>
+      <w>argtypes</w>
       <w>atrous</w>
       <w>balabala</w>
       <w>balabla</w>
@@ -11,10 +12,12 @@
       <w>bitrates</w>
       <w>caffe</w>
       <w>cbar</w>
+      <w>chao</w>
       <w>chekpoint</w>
       <w>cifar</w>
       <w>ckpt</w>
       <w>coeff</w>
+      <w>coeffnum</w>
       <w>compname</w>
       <w>comptype</w>
       <w>convolutional</w>
@@ -24,30 +27,51 @@
       <w>datas</w>
       <w>dataset</w>
       <w>deepbit</w>
+      <w>diqun</w>
       <w>downsampling</w>
       <w>dtype</w>
       <w>eecs</w>
+      <w>fmpeg</w>
+      <w>framenum</w>
+      <w>framenumber</w>
       <w>fullfile</w>
       <w>gpus</w>
+      <w>guang</w>
+      <w>haiying</w>
       <w>iters</w>
       <w>leakrelu</w>
+      <w>librosa</w>
+      <w>liguang</w>
+      <w>linna</w>
+      <w>logdir</w>
+      <w>logit</w>
+      <w>lstm</w>
       <w>matlab</w>
       <w>matplotlib</w>
       <w>matrixs</w>
+      <w>minibatch</w>
       <w>minibatches</w>
+      <w>mmmg</w>
+      <w>mtap</w>
       <w>ndarray</w>
+      <w>ndarry</w>
       <w>nhwc</w>
       <w>noheader</w>
       <w>nvidia</w>
       <w>pred</w>
       <w>preprocess</w>
       <w>pydub</w>
+      <w>qiaochu</w>
       <w>qmdc</w>
       <w>qmdct</w>
+      <w>rangding</w>
       <w>scikit</w>
       <w>sklearn</w>
+      <w>smmg</w>
+      <w>smsg</w>
       <w>softsign</w>
       <w>sqrt</w>
+      <w>startind</w>
       <w>steganographic</w>
       <w>steganography</w>
       <w>stegshi</w>
@@ -56,16 +80,25 @@
       <w>submode</w>
       <w>subsampling</w>
       <w>sudo</w>
+      <w>tensorboaed</w>
       <w>tensorboard</w>
       <w>tensorflow</w>
+      <w>tensorlayer</w>
       <w>tfrecord</w>
       <w>tfrecords</w>
       <w>uint</w>
       <w>weigths</w>
+      <w>xianfeng</w>
+      <w>xiaowei</w>
+      <w>xiong</w>
       <w>xlabel</w>
       <w>xtick</w>
+      <w>yanzhen</w>
       <w>ylabel</w>
       <w>ytick</w>
+      <w>zhang</w>
+      <w>zhao</w>
+      <w>zhou</w>
       <w>zlabel</w>
     </words>
   </dictionary>
