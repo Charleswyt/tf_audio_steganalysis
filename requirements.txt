@@ -5,3 +5,4 @@ tensorflow-gpu==1.4
 scikit-learn
 scikit-image
 librosa
+virtualenv

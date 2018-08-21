@@ -2,25 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c2d43106-d1ec-4b75-a6d9-339f7e1bcfc5" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/steganalysis_CNN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/steganalysis_CNN.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TODO" beforeDir="false" afterPath="$PROJECT_DIR$/TODO" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/audio_preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/audio_preprocess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file_preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/file_preprocess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_preprocess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/layer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_scipt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network.py" beforeDir="false" afterPath="$PROJECT_DIR$/network.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pre_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/pre_process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/samples_make.py" beforeDir="false" afterPath="$PROJECT_DIR$/samples_make.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text_preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/text_preprocess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/7501.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/7502.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/7503.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/7504.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/7509.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/7510.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/7831.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/7832.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/7833.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7501.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7502.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7504.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7505.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7506.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7574.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7575.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7576.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7578.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST/result_7579.pgm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -86,13 +89,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lstm.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lstm.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2808" />
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -105,14 +101,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="readme.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="readme.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/readme.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="225">
-                <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+              <first_editor relative-caret-position="-325">
+                <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
               </first_editor>
               <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="samples_make.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/samples_make.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="741">
+              <caret line="362" column="32" lean-forward="true" selection-start-line="362" selection-start-column="32" selection-end-line="362" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -121,7 +126,7 @@
         <entry file="file://$PROJECT_DIR$/config.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="475">
-              <caret line="25" column="3" lean-forward="true" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
+              <caret line="25" column="3" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
               <folding>
                 <element signature="e#121#130#0" expanded="true" />
                 <element signature="e#1429#9379#0" />
@@ -135,7 +140,7 @@
         <entry file="file://$PROJECT_DIR$/dataset.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
-              <caret line="12" column="19" lean-forward="true" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="34" />
+              <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -160,18 +165,14 @@
       </file>
       <file leaf-file-name="TODO" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TODO">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret lean-forward="true" />
-            </state>
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="550">
-              <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+              <caret line="26" selection-start-line="26" selection-end-line="26" />
             </state>
           </provider>
         </entry>
@@ -459,17 +460,16 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-47" y="0" width="1936" height="1056" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32826087" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.49307036" side_tool="true" weight="0.2241567" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="File Transfer" order="11" sideWeight="0.50479746" weight="0.259542" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.32824427" />
-      <window_info anchor="right" x="22" y="348" width="1876" height="343" id="Python Console" order="8" weight="0.3880597" />
+      <window_info active="true" anchor="right" x="22" y="348" width="1876" height="343" id="Python Console" order="8" visible="true" weight="0.3880597" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49520257" weight="0.29007635" />
       <window_info anchor="bottom" id="Terminal" order="18" sideWeight="0.50692964" weight="0.27153763" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.16257995" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.16257995" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
       <window_info anchor="right" id="SciView" order="5" weight="0.32995737" />
@@ -570,28 +570,6 @@
             <element signature="e#387#2295#0" />
             <element signature="e#2459#3960#0" />
             <element signature="e#4147#5549#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/samples_make.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="492">
-          <caret line="446" column="63" lean-forward="true" selection-start-line="446" selection-start-column="63" selection-end-line="446" selection-end-column="63" />
-          <folding>
-            <element signature="e#967#2137#0" />
-            <element signature="e#2242#3434#0" />
-            <element signature="e#3559#5710#0" />
-            <element signature="e#5901#7282#0" />
-            <element signature="e#7484#8949#0" />
-            <element signature="e#9133#10569#0" />
-            <element signature="e#10669#11975#0" />
-            <element signature="e#12138#13551#0" />
-            <element signature="e#13716#15267#0" />
-            <element signature="e#15386#16832#0" />
-            <element signature="e#16947#17713#0" />
-            <element signature="e#17805#18717#0" />
-            <element signature="e#18821#19933#0" />
           </folding>
         </state>
       </provider>
@@ -714,17 +692,10 @@
     <entry file="file://$PROJECT_DIR$/.gitattributes">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/TODO">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="550">
-          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+          <caret line="26" selection-start-line="26" selection-end-line="26" />
         </state>
       </provider>
     </entry>
@@ -748,14 +719,14 @@
     <entry file="file://$PROJECT_DIR$/dataset.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
-          <caret line="12" column="19" lean-forward="true" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="34" />
+          <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="34" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="475">
-          <caret line="25" column="3" lean-forward="true" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
+          <caret line="25" column="3" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
           <folding>
             <element signature="e#121#130#0" expanded="true" />
             <element signature="e#1429#9379#0" />
@@ -767,10 +738,20 @@
     <entry file="file://$PROJECT_DIR$/readme.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="225">
-            <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+          <first_editor relative-caret-position="-325">
+            <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TODO">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/samples_make.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="741">
+          <caret line="362" column="32" lean-forward="true" selection-start-line="362" selection-start-column="32" selection-end-line="362" selection-end-column="32" />
         </state>
       </provider>
     </entry>

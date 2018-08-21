@@ -9,6 +9,8 @@ Email: wangyuntao2@iie.ac.cn
 ## Necessary Package
 tensorflow-gpu==1.4 or later, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa (depend on **FFmpeg**)
 
+You can use command **pip install -r requirements.txt** to install all packages mentioned above. If you don't want to change your version of tensorflow, you can use **virtualenv** to create a new python run environment.
+
 ## The architecture of the network (Wang Audio Steganalysis Deep Network, WASDN)
 
 ![The structure of the proposed network](https://i.imgur.com/h0o5lfB.jpg)
