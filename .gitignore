@@ -17,3 +17,6 @@
 *.meta
 *.gz
 *.exe
+samples_make.py
+test_scipt.py
+TODO

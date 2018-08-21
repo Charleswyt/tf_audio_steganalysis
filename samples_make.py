@@ -14,9 +14,27 @@ from file_preprocess import get_file_name
 
 """
 function:
-    cover_make(wav_files_path, mp3_files_path, bitrate, start_idx=0, end_idx=10000)                 make cover samples via lame encoder (制备cover阴性样本集)
-    mp3stego_cover_make(wav_files_path, mp3_files_path, bitrate, start_idx=0, end_idx=10000)        make cover samples via lame encoder (制备mp3stego cover阴性样本集)
-    calibration(mp3_files_path, calibration_files_path, bitrate, start_idx=0, end_idx=10000)        calibration via lame encoder (mp3音频的校正， cover -> cover')
+    cover_make_lame(wav_files_path, mp3_files_path, bitrate, start_idx=None, end_idx=None)                              make cover samples via lame encoder
+    cover_make_mp3stego(wav_files_path, mp3_files_path, bitrate, start_idx=None, end_idx=None)                          make cover samples via MP3Stego encoder
+    stego_make_mp3stego(wav_files_path, mp3_files_path, bitrate, embedding_rate="10", start_idx=None, end_idx=None)     make stego samples via MP3Stego encoder
+    stego_make_hcm(wav_files_path, mp3_files_path, bitrate, cost="2",
+                   embed=embedding_file_path, frame_num="50", embedding_rate="10", start_idx=None, end_idx=None)        make stego samples via HCM encoder
+    stego_make_eecs(wav_files_path, mp3_files_path, bitrate, width, height="7",
+                    embed=embedding_file_path, frame_num="50", embedding_rate="10", start_idx=None, end_idx=None)       make stego samples via EECS encoder
+    stego_make_acs(wav_files_path, mp3_files_path, bitrate, width, height="7",
+                   embed=embedding_file_path, embedding_rate="10", start_idx=None, end_idx=None)                        make stego samples via ACS encoder
+    cover_make(wav_files_path, mp3_files_path, bitrate, cover_types="lame", start_idx=None, end_idx=None)               cover make
+    
+    # make samples in batch
+    stego_make_mp3stego_batch(wav_files_path, mp3_files_path, start_idx=None, end_idx=None)                             make stego samples via MP3Stego encoder in batch
+    stego_make_hcm_batch(wav_files_path, mp3_files_path, frame_num="50",
+                         embed=embedding_file_path, start_idx=None, end_idx=None)                                       make stego samples via HCM encoder in batch
+    stego_make_eecs_batch(wav_files_path, mp3_files_path, frame_num="50",
+                          embed=embedding_file_path, start_idx=None, end_idx=None)                                      make stego samples via EECS encoder in batch
+    stego_make_acs_batch(wav_files_path, mp3_files_path, embed=embedding_file_path, start_idx=None, end_idx=None)       make stego samples via ACS encoder in batch
+    cover_make_batch(wav_files_path, mp3_files_path, start_idx=None, end_idx=None)                                      make cover samples via lame encoder in batch
+    
+    calibration(mp3_files_path, calibration_files_path, bitrate, start_idx=None, end_idx=None)                          calibration(recode) via lame encoder
 """
 
 # global variable
@@ -24,7 +42,7 @@ embedding_file_path = "E:/Myself/2.database/5.stego_info/stego_info_full.txt"
 embedding_files_mp3stego_path = "E:/Myself/2.database/5.stego_info/MP3Stego"
 
 
-def cover_make_lame(wav_files_path, mp3_files_path, bitrate, start_idx=0, end_idx=1000000):
+def cover_make_lame(wav_files_path, mp3_files_path, bitrate, start_idx=None, end_idx=None):
     """
     make mp3 cover samples via lame encoder
     :param wav_files_path: path of wav audio files
@@ -52,7 +70,7 @@ def cover_make_lame(wav_files_path, mp3_files_path, bitrate, start_idx=0, end_id
         print("cover samples with bitrate %s are completed." % bitrate)
 
 
-def cover_make_mp3stego(wav_files_path, mp3_files_path, bitrate, start_idx=0, end_idx=100000000):
+def cover_make_mp3stego(wav_files_path, mp3_files_path, bitrate, start_idx=None, end_idx=None):
     """
     make mp3 cover samples via mp3stego encoder
     :param wav_files_path: path of wav audio files
@@ -80,7 +98,7 @@ def cover_make_mp3stego(wav_files_path, mp3_files_path, bitrate, start_idx=0, en
         print("MP3Stego cover samples with bitrate %s are completed." % bitrate)
 
 
-def stego_make_mp3stego(wav_files_path, mp3_files_path, bitrate, embedding_rate="10", start_idx=0, end_idx=10000000):
+def stego_make_mp3stego(wav_files_path, mp3_files_path, bitrate, embedding_rate="10", start_idx=None, end_idx=None):
     """
     make stego samples via MP3Stego
     for 10s wav audio, secret messages of 1528 bits (191 Bytes) will be embedded, and the length of secret messages is independent of bitrate
@@ -121,7 +139,7 @@ def stego_make_mp3stego(wav_files_path, mp3_files_path, bitrate, embedding_rate=
 
 
 def stego_make_hcm(wav_files_path, mp3_files_path, bitrate, cost="2",
-                   embed=embedding_file_path, frame_num="50", embedding_rate="10", start_idx=0, end_idx=1000000):
+                   embed=embedding_file_path, frame_num="50", embedding_rate="10", start_idx=None, end_idx=None):
     """
     make stego samples (HCM)
     :param wav_files_path: path of wav audio files
@@ -154,7 +172,7 @@ def stego_make_hcm(wav_files_path, mp3_files_path, bitrate, cost="2",
 
 
 def stego_make_eecs(wav_files_path, mp3_files_path, bitrate, width, height="7",
-                    embed=embedding_file_path, frame_num="50", embedding_rate="10", start_idx=0, end_idx=1000000):
+                    embed=embedding_file_path, frame_num="50", embedding_rate="10", start_idx=None, end_idx=None):
     """
     make stego samples (EECS)
     :param wav_files_path: path of wav audio files
@@ -188,7 +206,7 @@ def stego_make_eecs(wav_files_path, mp3_files_path, bitrate, width, height="7",
 
 
 def stego_make_acs(wav_files_path, mp3_files_path, bitrate, width, height="7",
-                   embed=embedding_file_path, embedding_rate="10", start_idx=0, end_idx=1000000):
+                   embed=embedding_file_path, embedding_rate="10", start_idx=None, end_idx=None):
     """
     make stego samples (ACS)
     :param wav_files_path: path of wav audio files
@@ -220,7 +238,7 @@ def stego_make_acs(wav_files_path, mp3_files_path, bitrate, width, height="7",
                 pass
 
 
-def stego_make_mp3stego_batch(wav_files_path, mp3_files_path, start_idx=0, end_idx=1000000):
+def stego_make_mp3stego_batch(wav_files_path, mp3_files_path, start_idx=None, end_idx=None):
     """
     make stego samples (MP3Stego)
     :param wav_files_path: path of wav audio files
@@ -250,7 +268,7 @@ def stego_make_mp3stego_batch(wav_files_path, mp3_files_path, start_idx=0, end_i
 
 
 def stego_make_hcm_batch(wav_files_path, mp3_files_path, frame_num="50",
-                         embed=embedding_file_path, start_idx=0, end_idx=1000000):
+                         embed=embedding_file_path, start_idx=None, end_idx=None):
     """
     make stego samples (HCM)
     :param wav_files_path: path of wav audio files
@@ -284,7 +302,7 @@ def stego_make_hcm_batch(wav_files_path, mp3_files_path, frame_num="50",
 
 
 def stego_make_eecs_batch(wav_files_path, mp3_files_path, frame_num="50",
-                          embed=embedding_file_path, start_idx=0, end_idx=1000000):
+                          embed=embedding_file_path, start_idx=None, end_idx=None):
     """
     make stego samples (EECS, batch)
     :param wav_files_path: path of wav audio files
@@ -319,7 +337,7 @@ def stego_make_eecs_batch(wav_files_path, mp3_files_path, frame_num="50",
         print("stego samples are made completely, stego algorithm EECS.")
 
 
-def stego_make_acs_batch(wav_files_path, mp3_files_path, embed=embedding_file_path, start_idx=0, end_idx=1000):
+def stego_make_acs_batch(wav_files_path, mp3_files_path, embed=embedding_file_path, start_idx=None, end_idx=None):
     """
     make stego samples (ACS, batch)
     :param wav_files_path: path of wav audio files
@@ -353,7 +371,7 @@ def stego_make_acs_batch(wav_files_path, mp3_files_path, embed=embedding_file_pa
         print("stego samples are made completely, stego algorithm ACS.")
 
 
-def cover_make(wav_files_path, mp3_files_path, bitrate, cover_types="lame", start_idx=0, end_idx=10000000):
+def cover_make(wav_files_path, mp3_files_path, bitrate, cover_types="lame", start_idx=None, end_idx=None):
     """
     make cover mp3 samples with specified cover type and bitrate
     :param wav_files_path: path of wav audio files
@@ -372,7 +390,7 @@ def cover_make(wav_files_path, mp3_files_path, bitrate, cover_types="lame", star
         print("No cover type matches.")
 
 
-def cover_make_batch(wav_files_path, mp3_files_path, start_idx=0, end_idx=10000000):
+def cover_make_batch(wav_files_path, mp3_files_path, start_idx=None, end_idx=None):
     """
     make cover mp3 samples
     :param wav_files_path: path of wav audio files
@@ -380,10 +398,10 @@ def cover_make_batch(wav_files_path, mp3_files_path, start_idx=0, end_idx=100000
     :param start_idx: the start index of audio files to be processed
     :param end_idx: the end index of audio files to be processed
     :return: NULL
-        origin: cover_make(wav_files_path, mp3_files_path, bitrate, cover_types="lame", start_idx=0, end_idx=10000000):
+        origin: cover_make(wav_files_path, mp3_files_path, bitrate, cover_types="lame", start_idx=None, end_idx=None):
     """
     bitrates = ["128", "192", "256", "320"]
-    cover_types = ["lame"]
+    cover_types = ["lame", "mp3stego"]
     if not os.path.exists(mp3_files_path):
         os.mkdir(mp3_files_path)
     else:
@@ -395,7 +413,7 @@ def cover_make_batch(wav_files_path, mp3_files_path, start_idx=0, end_idx=100000
             cover_make(wav_files_path, mp3_files_sub_path, bitrate, cover_type, start_idx=start_idx, end_idx=end_idx)
 
 
-def calibration(mp3_files_path, calibration_files_path, bitrate, start_idx=0, end_idx=10000000):
+def calibration(mp3_files_path, calibration_files_path, bitrate, start_idx=None, end_idx=None):
     """
     mp3 calibration via lame encoder  -> lame.exe -b 128 ***.mp3 c_***.mp3
     :param mp3_files_path: the mp3 files path

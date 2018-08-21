@@ -7,7 +7,7 @@ Hope we can have a friendly communication.
 Email: wangyuntao2@iie.ac.cn
 
 ## Necessary Package
-tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa (depend on **FFmpeg**)
+tensorflow-gpu==1.4 or later, numpy, pandas, matplotlib, scikit-image, scikit-learn, librosa (depend on **FFmpeg**)
 
 ## The architecture of the network (Wang Audio Steganalysis Deep Network, WASDN)
 

@@ -54,7 +54,6 @@ def parse(line, query_args):
     return:
         a dict of gpu info
     Parsing a line of csv format text returned by nvidia-smi
-    解析一行nvidia-smi返回的csv格式文本
     """
     countable_args = ["memory.free", "memory.total", "power.draw", "power.limit"]               # 可计数的参数
     power_manage_enable = lambda v: ("Not Support" not in v)                                    # 显卡是否支持power management（笔记本可能不支持）
@@ -71,7 +70,6 @@ def query_gpu(query_args=None):
     return:
         a list of dict
     Querying GPUs info
-    查询GPU信息
     """
     if query_args is None:
         query_args = []
@@ -144,8 +142,7 @@ class GPUManager:
             0: (default)sorted by free memory size
         return:
             a TF device object
-        Auto choice the freest GPU device,not specified
-        ones
+        Auto choice the freest GPU device,not specified ones
         自动选择最空闲GPU
         """
         if check_gpus() is True:

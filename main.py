@@ -14,13 +14,9 @@ from config import command_parse
 
 
 def main():
-    try:
-        import win_unicode_console
-        win_unicode_console.enable()
-    except ImportError:
-        print("win_unicode_console import unsuccessfully.")
-
+    # command parsing
     arguments = command_parse()
+
     if arguments.gpu_selection == "auto":
         gm = GPUManager()
         gpu_index = gm.auto_choice()
@@ -28,6 +24,7 @@ def main():
             os.environ["CUDA_VISIBLE_DEVICES"] = gpu_index
     else:
         os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
+
     run_mode(arguments)
 
 

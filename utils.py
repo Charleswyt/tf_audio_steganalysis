@@ -20,7 +20,7 @@ from matplotlib.pylab import plt
         fullfile(file_dir, file_name)                                                                           concatenate the file path (实现路径连接，功能类似于matlab中的fullfile)
         get_time(_unix_time_stamp=None)                                                                         get calender time via unix time stamp (根据Unix时间戳获取日历时间)
         get_unix_stamp(_time_string="1970-01-01 08:01:51", _format="%Y-%m-%d %H:%M:%S")                         get unix time stamp via calender time (根据日历时间获取Unix时间戳)
-        read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=10000, is_shuffle=True)              get file list and  corresponding label list (获取文件列表与标签列表)
+        read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, is_shuffle=True)              get file list and  corresponding label list (获取文件列表与标签列表)
         minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None)   get minibatch for training (批次读取数据, 此处的数据仍为文件列表)
         get_data_batch(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0,
                        is_trunc=False, threshold=15, threshold_left=0, threshold_right=255)                     read a batch of data (批次读取数据)
@@ -36,7 +36,8 @@ def fullfile(file_dir, file_name):
     fullfile as matlab
     :param file_dir: file dir
     :param file_name: file name
-    :return: a full file path
+    :return:
+        full_file_path: the full file path
     """
     full_file_path = os.path.join(file_dir, file_name)
     full_file_path = full_file_path.replace("\\", "/")
@@ -44,37 +45,38 @@ def fullfile(file_dir, file_name):
     return full_file_path
 
 
-def get_time(_unix_time_stamp=None):
+def get_time(unix_time_stamp=None):
     """
-    unix时间戳 -> "%Y-%m-%d %H:%M:%S"格式的时间
+    unix time stamp -> time in "%Y-%m-%d %H:%M:%S" format
     e.g. 1522048036 -> 2018-03-26 15:07:16
-    :param _unix_time_stamp: unix时间戳
+    :param unix_time_stamp: unix time stamp
     :return:
-        "%Y-%m-%d %H:%M:%S"格式的时间
+        time_string: time in "%Y-%m-%d %H:%M:%S" format
     """
-    _format = "%Y-%m-%d %H:%M:%S"
-    if _unix_time_stamp is None:
+    time_format = "%Y-%m-%d %H:%M:%S"
+    if unix_time_stamp is None:
         value = time.localtime()
     else:
-        value = time.localtime(_unix_time_stamp)
-    _time_string = time.strftime(_format, value)
+        value = time.localtime(unix_time_stamp)
+    time_string = time.strftime(time_format, value)
 
-    return _time_string
+    return time_string
 
 
-def get_unix_stamp(_time_string="1970-01-01 08:01:51", _format="%Y-%m-%d %H:%M:%S"):
+def get_unix_stamp(time_string="1970-01-01 08:01:51", time_format="%Y-%m-%d %H:%M:%S"):
     """
     time expression with "%Y-%m-%d %H:%M:%S" format -> unix time stamp
-    :param _time_string: time expression with "%Y-%m-%d %H:%M:%S" format
-    :param _format:
-    :return: unix time stamp
+    :param time_string: time expression with "%Y-%m-%d %H:%M:%S" format
+    :param time_format: time format to be exchanged
+    :return:
+        unix time stamp: unix time stamp
     """
-    _unix_time_stamp = time.mktime(time.strptime(_time_string, _format))
+    unix_time_stamp = time.mktime(time.strptime(time_string, time_format))
 
-    return int(_unix_time_stamp)
+    return int(unix_time_stamp)
 
 
-def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=1000000, is_shuffle=True):
+def read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, is_shuffle=True):
     """
     read file names from the storage
     :param cover_files_path: the folder name of cover files
@@ -83,14 +85,16 @@ def read_data(cover_files_path, stego_files_path, start_idx=0, end_idx=1000000, 
     :param end_idx: the end index
     :param is_shuffle: whether shuffle or not (default is True)
     :return:
-        data_list: the file name list
-        label_list: the label list
+        cover_data_list: list of cover data
+        cover_label_list: list of cover label
+        stego_data_list: list of stego data
+        stego_label_list: list of stego label
     """
-    cover_files_list = get_files_list(cover_files_path)  # cover文件列表
-    stego_files_list = get_files_list(stego_files_path)  # stego文件列表
-    sample_num = len(cover_files_list)  # 样本对数
-    cover_label_list = np.zeros(sample_num, np.int32)  # cover标签列表
-    stego_label_list = np.ones(sample_num, np.int32)  # stego标签列表
+    cover_files_list = get_files_list(cover_files_path)         # data list of cover files
+    stego_files_list = get_files_list(stego_files_path)         # data list of stego files
+    sample_num = len(cover_files_list)                          # total pairs of samples
+    cover_label_list = np.zeros(sample_num, np.int32)           # label list of cover files
+    stego_label_list = np.ones(sample_num, np.int32)            # label list of stego files
 
     temp_cover = np.array([cover_files_list, cover_label_list])
     temp_cover = temp_cover.transpose()
@@ -137,7 +141,7 @@ def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_lab
 
 
 def get_data_batch(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0,
-                   is_trunc=False, threshold=15, threshold_left=0, threshold_right=255):
+                   is_trunc=False, threshold=15, threshold_left=-15, threshold_right=15):
     """
     read data batch by batch
     :param files_list: files list (audio | image | text)
@@ -154,7 +158,7 @@ def get_data_batch(files_list, height, width, carrier="audio", is_abs=False, is_
     :param threshold_left: the threshold of truncation
     :param threshold_right: the threshold of truncation
     :return:
-        the data list 4-D tensor [batch_size, height, width, channel]
+        data: the data list 4-D tensor [batch_size, height, width, channel]
     """
     if carrier == "audio":
         data = text_read_batch(text_files_list=files_list, height=height, width=width, is_abs=is_abs, is_diff=is_diff, order=order, direction=direction,
@@ -215,7 +219,11 @@ def evaluation(logits, labels):
     :param logits: prediction
     :param labels: label
     :return:
-        false_positive_rate, false_negative_rate, accuracy_rate, precision_rate, recall_rate
+        false_positive_rate: false positive rate
+        false_negative_rate: false negative rate
+        accuracy_rate: accuracy rate
+        precision_rate: precision rate
+        recall_rate: recall rate
     """
     # format exchange
     if isinstance(logits, list):
@@ -272,10 +280,4 @@ def qmdct_extractor(mp3_file_path, height=200, width=576, frame_num=50, coeff_nu
 
 
 if __name__ == "__main__":
-    a = tf.constant([1, 0, 1, 1, 0, 0, 1])
-    b = tf.constant([1, 1, 1, 0, 1, 0, 0])
-    c = [1, 2, 3]
-    x, y, z, _, __ = evaluation(a, b)
-    print(x, y, z, _, __)
-    content = qmdct_extractor("E:/Myself/2.database/3.cover/cover_10s/128/test/wav10s_20001.mp3")
-    print(np.shape(content))
+    pass

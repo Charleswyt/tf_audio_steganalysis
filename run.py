@@ -17,9 +17,10 @@ Finished on 2017.11.30
 
 """
     function: 
-        train(args)                                             # 训练
-        steganalysis_one(args)                                  # 隐写分析网络测试 (单个文件)
-        steganalysis_batch(args)                                # 隐写分析网络测试 (多个文件)
+        train(args)                                             # train
+        test(args)                                              # test
+        steganalysis_one(args)                                  # steganalysis for one sample
+        steganalysis_batch(args)                                # steganalysis for multiple samples
 """
 
 

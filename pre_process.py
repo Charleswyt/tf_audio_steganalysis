@@ -12,9 +12,9 @@ import numpy as np
 
 """
 The pre-processing of the QMDCT matrix:
-    truncate(matrix, threshold)                                                                 截断处理
-    down_sampling(matrix, mode, mode_number)                                                    单一模式下采样
-    get_down_sampling(matrix, mode_number)                                                      混合模式下采样
+    truncate(matrix, threshold)                                                                 truncation of matrix
+    down_sampling(matrix, mode, mode_number)                                                    downsampling in single mode
+    get_down_sampling(matrix, mode_number)                                                      downsampling in 
 """
 
 

@@ -27,7 +27,7 @@ from filters import *
 
 def network1(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    The proposed network
+        The proposed network
     """
     print("network1: The proposed network")
     print("Network Structure: ")
@@ -68,7 +68,7 @@ def network1(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -80,7 +80,7 @@ def network1(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
 
 def network1_1(input_data, class_num=2, is_bn=False, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    remove the batch normalization (去掉BN层)
+        remove the batch normalization (去掉BN层)
     """
     print("network1_1: Remove the BN layer")
     print("Network Structure: ")
@@ -121,7 +121,7 @@ def network1_1(input_data, class_num=2, is_bn=False, activation_method="tanh", p
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -133,7 +133,7 @@ def network1_1(input_data, class_num=2, is_bn=False, activation_method="tanh", p
 
 def network1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=False):
     """
-    在network1的基础上, 将所有降采样方式均改为平均池化
+        Average pooling layer is used for subsampling (将所有的降采样方式改为平均池化方式)
     """
     print("network1_2 replace the max pooling layer with the average pooling layer")
     print("Network Structure: ")
@@ -174,7 +174,7 @@ def network1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -186,7 +186,7 @@ def network1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
 
 def network1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=False):
     """
-    在network1的基础上, 将所有降采样方式均改为卷积池化
+        Convolutional layer with stride 2 is used for subsampling (将所有的降采样方式改为卷积池化方式)
     """
     print("network1_3 replace the max pooling layer with the convolutional pooling layer")
     print("Network Structure: ")
@@ -226,7 +226,7 @@ def network1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -238,7 +238,7 @@ def network1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
 
 def network1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    将卷积核尺寸由3 x 3改为5 x 5
+        Replace the convolutional kernel with 5x5 kernel (将卷积核尺寸由3 x 3改为5 x 5)
     """
     print("network1_4 replace the 3 x 3 kernel with the 5 x 5 kernel")
     print("Network Structure: ")
@@ -278,7 +278,7 @@ def network1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc11", activation_method=None)
@@ -290,7 +290,7 @@ def network1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
 
 def network1_5(input_data, class_num=2, is_bn=True, activation_method="relu", padding="SAME", is_max_pool=True):
     """
-    在network1的基础上, 将激活函数换为relu
+        ReLu is used as the activation function (将激活函数由Tanh改为ReLu)
     """
     print("network1_5 use relu as the activation function")
     print("Network Structure: ")
@@ -330,7 +330,7 @@ def network1_5(input_data, class_num=2, is_bn=True, activation_method="relu", pa
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -342,7 +342,7 @@ def network1_5(input_data, class_num=2, is_bn=True, activation_method="relu", pa
 
 def network1_6(input_data, class_num=2, is_bn=True, activation_method="leakrelu", padding="SAME", is_max_pool=True):
     """
-    在network1的基础上, 将激活函数换为leakrelu
+        Leaky-ReLu is used as the activation function (将激活函数由tanh改为Leaky-ReLu)
     """
     print("network1_6 use leakrelu as the activation function")
     print("Network Structure: ")
@@ -382,7 +382,7 @@ def network1_6(input_data, class_num=2, is_bn=True, activation_method="leakrelu"
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -394,7 +394,7 @@ def network1_6(input_data, class_num=2, is_bn=True, activation_method="leakrelu"
 
 def network1_7(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    deepen the network
+        Deepen the network to block convolutional layers (加深网络)
     """
     print("network1_7: Deepen the network to 7 groups.")
     print("Network Structure: ")
@@ -440,7 +440,7 @@ def network1_7(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
     bn7_3 = batch_normalization(conv7_2, name="BN7_3", activation_method=activation_method, is_train=is_bn)
     pool7_4 = pool_layer(bn7_3, 2, 2, 2, 2, name="pool7_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc8 = fc_layer(pool7_4, 4096, name="fc8", activation_method=None)
     bn9 = batch_normalization(fc8, name="BN9", activation_method=activation_method, is_train=is_bn)
     fc10 = fc_layer(bn9, 512, name="fc10", activation_method=None)
@@ -452,7 +452,7 @@ def network1_7(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
 
 def network1_8(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    Remove the 1x1 conv layers
+        Remove the 1x1 convolutional layers (移除1x1卷积层)
     """
     print("network1_8: Remove the 1x1 conv layers.")
     print("Network Structure: ")
@@ -487,7 +487,7 @@ def network1_8(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
     bn6_2 = batch_normalization(conv6_1, name="BN6_2", activation_method=activation_method, is_train=is_bn)
     pool6_3 = pool_layer(bn6_2, 2, 2, 2, 2, name="pool6_3", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_3, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -498,47 +498,59 @@ def network1_8(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
 
 
 def stegshi(input_data, class_num=2, is_bn=True, is_max_pool=False):
-    # group 0
+    """
+        Xu-Net for image steganalysis (图像隐写分析, Xu-Net)
+    """
+    print("stegshi: Remove the 1x1 conv layers.")
+    print("Network Structure: ")
+
+    # Group 0
     conv0 = static_conv_layer(input_data, kv_kernel, 1, 1, "conv0")
 
-    # group 1
+    # Group 1
     conv1_1 = conv_layer(conv0, 5, 5, 1, 1, 8, "conv1_1", activation_method=None, init_method="gaussian", bias_term=False)
     conv1_2 = tf.abs(conv1_1, "conv1_abs")
     conv1_3 = batch_normalization(conv1_2, name="conv1_BN", activation_method="tanh", is_train=is_bn)
     pool1_4 = pool_layer(conv1_3, 5, 5, 2, 2, "pool1_4", is_max_pool=is_max_pool)
 
-    # group 2
+    # Group 2
     conv2_1 = conv_layer(pool1_4, 5, 5, 1, 1, 16, "conv2_1", activation_method=None, init_method="gaussian", bias_term=False)
     bn2_2 = batch_normalization(conv2_1, name="BN2_2", activation_method="tanh", is_train=is_bn)
     pool2_3 = pool_layer(bn2_2, 5, 5, 2, 2, name="pool2_3", is_max_pool=is_max_pool)
 
-    # group 3
+    # Group 3
     conv3_1 = conv_layer(pool2_3, 1, 1, 1, 1, 32, "conv3_1", activation_method=None, init_method="gaussian", bias_term=False)
     bn3_2 = batch_normalization(conv3_1, activation_method="relu", name="BN3_2", is_train=is_bn)
     pool3_3 = pool_layer(bn3_2, 5, 5, 2, 2, "pool3_3", is_max_pool=is_max_pool)
 
-    # group 4
+    # Group 4
     conv4_1 = conv_layer(pool3_3, 1, 1, 1, 1, 64, "conv4_1", activation_method=None, init_method="gaussian", bias_term=False)
     bn4_2 = batch_normalization(conv4_1, activation_method="relu", name="BN4_2", is_train=is_bn)
     pool4_3 = pool_layer(bn4_2, 7, 7, 2, 2, "pool4_3", is_max_pool=is_max_pool)
 
-    # group 5
+    # Group 5
     conv5_1 = conv_layer(pool4_3, 1, 1, 1, 1, 128, "conv5_1", activation_method=None, init_method="gaussian", bias_term=False)
     bn5_2 = batch_normalization(conv5_1, activation_method="relu", name="BN5_2", is_train=is_bn)
     pool5_3 = pool_layer(bn5_2, 7, 7, 2, 2, "pool5_3", is_max_pool=is_max_pool)
 
-    # group 6
+    # Group 6
     conv6_1 = conv_layer(pool5_3, 1, 1, 1, 1, 256, "conv6_1", activation_method=None, init_method="gaussian", bias_term=False)
     bn6_2 = batch_normalization(conv6_1, activation_method="relu", name="BN6_2", is_train=is_bn)
     pool6_3 = pool_layer(bn6_2, 16, 16, 16, 16, "pool6_3", is_max_pool=is_max_pool)
 
-    # fc layer
+    # Fully connected layer
     logits = fc_layer(pool6_3, class_num, "fc7", activation_method=None)
 
     return logits
 
 
 def le_net(input_data, class_num=10):
+    """
+        Le-Net for image classification
+    """
+    print("le_net: Remove the 1x1 conv layers.")
+    print("Network Structure: ")
+
     # Group1
     conv1_1 = conv_layer(input_data, 5, 5, 1, 1, 6, "conv1", "VALID")
     pool1_2 = pool_layer(conv1_1, 2, 2, 2, 2, "pool1_2")
@@ -547,7 +559,7 @@ def le_net(input_data, class_num=10):
     conv2_1 = conv_layer(pool1_2, 5, 5, 1, 1, 16, "conv2_1", "VALID")
     pool2_2 = pool_layer(conv2_1, 2, 2, 2, 2, "pool2_2")
 
-    # 全连接层
+    # Fully connected layer
     fc4 = fc_layer(pool2_2, 120, "fc4", "relu")
     fc5 = fc_layer(fc4, 84, "fc5", False)
     fc5_drop = dropout(fc5, keep_pro=0.5, name="fc5_drop")
@@ -557,6 +569,12 @@ def le_net(input_data, class_num=10):
 
 
 def vgg16(input_data, class_num=4096):
+    """
+        vgg16 for image classification
+    """
+    print("vgg16: Remove the 1x1 conv layers.")
+    print("Network Structure: ")
+
     # vgg16
     conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 64, "conv1_1")
     conv1_2 = conv_layer(conv1_1, 3, 3, 1, 1, 64, "conv1_2")
@@ -591,6 +609,12 @@ def vgg16(input_data, class_num=4096):
 
 
 def vgg19(input_data, class_num=4096):
+    """
+        vgg19 for image classification
+    """
+    print("vgg19: Remove the 1x1 conv layers.")
+    print("Network Structure: ")
+
     # vgg19
     conv1_1 = conv_layer(input_data, 3, 3, 1, 1, 64, "conv1_1")
     conv1_2 = conv_layer(conv1_1, 3, 3, 1, 1, 64, "conv1_2")
@@ -629,7 +653,7 @@ def vgg19(input_data, class_num=4096):
 
 def network1__1(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    Remove the BN layer in the first group
+        Remove the BN layer in the first group
     """
     print("network1__1: Remove the BN layer in the first group.")
     print("Network Structure: ")
@@ -670,7 +694,7 @@ def network1__1(input_data, class_num=2, is_bn=True, activation_method="tanh", p
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -682,7 +706,7 @@ def network1__1(input_data, class_num=2, is_bn=True, activation_method="tanh", p
 
 def network1__2(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    Remove the BN layer in the first two groups
+        Remove the BN layer in the first two groups
     """
     print("network1__2: Remove the BN layers in the first  groups.")
     print("Network Structure: ")
@@ -723,7 +747,7 @@ def network1__2(input_data, class_num=2, is_bn=True, activation_method="tanh", p
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -735,7 +759,7 @@ def network1__2(input_data, class_num=2, is_bn=True, activation_method="tanh", p
 
 def network1__3(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    Remove the BN layer in the first four groups
+        Remove the BN layer in the first four groups
     """
     print("network1__3: Remove the BN layers in the first four groups")
     print("Network Structure: ")
@@ -776,7 +800,7 @@ def network1__3(input_data, class_num=2, is_bn=True, activation_method="tanh", p
     bn6_3 = batch_normalization(conv6_2, name="BN6_3", activation_method=activation_method, is_train=is_bn)
     pool6_4 = pool_layer(bn6_3, 2, 2, 2, 2, name="pool6_4", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
@@ -788,7 +812,7 @@ def network1__3(input_data, class_num=2, is_bn=True, activation_method="tanh", p
 
 def network1__4(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    Add BN layers at the top of 3x3 conv layer
+        Add BN layers at the top of 3x3 conv layer
     """
     print("network1: The proposed network")
     print("Network Structure: ")
@@ -835,7 +859,7 @@ def network1__4(input_data, class_num=2, is_bn=True, activation_method="tanh", p
     bn6_4 = batch_normalization(conv6_3, name="BN6_4", activation_method=activation_method, is_train=is_bn)
     pool6_5 = pool_layer(bn6_4, 2, 2, 2, 2, name="pool6_5", is_max_pool=is_max_pool)
 
-    # 全连接层
+    # Fully connected layer
     fc7 = fc_layer(pool6_5, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)

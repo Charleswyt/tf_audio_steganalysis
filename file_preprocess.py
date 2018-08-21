@@ -23,13 +23,15 @@ def get_file_name(file_path, sep="/"):
     get the name of file (获取文件名)
     :param file_path: file path (文件路径)
     :param sep: separator (分隔符)
-    :return: file name (文件名)
+    :return:
+        file name (文件名)
     """
     if os.path.exists(file_path):
         file_path.replace("\\", "/")
         file_name = file_path.split(sep=sep)[-1]
     else:
         file_name = None
+
     return file_name
 
 
@@ -38,7 +40,8 @@ def get_file_size(file_path, unit="KB"):
     get the size of file (获取文件名)
     :param file_path: file path (文件路径)
     :param unit: the unit of file size (文件大小单位(B KB MB GB TB))
-    :return: file_size (文件大小)
+    :return:
+        file_size (文件大小)
     """
     units = ["B", "KB", "MB", "GB", "TB"]
     power = units.index(unit)
@@ -47,7 +50,7 @@ def get_file_size(file_path, unit="KB"):
         file_size = os.path.getsize(file_path)
         file_size = round(file_size / divisor)
     else:
-        file_size = -1
+        file_size = None
 
     return file_size
 
@@ -57,7 +60,8 @@ def get_file_type(file_path, sep="."):
     get the type of file (获取文件类型)
     :param file_path: file path (文件路径)
     :param sep: separator (分隔符)
-    :return: file type (文件类型)
+    :return:
+        file type (文件类型)
     """
     if os.path.exists(file_path):
         file_type = file_path.split(sep=sep)[-1]

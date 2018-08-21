@@ -12,6 +12,16 @@ Finished on 2017.11.27
 @author: Wang Yuntao
 """
 
+"""
+    function:
+        text_read(text_file_path, height=200, width=576,
+              is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15)               read single QMDCT coefficients matrix into memory
+        text_read_all(text_files_dir, height=200, width=576,
+                  is_abs=False, is_diff=False, order=2, direction=0, is_trunc=False, threshold=15)                              read all QMDCT coefficients matrix read into memory
+        text_read_batch(text_files_list, height=200, width=576,
+                    is_abs=False, is_diff=False, order=2, direction=0, is_diff_abs=True, is_trunc=False, threshold=15)          read QMDCT coefficients matrix in batch
+"""
+
 
 def text_read(text_file_path, height=200, width=576,
               is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15):
@@ -136,20 +146,3 @@ def text_read_batch(text_files_list, height=200, width=576,
         i = i + 1
 
     return data
-
-
-def read_csv(csv_file_path):
-    csv_data = pd.read_csv(csv_file_path)
-    csv_data_list = csv_data.values.tolist()
-
-    data_list, label_list = list(), list()
-    for csv_data in csv_data_list:
-        data_list.append(csv_data[0])
-        label_list.append(csv_data[1])
-
-    return data_list, label_list
-
-
-if __name__ == "__main__":
-    data_list, label_list = read_csv(r"C:\Users\Charles_CatKing\Desktop\123.csv")
-    print(data_list, label_list)

@@ -45,30 +45,30 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
     :param is_max_pool: if True, max pooling, else average pooling
     :param padding: padding="SAME"
     :return:
-        output: 4-D tensor [batch_size, height, width. channel]
+        output: a 4-D tensor [batch_size, height, width. channel]
     """
 
     if is_max_pool is True:
-        pooling = tf.nn.max_pool(input_data,
-                                 ksize=[1, height, width, 1],
-                                 strides=[1, x_stride, y_stride, 1],
-                                 padding=padding,
-                                 name=name)
+        output = tf.nn.max_pool(input_data,
+                                ksize=[1, height, width, 1],
+                                strides=[1, x_stride, y_stride, 1],
+                                padding=padding,
+                                name=name)
         pooling_type = "max_pooling"
 
     else:
-        pooling = tf.nn.avg_pool(input_data,
-                                 ksize=[1, height, width, 1],
-                                 strides=[1, x_stride, y_stride, 1],
-                                 padding=padding,
-                                 name=name)
+        output = tf.nn.avg_pool(input_data,
+                                ksize=[1, height, width, 1],
+                                strides=[1, x_stride, y_stride, 1],
+                                padding=padding,
+                                name=name)
         pooling_type = "average_pooling"
 
-    shape = pooling.get_shape()
+    shape = output.get_shape()
 
     print("name: %s, shape: (%d, %d, %d), type: %s" % (name, shape[1], shape[2], shape[3], pooling_type))
 
-    return pooling
+    return output
 
 
 def batch_normalization(input_data, name, activation_method="relu", is_train=True):
@@ -79,13 +79,15 @@ def batch_normalization(input_data, name, activation_method="relu", is_train=Tru
     :param activation_method: the method of activation function
     :param is_train: if False, skip this layer, default is True
     :return:
+        output: output after batch normalization
     """
-    output_data = batch_norm(inputs=input_data, decay=0.9, center=True, scale=True, epsilon=1e-5, scope=name, updates_collections=None,
-                             reuse=False, is_training=is_train, zero_debias_moving_mean=True)
-    output_data = activation_layer(input_data=output_data,
-                                   activation_method=activation_method)
+    output = batch_norm(inputs=input_data, decay=0.9, center=True, scale=True, epsilon=1e-5, scope=name, updates_collections=None,
+                        reuse=False, is_training=is_train, zero_debias_moving_mean=True)
+    output = activation_layer(input_data=output,
+                              activation_method=activation_method)
     print("name: %s, activation: %s, is_training: %r" % (name, activation_method, is_train))
-    return output_data
+
+    return output
 
 
 def dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True):
@@ -97,7 +99,7 @@ def dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True):
     :param seed: int or None. An integer or None to create random seed
     :param is_train: if False, skip this layer, default is True
     :return:
-
+        output: output with dropout
     drop率的选择：
         经过交叉验证, 隐含节点dropout率等于0.5的时候效果最好, 原因是0.5的时候dropout随机生成的网络结构最多
         dropout也可被用作一种添加噪声的方法, 直接对input进行操作. 输入层设为更接近1的数, 使得输入变化不会太大(0.8)
@@ -124,7 +126,7 @@ def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, 
     :param alpha: leakey relu alpha
     :param is_train: if False, skip this layer, default is True
     :return:
-        output: 4-D tensor [batch_size, height, width. channel]
+        output: a 4-D tensor [batch_size, height, width. channel]
     """
     if is_train is True:
         shape = input_data.get_shape()
@@ -180,7 +182,7 @@ def activation_layer(input_data, activation_method="None", alpha=0.2):
         "leakrelu": leak * features, if < 0, feature, otherwise
         "softsign": features / (abs(features) + 1)
     :return:
-        output: 4-D tensor [batch_size, height, width. channel]
+        output: a 4-D tensor [batch_size, height, width. channel]
     """
     if activation_method == "relu":
         output = tf.nn.relu(input_data, name="relu")
@@ -226,7 +228,8 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
     :param bias_term: whether the bias term exists or not (default: False)
     :param is_pretrain: whether the parameters are trainable (default: True)
 
-    :return: 4-D tensor
+    :return:
+        output: a 4-D tensor [number, height, width, channel]
     """
     channel = input_data.get_shape()[-1]
 
@@ -292,8 +295,8 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAM
         :param y_stride: stride in Y axis
         :param name: the name of the layer
         :param padding: the padding method, "SAME" | "VALID"
-
-        :return: 4-D tensor
+        :return:
+            feature_map: 4-D tensor [number, height, width, channel]
         """
     with tf.variable_scope(name):
         feature_map = tf.nn.conv2d(input=input_data,
@@ -316,7 +319,8 @@ def loss_layer(logits, labels, is_regulation=False, coeff=1e-3, method="sparse_s
     :param is_regulation: whether regulation or not
     :param coeff: the coefficients of the regulation
     :param method: loss method
-    :return: loss
+    :return:
+        loss: loss with regularization
     """
     with tf.variable_scope("loss"):
         if method == "sigmoid_cross_entropy":
@@ -383,6 +387,7 @@ def optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0
     :param momentum: Momentum | RMSProp, default 0.9
     :param decay: Momentum | RMSProp, default 0.9
     :return:
+        train_op: optimizer
     """
     with tf.name_scope("optimizer"):
         if optimizer_type == "GradientDescent":
@@ -436,15 +441,16 @@ def learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate
     :param end_learning_rate: A scalar float32 or float64 Tensor or a Python number. The minimal end learning rate.
     :param power: A scalar float32 or float64 Tensor or a Python number. The power of the polynomial. Defaults to linear, 1.0.
     :param cycle: A boolean, whether or not it should cycle beyond decay_steps.
-    :return: decayed_learning_rate
-    type:
-        fixed               -> decayed_learning_rate = learning_rate
-        step                -> decayed_learning_rate = learning_rate ^ (floor(global_step / decay_steps))
-        exponential_decay   -> decayed_learning_rate = learning_rate * decay_rate ^ (global_step / decay_steps)
-        inverse_time_decay  -> decayed_learning_rate = learning_rate / (1 + decay_rate * t)
-        natural_exp_decay   -> decayed_learning_rate = learning_rate * exp(-decay_rate * global_step)
-        polynomial_decay    -> decayed_learning_rate =
-                                (learning_rate - end_learning_rate) * (1 - global_step / decay_steps) ^ (power) + end_learning_rate
+    :return:
+        decayed_learning_rate
+        type:
+            fixed               -> decayed_learning_rate = learning_rate
+            step                -> decayed_learning_rate = learning_rate ^ (floor(global_step / decay_steps))
+            exponential_decay   -> decayed_learning_rate = learning_rate * decay_rate ^ (global_step / decay_steps)
+            inverse_time_decay  -> decayed_learning_rate = learning_rate / (1 + decay_rate * t)
+            natural_exp_decay   -> decayed_learning_rate = learning_rate * exp(-decay_rate * global_step)
+            polynomial_decay    -> decayed_learning_rate =
+                                    (learning_rate - end_learning_rate) * (1 - global_step / decay_steps) ^ (power) + end_learning_rate
     """
     if decay_method == "fixed":
         decayed_learning_rate = init_learning_rate

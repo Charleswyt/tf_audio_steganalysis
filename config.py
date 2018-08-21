@@ -7,21 +7,14 @@ Finished on 2018.01.05
 """
 
 import os
-import pip
 import argparse
-import platform
-from subprocess import call
+from utils import fullfile, get_files_list
+
 
 """
 function:
         command_parse()                                     parse command line parameters (命令行解析)
         file_path_setup(args)                               get file path (获取文件路径)
-        get_files_list(file_dir, start_idx=0, end_idx=-1)   get file list (获取文件列表)
-        get_packages()                                      get installed packages in the current machine (获取当前系统安装的库文件)
-        show_package(_packages)                             show all installed  packages in the current machine (显示当前系统安装的库文件)
-        package_download(packages_name)                     download defect packages automatically (如果缺少支持程序运行的包则自动下载)
-        package_upgrade(package_name)                       update the package in the current machine (更新当前系统安装的指定库文件)
-        packages_upgrade()                                  update all packages in the current machine (批量更新当前系统安装的所有库文件)
 """
 
 """
@@ -192,102 +185,3 @@ def file_path_setup(args):
         os.mkdir(log_file_path)
 
     return cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, model_file_path, log_file_path
-
-
-def get_files_list(file_dir, start_idx=0, end_idx=10000000):
-    """
-    get the files list
-    :param file_dir: file directory
-    :param start_idx: start index
-    :param end_idx: end index
-    :return:
-    """
-    filename = os.listdir(file_dir)
-    file_list = [file_dir + "/" + file for file in filename]
-    total_num = len(file_list)
-    if start_idx > total_num:
-        start_idx = 0
-    if end_idx > total_num:
-        end_idx = total_num + 1
-
-    file_list = file_list[start_idx:end_idx]
-
-    return file_list
-
-
-def fullfile(file_dir, file_path):
-    """
-    full file path based on os.path.join
-    :param file_dir: dir
-    :param file_path: file path
-    :return:
-        path: final path
-    """
-    path = os.path.join(file_dir, file_path)
-    path = path.replace("\\", "/")
-
-    return path
-
-
-def get_packages():
-    """
-    get the
-    :return:
-    """
-    _packages = list()
-    for distribution in pip.get_installed_distributions():
-        package_name = distribution.project_name
-        _packages.append(package_name)
-
-    return _packages
-
-
-def show_package(_packages):
-    for i in range(len(_packages)):
-        print(_packages[i])
-
-
-def package_download(packages_name):
-    _packages = get_packages()
-    if isinstance(packages_name, str) is True:
-        packages_list = list()
-        packages_list.append(packages_name)
-    else:
-        packages_list = packages_name
-    for package in packages_list:
-        if package not in _packages:
-            if system == "Windows":
-                call("pip3 install " + package, shell=True)
-            if system == "Linux":
-                call("sudo pip3 install " + package, shell=True)
-
-
-def package_upgrade(package_name):
-    _input = input("Are you sure to upgrade package %s (Y or N): " % package_name)
-    if _input == "Y" or _input == "y":
-        if system == "Windows":
-            call("pip3 install --upgrade " + package_name, shell=False)
-        if system == "Linux":
-            call("sudo pip3 install --upgrade " + package_name, shell=False)
-    elif _input == "N" or _input == "n":
-        print("upgrade quit.")
-    else:
-        print("input error.")
-
-
-def packages_upgrade():
-    _input = input("Are you sure (Y or N): ")
-    if _input == "Y" or _input == "y":
-        for dist in pip.get_installed_distributions():
-            if system == "Windows":
-                call("pip3 install --upgrade " + dist.project_name, shell=False)
-            if system == "Linux":
-                call("sudo pip3 install --upgrade " + dist.project_name, shell=False)
-    elif _input == "N" or _input == "n":
-        print("upgrade quit.")
-    else:
-        print("input error.")
-
-
-if __name__ == "__main__":
-    print(__doc__)

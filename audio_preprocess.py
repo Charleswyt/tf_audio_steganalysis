@@ -32,7 +32,3 @@ def audio_read(audio_file_path, sampling_rate=44100, mono=False, offset=0, durat
     audio = librosa.load(audio_file_path, sr=sampling_rate, mono=mono, offset=offset, duration=duration)
 
     return audio
-
-
-if __name__ == "__main__":
-    audio_read("E:/Myself/1.source_code/audio_steganalysis/module/test/wav10s_00001_stego_128.mp3", 44100)
