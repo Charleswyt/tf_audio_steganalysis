@@ -14,7 +14,9 @@ import numpy as np
 The pre-processing of the QMDCT matrix:
     truncate(matrix, threshold)                                                                 truncation of matrix
     down_sampling(matrix, mode, mode_number)                                                    downsampling in single mode
-    get_down_sampling(matrix, mode_number)                                                      downsampling in 
+    get_down_sampling(matrix, mode_number)                                                      downsampling in 2x2 and 4x4 mode
+    preprocess(content, is_abs=False, is_diff=False, is_abs_diff=False,
+        is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15)                  pre-processing of matrix
 """
 
 
@@ -73,14 +75,31 @@ def get_down_sampling(matrix, mode_number):
     return output
 
 
-def preprocess(content, is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15):
+def preprocess(content, is_abs=False, is_diff=False, is_abs_diff=False, is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15):
+    """
+    pre-processing of input data (image, audio, text)
+    :param content: input data (image, audio, text)
+    :param is_abs: whether make absolute or not
+    :param is_diff: whether make difference or not
+    :param is_abs_diff: whether make absolute and difference or not
+    :param is_diff_abs: whether make difference and absolute or not
+    :param order: order of difference
+    :param direction: direction of difference
+    :param is_trunc: whether make truncation or not
+    :param threshold: threshold of truncation
+    :return:
+    """
     if is_abs is True:
         content = abs(content)
     if is_trunc is True:
         content = truncate(content, threshold=threshold)
     if is_diff is True:
         content = np.diff(content, n=order, axis=direction)
-        if is_diff_abs is True:
-            content = abs(content)
+    if is_diff_abs is True:
+        content = np.diff(content, n=order, axis=direction)
+        content = abs(content)
+    if is_abs_diff is True:
+        content = abs(content)
+        content = np.diff(content, n=order, axis=direction)
 
     return content
