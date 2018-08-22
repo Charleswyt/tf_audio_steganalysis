@@ -8,16 +8,13 @@ Finished on 2017.11.20
 """
 
 import csv
-from ctypes import *
 import tensorflow as tf
-from text_preprocess import *
-from image_preprocess import *
-from audio_preprocess import *
 from matplotlib.pylab import plt
 
 """
     function:
         fullfile(file_dir, file_name)                                                                           concatenate the file path (实现路径连接，功能类似于matlab中的fullfile)
+        get_files_list(file_dir, start_idx=None, end_idx=None)                                                  get files list
         get_time(_unix_time_stamp=None)                                                                         get calender time via unix time stamp (根据Unix时间戳获取日历时间)
         get_unix_stamp(_time_string="1970-01-01 08:01:51", _format="%Y-%m-%d %H:%M:%S")                         get unix time stamp via calender time (根据日历时间获取Unix时间戳)
         read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, is_shuffle=True)              get file list and  corresponding label list (获取文件列表与标签列表)
@@ -43,6 +40,27 @@ def fullfile(file_dir, file_name):
     full_file_path = full_file_path.replace("\\", "/")
 
     return full_file_path
+
+
+def get_files_list(file_dir, start_idx=None, end_idx=None):
+    """
+    get the files list
+    :param file_dir: file directory
+    :param start_idx: start index
+    :param end_idx: end index
+    :return:
+    """
+    filename = os.listdir(file_dir)
+    file_list = [file_dir + "/" + file for file in filename]
+    total_num = len(file_list)
+    if start_idx > total_num:
+        start_idx = 0
+    if end_idx > total_num:
+        end_idx = total_num + 1
+
+    file_list = file_list[start_idx:end_idx]
+
+    return file_list
 
 
 def get_time(unix_time_stamp=None):
@@ -171,46 +189,6 @@ def get_data_batch(files_list, height, width, carrier="audio", is_abs=False, is_
                                is_trunc=is_trunc, threshold=threshold)
 
     return data
-
-
-def media_read(media_file_path, media_file_type="text", height=200, width=576, as_grey=False, sampling_rate=44100, mono=False, offset=0, duration=None,
-               is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15):
-    """
-    read media according to the file path and file type
-    :param media_file_path: the path of media file
-    :param media_file_type: the type of media file, default is "text"
-    :param height: the output height of media file, default is 200
-    :param width: the output width of media file, default is 576
-    :param as_grey: whether covert the image to gray image or not, default is False
-    :param sampling_rate: the sampling rate of audio file, default is 44100
-    :param mono: whether convert the audio file to mono, default is False
-     :param offset: start reading after this time (in seconds), default is 0
-    :param duration: only load up to this much audio (in seconds), default is None
-
-    # some pre-processing methods
-    :param is_abs: whether abs or not, default: False
-    :param is_diff: whether difference or not, default: False
-    :param is_diff_abs: whether abs after difference or not, default: False
-    :param order: the order of the difference, default: 2
-    :param direction: the direction of the difference (0 - row, 1 - col, default: 0)
-    :param is_trunc: whether truncation or not, default: False
-    :param threshold: threshold, default: 15
-
-    :return:
-        media in ndarry format
-    """
-    if media_file_type == "image":
-        media = io.imread(media_file_path, as_grey=as_grey)
-    elif media_file_type == "audio":
-        media = audio_read(media_file_path, sampling_rate=sampling_rate, mono=mono, offset=offset, duration=duration)
-    elif media_file_path == "text":
-        media = text_read(media_file_path, height=height, width=width)
-    else:
-        media = None
-
-    media = preprocess(media, is_abs=is_abs, is_diff=is_diff, is_diff_abs=is_diff_abs, order=order, direction=direction, is_trunc=is_trunc, threshold=threshold)
-
-    return media
 
 
 def evaluation(logits, labels):
