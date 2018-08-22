@@ -104,15 +104,6 @@ class GPUManager:
     优先选择未指定的GPU.
     """
 
-    def __init__(self, query_args=None):
-        if query_args is None:
-            query_args = []
-        self.query_args = query_args
-        self.gpus = query_gpu(query_args)
-        for gpu in self.gpus:
-            gpu["specified"] = False
-        self.gpu_num = len(self.gpus)
-
     @staticmethod
     def _sort_by_memory(gpus, by_size=False):
         if by_size:
