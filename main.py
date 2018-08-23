@@ -7,25 +7,42 @@ Finished on 2017.12.19
 """
 
 import os
+import sys
 from run import *
 from manager import *
 import tensorflow as tf
-from config import command_parse
+from config import *
 
 
 def main():
     # command parsing
-    arguments = command_parse()
+    params_num = len(sys.argv)
 
-    if arguments.gpu_selection == "auto":
-        gm = GPUManager()
-        gpu_index = gm.auto_choice()
-        if not gpu_index == -1:
-            os.environ["CUDA_VISIBLE_DEVICES"] = gpu_index
+    # json config mode
+    if params_num == 1:
+        config_file_path = "./config_file/config_train.json"
+        arguments = config_train_file_read(config_file_path)
+    elif params_num == 2:
+        config_file_path = "./config_file/config_" + sys.argv[1] + ".json"
+        command = "config_" + sys.argv[1] + "_file_read(config_file_path)"
+        arguments = eval(command)
+
+    # command line mode
     else:
-        os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
+        arguments = command_parse()
 
-    run_mode(arguments)
+    # try:
+    #     if arguments.gpu_selection == "auto":
+    #         gm = GPUManager()
+    #         gpu_index = gm.auto_choice()
+    #         if not gpu_index == -1:
+    #             os.environ["CUDA_VISIBLE_DEVICES"] = gpu_index
+    #     else:
+    #         os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
+    #
+    #     run_mode(arguments)
+    # except UnboundLocalError:
+    #     print("Error command, please try again.")
 
 
 if __name__ == "__main__":
