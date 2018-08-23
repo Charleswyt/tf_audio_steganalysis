@@ -7,6 +7,7 @@ Finished on 2017.11.20
 @author: Wang Yuntao
 """
 
+import os
 import csv
 import tensorflow as tf
 from matplotlib.pylab import plt
@@ -49,15 +50,17 @@ def get_files_list(file_dir, start_idx=None, end_idx=None):
     :param start_idx: start index
     :param end_idx: end index
     :return:
+        file_list: a list containing full file path
     """
     filename = os.listdir(file_dir)
-    file_list = [file_dir + "/" + file for file in filename]
+    file_list = [fullfile(file_dir, file) for file in filename]
     total_num = len(file_list)
-    if start_idx > total_num:
-        start_idx = 0
-    if end_idx > total_num:
-        end_idx = total_num + 1
-
+    file_list[0]
+    if type(start_idx) is int and start_idx > total_num:
+        start_idx = None
+    if type(end_idx) is int and end_idx > total_num:
+        end_idx = None
+    print(start_idx, end_idx)
     file_list = file_list[start_idx:end_idx]
 
     return file_list
