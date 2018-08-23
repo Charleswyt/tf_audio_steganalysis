@@ -1,0 +1,58 @@
+{
+	"files_path": {
+		"cover_train_path": null,
+        "cover_valid_path": null,
+        "stego_train_path": null,
+        "stego_valid_path": null,
+        "models_path": null,
+        "logs_path": null
+	},
+	"mode_config": {
+		"gpu_selection": "auto",
+        "gpu": "0",
+        "mode": "train",
+        "submode": "one",
+        "carrier": "audio",
+        "network": "network1"
+    },
+    "hyper_parameters": {
+        "batch_size_train": 64,
+        "batch_size_valid": 16,
+        "learning_rate": 0.001,
+        "epoch": 500,
+        "seed": 1,
+        "is_regulation": true,
+        "coeff_regulation": 0.001,
+        "loss_method": "sparse_softmax_cross_entropy",
+        "class_num": 2
+    },
+    "preprocessing_method": {
+        "height": 200,
+        "width": 576,
+        "channel": 1,
+        "is_abs": false,
+        "is_trunc": false,
+        "is_diff": false,
+        "is_diff_abs": false,
+        "is_abs_diff": false,
+        "threshold": 15,
+        "order": 0,
+        "direction": 0
+    },
+    "learning_rate_method":{
+        "decay_method": "exponential",
+        "decay_step": 5000,
+        "decay_rate": 0.9,
+        "staircase": false
+    },
+    "model": {
+        "max_to_keep": 3,
+        "keep_checkpoint_every_n_hours": 0.5
+    },
+    "index":{
+        "strat_index_train": null,
+        "end_index_train": null,
+        "strat_index_valid": null,
+        "end_index_valid": null
+    }
+}
