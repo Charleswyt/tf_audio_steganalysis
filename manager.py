@@ -4,12 +4,15 @@
 """
 Created on 2018.02.07
 Finished on 2018.03.08
+Modified on 2018.08.24
+
 @author: Wang Yuntao
 """
 
 import os
 import platform
 import tensorflow as tf
+from tensorflow.python.client import device_lib as _device_lib
 
 """
 Example:
@@ -19,30 +22,13 @@ with gm.auto_choice():
 """
 
 
-def check_gpus():
-    """
-    GPU available check (just for Linux now)
-    reference : http://feisky.xyz/machine-learning/tensorflow/gpu_list.html
-    """
-    # ============================================================================================== #
-    #     all_gpus = [x.name for x in device_lib.list_local_devices() if x.device_type == "GPU"]     #
-    # ============================================================================================== #
-    system = platform.system()
-    if system == "Linux":
-        first_gpus = os.popen("nvidia-smi --query-gpu=index --format=csv,noheader").readlines()[0].strip()
-        if not first_gpus == "0":
-            print("This script could only be used to manage NVIDIA GPUs,but no GPU found in your device")
-            return False
-        elif "NVIDIA System Management" not in os.popen("nvidia-smi -h").read():
-            print("nvidia-smi tool not found.")
-            return False
-        else:
-            return True
-    elif not system == "Linux":
-        print("The current system is not Linux.")
-        return False
+def is_gpu_available(cuda_only=True):
+    if cuda_only:
+        return any((x.device_type == 'GPU')
+                   for x in _device_lib.list_local_devices())
     else:
-        return True
+        return any((x.device_type == 'GPU' or x.device_type == 'SYCL')
+                   for x in _device_lib.list_local_devices())
 
 
 def parse(line, query_args):
@@ -55,9 +41,9 @@ def parse(line, query_args):
         a dict of gpu info
     Parsing a line of csv format text returned by nvidia-smi
     """
-    countable_args = ["memory.free", "memory.total", "power.draw", "power.limit"]               # 可计数的参数
-    power_manage_enable = lambda v: ("Not Support" not in v)                                    # 显卡是否支持power management（笔记本可能不支持）
-    to_countable = lambda v: float(v.upper().strip().replace("MIB", "").replace("W", ""))       # 带单位字符串去掉单位
+    countable_args = ["memory.free", "memory.total", "power.draw", "power.limit"]
+    power_manage_enable = lambda v: ("Not Support" not in v)                                    # whether the GPU supports power management
+    to_countable = lambda v: float(v.upper().strip().replace("MIB", "").replace("W", ""))       # remove the unit
     process = lambda k, v: ((int(to_countable(v)) if power_manage_enable(v) else 1) if k in countable_args else v.strip())
 
     return {k: process(k, v) for k, v in zip(query_args, line.strip().split(","))}
@@ -99,10 +85,16 @@ class GPUManager:
     A manager which can list all available GPU devices
     and sort them and choice the most free one.Unspecified
     ones pref.
-    GPU设备管理器, 考虑列举出所有可用GPU设备, 并加以排序，自动选出
-    最空闲的设备. 在一个GPUManager对象内会记录每个GPU是否已被指定,
-    优先选择未指定的GPU.
     """
+
+    def __init__(self, query_args=None):
+        if query_args is None:
+            query_args = []
+        self.query_args = query_args
+        self.gpus = query_gpu(query_args)
+        for gpu in self.gpus:
+            gpu["specified"] = False
+        self.gpu_num = len(self.gpus)
 
     @staticmethod
     def _sort_by_memory(gpus, by_size=False):
@@ -134,9 +126,8 @@ class GPUManager:
         return:
             a TF device object
         Auto choice the freest GPU device,not specified ones
-        自动选择最空闲GPU
         """
-        if check_gpus() is True:
+        if is_gpu_available() is True:
             for old_info, new_info in zip(self.gpus, query_gpu(self.query_args)):
                 old_info.update(new_info)
             unspecified_gpus = [gpu for gpu in self.gpus if not gpu["specified"]] or self.gpus
