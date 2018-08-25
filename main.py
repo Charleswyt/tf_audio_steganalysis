@@ -3,6 +3,8 @@
 """
 Created on 2017.11.16
 Finished on 2017.12.19
+Modified on 2018.08.24
+
 @author: Wang Yuntao
 """
 
@@ -31,18 +33,16 @@ def main():
     else:
         arguments = command_parse()
 
-    # try:
-    #     if arguments.gpu_selection == "auto":
-    #         gm = GPUManager()
-    #         gpu_index = gm.auto_choice()
-    #         if not gpu_index == -1:
-    #             os.environ["CUDA_VISIBLE_DEVICES"] = gpu_index
-    #     else:
-    #         os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
-    #
-    #     run_mode(arguments)
-    # except UnboundLocalError:
-    #     print("Error command, please try again.")
+    if is_gpu_available():
+        if arguments.gpu_selection == "auto":
+            gm = GPUManager()
+            gpu_index = gm.auto_choice()
+            if not gpu_index == -1:
+                os.environ["CUDA_VISIBLE_DEVICES"] = gpu_index
+        else:
+            os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
+
+        # run_mode(arguments)
 
 
 if __name__ == "__main__":
