@@ -7,24 +7,26 @@ import numpy as np
 """
 Created on 2018.01.15
 Finished on 2018.01.15
+Modified on 2018.08.27
+
 @author: Wang Yuntao
 """
 
 """
 function:
-    get_file_name(file_path)                                                        get the name of file (获取文件名)
-    get_file_size(file_path, unit="KB")                                             get the size of file (获取文件大小)
-    get_file_type(file_path)                                                        get the type of file (获取文件类型)
+    get_file_name(file_path)                                                        get the name of file
+    get_file_size(file_path, unit="KB")                                             get the size of file
+    get_file_type(file_path)                                                        get the type of file
 """
 
 
 def get_file_name(file_path, sep="/"):
     """
-    get the name of file (获取文件名)
-    :param file_path: file path (文件路径)
-    :param sep: separator (分隔符)
+    get the name of file
+    :param file_path: file path
+    :param sep: separator
     :return:
-        file name (文件名)
+        file name
     """
     if os.path.exists(file_path):
         file_path.replace("\\", "/")
@@ -37,11 +39,11 @@ def get_file_name(file_path, sep="/"):
 
 def get_file_size(file_path, unit="KB"):
     """
-    get the size of file (获取文件名)
-    :param file_path: file path (文件路径)
-    :param unit: the unit of file size (文件大小单位(B KB MB GB TB))
+    get the size of file
+    :param file_path: file path
+    :param unit: the unit of file size (Unit: B KB MB GB TB)
     :return:
-        file_size (文件大小)
+        file_size
     """
     units = ["B", "KB", "MB", "GB", "TB"]
     power = units.index(unit)
@@ -57,11 +59,11 @@ def get_file_size(file_path, unit="KB"):
 
 def get_file_type(file_path, sep="."):
     """
-    get the type of file (获取文件类型)
-    :param file_path: file path (文件路径)
-    :param sep: separator (分隔符)
+    get the type of file
+    :param file_path: file path
+    :param sep: separator
     :return:
-        file type (文件类型)
+        file type
     """
     if os.path.exists(file_path):
         file_type = file_path.split(sep=sep)[-1]
@@ -69,3 +71,5 @@ def get_file_type(file_path, sep="."):
         file_type = None
 
     return file_type
+
+
