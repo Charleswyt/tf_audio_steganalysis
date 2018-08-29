@@ -34,7 +34,7 @@ def text_read(text_file_path, height=200, width=576, separator=","):
     file = open(text_file_path)
     content = []
 
-    # read data line by line (逐行读取数据)
+    # read data line by line
     lines = file.readlines()
     for line in lines:
         numbers = [int(character) for character in line.split(separator)[:-1]]
@@ -50,9 +50,9 @@ def text_read_all(text_files_dir, height=200, width=576, separator=","):
     """
     read all txt files into the memory (not recommend)
 
-    :param text_files_dir: the folder of txt files (txt文件存储路径)
-    :param height: the height of QMDCT matrix (QMDCT矩阵的高度)
-    :param width: the width of QMDCT matrix (QMDCT矩阵的宽度)
+    :param text_files_dir: the folder of txt files
+    :param height: the height of QMDCT matrix
+    :param width: the width of QMDCT matrix
     :param separator: separator of each elements in text file
     :return:
         data: QMDCT matrices, ndarry, shape: [files_num, height, width, 1]

@@ -1,7 +1,7 @@
 {
 	"files_path": {
 		"files_path": null,
-        "models_path": null,
+        "model_path": null,
 	},
 	"mode_config": {
 		"gpu_selection": "auto",

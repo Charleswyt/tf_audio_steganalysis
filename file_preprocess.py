@@ -3,34 +3,35 @@
 
 import os
 import numpy as np
+import filetype as ft
 
 """
 Created on 2018.01.15
 Finished on 2018.01.15
-Modified on 2018.08.27
+Modified on 2018.08.29
 
 @author: Wang Yuntao
 """
 
 """
 function:
-    get_file_name(file_path)                                                        get the name of file
-    get_file_size(file_path, unit="KB")                                             get the size of file
-    get_file_type(file_path)                                                        get the type of file
+    get_file_name(file_path)                                                        get the name of the file
+    get_file_size(file_path, unit="KB")                                             get the size of the file
+    get_file_type(file_path)                                                        get the type of the file
+    get_path_type(path)                                                             get the type of the input path (file, folder or not exist)
 """
 
 
-def get_file_name(file_path, sep="/"):
+def get_file_name(file_path):
     """
-    get the name of file
-    :param file_path: file path
-    :param sep: separator
+    get the name of the file
+    :param file_path: the path of the file
     :return:
-        file name
+        the name of the file
     """
     if os.path.exists(file_path):
         file_path.replace("\\", "/")
-        file_name = file_path.split(sep=sep)[-1]
+        file_name = file_path.split(sep="/")[-1]
     else:
         file_name = None
 
@@ -57,19 +58,35 @@ def get_file_size(file_path, unit="KB"):
     return file_size
 
 
-def get_file_type(file_path, sep="."):
+def get_file_type(file_path):
     """
-    get the type of file
+    get the type of file according to the suffix of the file name
     :param file_path: file path
-    :param sep: separator
     :return:
         file type
     """
     if os.path.exists(file_path):
-        file_type = file_path.split(sep=sep)[-1]
+        file_type = ft.guess(file_path).extension
     else:
         file_type = None
 
     return file_type
 
 
+def get_path_type(path):
+    """
+    get type of input path
+    :param path: input path
+    :return:
+        path_type:
+            "file": the input path corresponds to a file
+            "folder": the input path corresponds to a folder
+            None: the input path does not exist
+    """
+    if os.path.exists(path):
+        if os.path.isfile(path):
+            return "file"
+        else:
+            return "folder"
+    else:
+        return None

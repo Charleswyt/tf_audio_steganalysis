@@ -4,9 +4,15 @@
         "cover_valid_path": null,
         "stego_train_path": null,
         "stego_valid_path": null,
-        "models_path": null,
-        "logs_path": null
-	},
+        "model_path": null,
+        "log_path": null
+    },
+    "index": {
+        "strat_index_train": null,
+        "end_index_train": null,
+        "strat_index_valid": null,
+        "end_index_valid": null
+    },
 	"mode_config": {
 		"gpu_selection": "auto",
         "gpu": "0",
@@ -48,11 +54,5 @@
     "model": {
         "max_to_keep": 3,
         "keep_checkpoint_every_n_hours": 0.5
-    },
-    "index":{
-        "strat_index_train": null,
-        "end_index_train": null,
-        "strat_index_valid": null,
-        "end_index_valid": null
     }
 }
