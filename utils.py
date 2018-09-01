@@ -4,13 +4,17 @@
 """
 Created on 2017.11.20
 Finished on 2017.11.20
+Modified on 2018.08.29
 @author: Wang Yuntao
 """
 
 import os
 import csv
+from glob import glob
 import tensorflow as tf
 from matplotlib.pylab import plt
+from file_preprocess import get_path_type
+from text_preprocess import text_read_batch
 
 """
     function:
@@ -43,19 +47,19 @@ def fullfile(file_dir, file_name):
     return full_file_path
 
 
-def get_files_list(file_dir, start_idx=None, end_idx=None):
+def get_files_list(file_dir, file_type="txt", start_idx=None, end_idx=None):
     """
     get the files list
     :param file_dir: file directory
+    :param file_type: type of files, "*" is to get all files in this folder
     :param start_idx: start index
     :param end_idx: end index
     :return:
         file_list: a list containing full file path
     """
-    filename = os.listdir(file_dir)
-    file_list = [fullfile(file_dir, file) for file in filename]
+    pattern = "/*." + file_type
+    file_list = sorted(glob(file_dir + pattern))
     total_num = len(file_list)
-    file_list[0]
     if type(start_idx) is int and start_idx > total_num:
         start_idx = None
     if type(end_idx) is int and end_idx > total_num:
@@ -182,8 +186,7 @@ def get_data_batch(files_list, height, width, carrier="audio", is_abs=False, is_
         data: the data list 4-D tensor [batch_size, height, width, channel]
     """
     if carrier == "audio":
-        data = text_read_batch(text_files_list=files_list, height=height, width=width, is_abs=is_abs, is_diff=is_diff, order=order, direction=direction,
-                               is_diff_abs=is_diff_abs, is_trunc=is_trunc, threshold=threshold)
+        data = text_read_batch(text_files_list=files_list, height=height, width=width)
     elif carrier == "image":
         data = image_read_batch(image_files_list=files_list, height=height, width=width, is_diff=is_diff, order=order, direction=direction,
                                 is_trunc=is_trunc, threshold=threshold, threshold_left=threshold_left, threshold_right=threshold_right)
@@ -237,13 +240,12 @@ def evaluation(logits, labels):
     return false_positive_rate, false_negative_rate, accuracy_rate, precision_rate, recall_rate
 
 
-def qmdct_extractor(mp3_file_path, height=200, width=576, frame_num=50, coeff_num=576):
+def qmdct_extractor(mp3_file_path, width=576, frame_num=50, coeff_num=576):
     """
     qmdct coefficients extraction
     :param mp3_file_path: mp3 file path
-    :param height: the height of QMDCT coefficients matrix
-    :param width: the width of QMDCT coefficients matrix
-    :param frame_num: the frame num of QMDCT coefficients extraction
+    :param width: the width of QMDCT coefficients matrix, default: 576
+    :param frame_num: the frame num of QMDCT coefficients extraction, default: 50
     :param coeff_num: the num of coefficients in a channel
     :return:
         QMDCT coefficients matrix, size: (4 * frame_num) * coeff_num -> 200 * 576
@@ -254,11 +256,32 @@ def qmdct_extractor(mp3_file_path, height=200, width=576, frame_num=50, coeff_nu
     command = "lame_qmdct.exe " + mp3_file_path + " -framenum " + str(frame_num) + " -startind 0 " + " -coeffnum " + str(coeff_num) + " --decode"
     os.system(command)
     os.remove(wav_file_path)
+
+    height = frame_num * 4
     content = text_read(text_file_path=txt_file_path, height=height, width=width)
+
     os.remove(txt_file_path)
 
     return content
 
 
-if __name__ == "__main__":
-    pass
+def get_batch(cover_datas, cover_labels, stego_datas, stego_labels, batch_size):
+    cover_datas = tf.cast(cover_datas, tf.string)
+    cover_datas = tf.cast(cover_labels, tf.int32)
+    cover_datas = tf.cast(stego_datas, tf.string)
+    cover_datas = tf.cast(stego_labels, tf.string)
+
+
+def get_model_file_path(path):
+    """
+    get the path of trained tensorflow model
+    :param path: input path, file path or folder path
+    :return:
+        the path of trained tensorflow model
+    """
+    if get_path_type(path) == "file":
+        return path
+    elif get_path_type(path) == "folder":
+        return tf.train.latest_checkpoint(path)
+    else:
+        return None
