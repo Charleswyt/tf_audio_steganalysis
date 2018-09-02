@@ -22,8 +22,8 @@ Note: All **built-in** MP3 algorithms embeds secret messages in the process of M
 
 All steganographic algorithms are coded by Kun Yang (E-Mail: yangkun9076@iie.ac.cn)
 ## Dataset
-The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1ZRkfQTBXg4qMrASR_-ZBSQ) <br>
-The *extraction password* is "**1fzi**".
+The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1rYCzJRksHkgbOOYI9MqQjA) <br>
+The *extraction password* is "**z28d**".
 
 ## File description
 ID      |   File                    |   Function
@@ -32,20 +32,24 @@ ID      |   File                    |   Function
 02      |   text_preprocess.py      |   include some pre-process methods for **text**
 03      |   image_preprocess.py     |   include some pre-process methods for **image** 
 04      |   file_preprocess.py      |   get the name, size and type of the **file**
-05      |   samples_make.py         |   samples make script
+05      |   samples_make.py         |   samples make script (cover, MP3Stego_cover, MP3stego, HCM, EECS)
 06      |   pre_process.py          |   some pre-processing method such as **truncation**, **down_sampling**
 07      |   classifier.py           |   machine learning classifiers such as **SVM**, **KNN**, and **model selection**, **ROC** plot, etc.
-08      |   config.py               |   **command parser** and some package management
+08      |   config.py               |   all configuration for the system running
 09      |   filters.py              |   some **filters** used for pre-processing such as kv kernel or other **rich model**
 10      |   **main.py**             |   the main program
 11      |   manager.py              |   **GPU** management (free GPU selection **automatically**)
 12      |   layer.py                |   basic unit in CNN such as **conv layer**, **pooling layer**, **BN layer** and so on
-13      |   network.py              |   various networks including **VGG19**, **LeNet** and **ourselves' network**
+13      |   network                 |   various networks scirpt for audio, image steganalysis and other image classification task including **VGG19**, **LeNet** and **ourselves' network**
 14      |   utils.py                |   some useful tools such as **minibatch**, **get_model_info**, 
 15      |   run.py                  |   the **train** and **test** of the network **get_weights**, **get_biases** and so on
-16      |   dataset.py              |   some functions of dataset make
+16      |   dataset.py              |   some functions of tfrecord read and write
 17      |   lstm.py                 |   lstm network which uesd for steganalysis
-18      |   TODO                    |   to do list (used by myself)
+18      |   test_script.py          |   a script for function test
+19      |   setup                   |   a requirements.txt in this folder, which is used to install all packages in this system
+20      |   tools                   |   some useful tools in this folder, which are used to QMDCT coefficients extraction and others
+21      |   data_processing         |   the scripts in this folder are used to make dataset
+22      |   config_file             |   three files, config_train, config_test and config_steganalysis, in this folder are uesd to send the paramters into the network, like the usage in Caffe
 
 ## Run
 * install [**python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/) and add the path into the environment variable
