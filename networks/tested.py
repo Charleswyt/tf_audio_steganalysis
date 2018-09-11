@@ -683,3 +683,47 @@ def resnet(input_data, is_bn=True, activation_method="tanh", padding="SAME", is_
 
 def dense_net(input_data, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     pass
+
+
+def downsampling_network(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+    """
+    The proposed network
+    """
+    print("network: downsampling network")
+    print("Network Structure: ")
+
+    # down sampling
+    conv0 = down_sampling(input_data, 2, 2, "down_sampling")
+
+    # Group1
+    conv1_1 = conv_layer(conv0, 3, 3, 1, 1, 16, name="conv1_1", activation_method=activation_method, padding=padding)
+    conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 32, name="conv1_2", activation_method=None, padding=padding)
+    bn1_3 = batch_normalization(conv1_2, name="BN1_3", activation_method=activation_method, is_train=False)
+    pool1_4 = pool_layer(bn1_3, 2, 2, 2, 2, name="pool1_4", is_max_pool=is_max_pool)
+
+    # Group2
+    conv2_1 = conv_layer(pool1_4, 3, 3, 1, 1, 32, name="conv2_1", activation_method=activation_method, padding=padding)
+    conv2_2 = conv_layer(conv2_1, 1, 1, 1, 1, 64, name="conv2_2", activation_method=None, padding=padding)
+    bn2_3 = batch_normalization(conv2_2, name="BN2_3", activation_method=activation_method, is_train=False)
+    pool2_4 = pool_layer(bn2_3, 2, 2, 2, 2, name="pool2_4", is_max_pool=is_max_pool)
+
+    # Group3
+    conv3_1 = conv_layer(pool2_4, 3, 3, 1, 1, 64, name="conv3_1", activation_method=activation_method, padding=padding)
+    conv3_2 = conv_layer(conv3_1, 1, 1, 1, 1, 128, name="conv3_2", activation_method=None, padding=padding)
+    bn3_3 = batch_normalization(conv3_2, name="BN3_3", activation_method=activation_method, is_train=False)
+    pool3_4 = pool_layer(bn3_3, 2, 2, 2, 2, name="pool3_4", is_max_pool=is_max_pool)
+
+    # Group4
+    conv4_1 = conv_layer(pool3_4, 3, 3, 1, 1, 128, name="conv4_1", activation_method=activation_method, padding=padding)
+    conv4_2 = conv_layer(conv4_1, 1, 1, 1, 1, 256, name="conv4_2", activation_method=None, padding=padding)
+    bn4_3 = batch_normalization(conv4_2, name="BN4_3", activation_method=activation_method, is_train=is_bn)
+    pool4_4 = pool_layer(bn4_3, 2, 2, 2, 2, name="pool4_4", is_max_pool=is_max_pool)
+
+    # Fully connected layer
+    fc5 = fc_layer(pool4_4, 4096, name="fc5", activation_method=None)
+    bn6 = batch_normalization(fc5, name="BN6", activation_method="tanh", is_train=is_bn)
+    fc7 = fc_layer(bn6, 512, name="fc7", activation_method=None)
+    bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
+    logits = fc_layer(bn8, class_num, name="fc9", activation_method=None)
+
+    return logits

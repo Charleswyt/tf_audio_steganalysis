@@ -10,6 +10,7 @@ Modified on 2018.08.29
 
 import os
 import csv
+import numpy as np
 from glob import glob
 import tensorflow as tf
 from matplotlib.pylab import plt
@@ -131,9 +132,9 @@ def read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, 
         np.random.shuffle(temp_cover)
         np.random.shuffle(temp_stego)
 
-    if start_idx > sample_num:
+    if start_idx is not None and start_idx > sample_num:
         start_idx = 0
-    if end_idx > sample_num:
+    if end_idx is not None and end_idx > sample_num:
         end_idx = sample_num + 1
 
     cover_data_list = list(temp_cover[start_idx:end_idx, 0])

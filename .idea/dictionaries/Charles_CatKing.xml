@@ -31,6 +31,7 @@
       <w>downsampling</w>
       <w>dtype</w>
       <w>eecs</w>
+      <w>filetype</w>
       <w>fmpeg</w>
       <w>framenum</w>
       <w>framenumber</w>
@@ -39,6 +40,8 @@
       <w>guang</w>
       <w>haiying</w>
       <w>iters</w>
+      <w>jardiff</w>
+      <w>jnlp</w>
       <w>leakrelu</w>
       <w>librosa</w>
       <w>liguang</w>
@@ -46,12 +49,15 @@
       <w>logdir</w>
       <w>logit</w>
       <w>lstm</w>
+      <w>makeself</w>
       <w>matlab</w>
       <w>matplotlib</w>
       <w>matrixs</w>
       <w>minibatch</w>
       <w>minibatches</w>
+      <w>mlstm</w>
       <w>mmmg</w>
+      <w>mnist</w>
       <w>mtap</w>
       <w>ndarray</w>
       <w>ndarry</w>
@@ -60,12 +66,17 @@
       <w>nvidia</w>
       <w>pred</w>
       <w>preprocess</w>
+      <w>preprocessing</w>
       <w>pydub</w>
       <w>qiaochu</w>
       <w>qmdc</w>
       <w>qmdct</w>
       <w>rangding</w>
+      <w>redhat</w>
       <w>scikit</w>
+      <w>scipy</w>
+      <w>shockwave</w>
+      <w>shtml</w>
       <w>sklearn</w>
       <w>smmg</w>
       <w>smsg</w>
@@ -76,10 +87,12 @@
       <w>steganography</w>
       <w>stegshi</w>
       <w>strlist</w>
+      <w>stuffit</w>
       <w>subkey</w>
       <w>submode</w>
       <w>subsampling</w>
       <w>sudo</w>
+      <w>svgz</w>
       <w>tensorboaed</w>
       <w>tensorboard</w>
       <w>tensorflow</w>
@@ -88,11 +101,15 @@
       <w>tfrecords</w>
       <w>uint</w>
       <w>wasdn</w>
+      <w>wbmp</w>
+      <w>webp</w>
       <w>weigths</w>
+      <w>wmlc</w>
       <w>xianfeng</w>
       <w>xiaowei</w>
       <w>xiong</w>
       <w>xlabel</w>
+      <w>xpinstall</w>
       <w>xtick</w>
       <w>yanzhen</w>
       <w>ylabel</w>

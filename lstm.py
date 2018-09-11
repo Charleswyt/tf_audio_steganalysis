@@ -1,142 +1,171 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-
 """
 Created on
 Finished on
 @author: Wang Yuntao
 """
 
-'''
-A Bidirectional Recurrent Neural Network (LSTM) implementation example using TensorFlow library.
-This example is using the MNIST database of handwritten digits (http://yann.lecun.com/exdb/mnist/)
-Long Short Term Memory paper: http://deeplearning.cs.cmu.edu/pdfs/Hochreiter97_lstm.pdf
-
-Author: Aymeric Damien
-Project: https://github.com/aymericdamien/TensorFlow-Examples/
-'''
-
 import tensorflow as tf
-from tensorflow.contrib import rnn
-import numpy as np
-
-# Import MNIST data
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 
-'''
-To classify images using a bidirectional recurrent neural network, we consider
-every image row as a sequence of pixels. Because MNIST image shape is 28*28px,
-we will then handle 28 sequences of 28 steps for every sample.
-'''
+tf.reset_default_graph()
 
-# Parameters
-learning_rate = 0.001
+# hyper parameters
+learning_rate = 1e-3                        # learning rate
+n_steps = 380                               # length of sequence
+n_inputs = 380                              # number of units in the input layer
+n_hidden = 1024                             # number of units in the hidden layer
+n_layers = 2                                # number of layers
+class_num = 2                               # number of classification
 
-# 可以理解为，训练时总共用的样本数
-training_iters = 100000
+# placeholder
+with tf.name_scope("inputs"):
+    x = tf.placeholder(tf.float32, [None, n_steps * n_inputs], name="x_input")      # 输入
+    y = tf.placeholder(tf.float32, [None, class_num], name="y_input")               # 输出
+    keep_prob = tf.placeholder(tf.float32, name="keep_prob_input")                  # 保持多少不被 dropout
+    batch_size = tf.placeholder(tf.int32, [], name="batch_size_input")              # 批大小
 
-# 每次训练的样本大小
-batch_size = 128
+# weights and biases
+with tf.name_scope("weights"):
+    weights = tf.Variable(tf.truncated_normal([n_hiddens, class_num], stddev=0.1), dtype=tf.float32, name="weights")
+    tf.summary.histogram("output_layer_weights", weights)
+with tf.name_scope("biases"):
+    biases = tf.Variable(tf.random_normal([class_num]), name="biases")
+    tf.summary.histogram("output_layer_biases", biases)
 
-# 这个是用来显示的。
-display_step = 10
+with tf.name_scope("output_layer"):
+    pred = RNN_LSTM(x, weights, biases)
+    tf.summary.histogram("outputs", pred)
 
-# Network Parameters
-# n_steps*n_input其实就是那张图 把每一行拆到每个time step上。
-n_input = 28 # MNIST data input (img shape: 28*28)
-n_steps = 28 # timesteps
+with tf.name_scope("loss"):
+    cost = tf.reduce_mean(-tf.reduce_sum(y * tf.log(pred), reduction_indices=[1]))
+    tf.summary.scalar("loss", cost)
 
-# 隐藏层大小
-n_hidden = 128 # hidden layer num of features
-n_classes = 10 # MNIST total classes (0-9 digits)
+with tf.name_scope("train"):
+    train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
-# tf Graph input
-# [None, n_steps, n_input]这个None表示这一维不确定大小
-x = tf.placeholder("float", [None, n_steps, n_input])
-y = tf.placeholder("float", [None, n_classes])
-
-# Define weights
-weights = {
-    # Hidden layer weights => 2*n_hidden because of forward + backward cells
-    'out': tf.Variable(tf.random_normal([2*n_hidden, n_classes]))
-}
-biases = {
-    'out': tf.Variable(tf.random_normal([n_classes]))
-}
+with tf.name_scope("accuracy"):
+    accuracy = tf.metrics.accuracy(labels=tf.argmax(y, axis=1), predictions=tf.argmax(pred, axis=1))[1]
+    tf.summary.scalar("accuracy", accuracy)
 
 
-def BiRNN(x, weights, biases):
-
-    # Prepare data shape to match `bidirectional_rnn` function requirements
-    # Current data input shape: (batch_size, n_steps, n_input)
-    # Required shape: 'n_steps' tensors list of shape (batch_size, n_input)
-
-    # Unstack to get a list of 'n_steps' tensors of shape (batch_size, n_input)
-    # 变成了n_steps*(batch_size, n_input)
-    x = tf.unstack(x, n_steps, 1)
-
-    # Define lstm cells with tensorflow
-    # Forward direction cell
-    lstm_fw_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=1.0)
-    # Backward direction cell
-    lstm_bw_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=1.0)
-
-    # Get lstm cell output
-    try:
-        outputs, _, _ = rnn.static_bidirectional_rnn(lstm_fw_cell, lstm_bw_cell, x,
-                                              dtype=tf.float32)
-    except Exception: # Old TensorFlow version only returns outputs not states
-        outputs = rnn.static_bidirectional_rnn(lstm_fw_cell, lstm_bw_cell, x,
-                                        dtype=tf.float32)
-
-    # Linear activation, using rnn inner loop last output
-    return tf.matmul(outputs[-1], weights['out']) + biases['out']
+def rnn_lstm(x, weights, biases):
+    # RNN 输入 reshape
+    print(x)
+    x = tf.reshape(x, [-1, n_steps, n_inputs])
+    print(x)
+    def attn_cell():
+        lstm_cell = tf.contrib.rnn.BasicLSTMCell(n_hiddens)
+        with tf.name_scope("lstm_dropout"):
+            return tf.contrib.rnn.DropoutWrapper(lstm_cell, output_keep_prob=keep_prob)
+    enc_cells = []
+    for i in range(0, n_layers):
+        enc_cells.append(attn_cell())
+    with tf.name_scope("lstm_cells_layers"):
+        mlstm_cell = tf.contrib.rnn.MultiRNNCell(enc_cells, state_is_tuple=True)
+    # 全零初始化 state
+    _init_state = mlstm_cell.zero_state(batch_size, dtype=tf.float32)
+    # dynamic_rnn 运行网络
+    outputs, states = tf.nn.dynamic_rnn(mlstm_cell, x, initial_state=_init_state, dtype=tf.float32, time_major=False)
+    # 输出
+    return tf.nn.softmax(tf.matmul(outputs[:, -1, :], weights) + biases)
 
 
-pred = BiRNN(x, weights, biases)
+merged = tf.summary.merge_all()
+init = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
 
-# Define loss and optimizer
-# softmax_cross_entropy_with_logits：Measures the probability error in discrete classification tasks in which the classes are mutually exclusive
-# return a 1-D Tensor of length batch_size of the same type as logits with the softmax cross entropy loss.
-# reduce_mean就是对所有数值（这里没有指定哪一维）求均值。
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+# parameters
+step_train, step_valid = 0, 0                                                           # train step and valid step
+max_accuracy = 0
+max_accuracy_epoch = 0
+n_epoch = 10
 
-# Evaluate model
-correct_pred = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
-accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
-
-# Initializing the variables
-init = tf.global_variables_initializer()
-
-# Launch the graph
 with tf.Session() as sess:
     sess.run(init)
-    step = 1
-    # Keep training until reach max iterations
-    while step * batch_size < training_iters:
-        batch_x, batch_y = mnist.train.next_batch(batch_size)
-        # Reshape data to get 28 seq of 28 elements
-        batch_x = batch_x.reshape((batch_size, n_steps, n_input))
-        # Run optimization op (backprop)
-        sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
-        if step % display_step == 0:
-            # Calculate batch accuracy
-            acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
-            # Calculate batch loss
-            loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
-            print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
-                  "{:.6f}".format(loss) + ", Training Accuracy= " + \
-                  "{:.5f}".format(acc))
-        step += 1
-    print("Optimization Finished!")
+    train_writer = tf.summary.FileWriter("logs/train", sess.graph)
+    test_writer = tf.summary.FileWriter("logs/test", sess.graph)
 
-    # Calculate accuracy for 128 mnist test images
-    test_len = 128
-    test_data = mnist.test.images[:test_len].reshape((-1, n_steps, n_input))
-    test_label = mnist.test.labels[:test_len]
-    print("Testing Accuracy:", \
-        sess.run(accuracy, feed_dict={x: test_data, y: test_label}))
+    # training
+    for epoch in range(n_epoch):
+        start_time = time.time()
+
+        # read files list
+        cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_path,
+                                                                                                                 stego_train_path,
+                                                                                                                 start_index_train,
+                                                                                                                 end_index_train)
+
+        # read files list
+        cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_path,
+                                                                                                                 stego_valid_path,
+                                                                                                                 start_index_valid,
+                                                                                                                 end_index_valid)
+        # update the learning rate
+        lr = sess.run(learning_rate)
+
+        # train
+        train_iterations, train_loss, train_accuracy = 0, 0, 0
+        for x_train_batch, y_train_batch in \
+                minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size_train):
+            # data read and process
+            x_train_data = get_data_batch(x_train_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
+                                          is_trunc=is_trunc, threshold=threshold)
+
+            # get the accuracy and loss
+            _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op],
+                                                     feed_dict={data: x_train_data, labels: y_train_batch, is_bn: True})
+
+            train_loss += err
+            train_accuracy += ac
+            step_train += 1
+            train_iterations += 1
+            train_writer_train.add_summary(summary_str_train, global_step=step_train)
+
+            print("epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f" % (epoch + 1, train_iterations, err, ac))
+
+        print("==================================================================================")
+
+        # validation
+        valid_iterations, valid_loss, valid_accuracy = 0, 0, 0
+        for x_valid_batch, y_valid_batch in \
+                minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size_valid):
+            # data read and process
+            x_valid_data = get_data_batch(x_valid_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
+                                          is_trunc=is_trunc, threshold=threshold)
+
+            # get the accuracy and loss
+            err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
+                                                  feed_dict={data: x_valid_data, labels: y_valid_batch, is_bn: True})
+            valid_loss += err
+            valid_accuracy += ac
+            valid_iterations += 1
+            step_valid += 1
+            train_writer_valid.add_summary(summary_str_valid, global_step=step_valid)
+
+            print("epoch: %003d, valid iterations: %003d, valid loss: %f, valid accuracy: %f" % (epoch + 1, valid_iterations, err, ac))
+
+        # calculate the average in a batch
+        train_loss_average = train_loss / train_iterations
+        valid_loss_average = valid_loss / valid_iterations
+        train_accuracy_average = train_accuracy / train_iterations
+        valid_accuracy_average = valid_accuracy / valid_iterations
+
+        # model save
+        if valid_accuracy_average > max_accuracy:
+            max_accuracy = valid_accuracy_average
+            max_accuracy_epoch = epoch + 1
+            saver.save(sess, os.path.join(model_file_path, model_file_name), global_step=global_step)
+            print("The model is saved successfully.")
+
+        print("epoch: %003d, learning rate: %f, train loss: %f, train accuracy: %f, valid loss: %f, valid accuracy: %f, "
+              "max valid accuracy: %f, max valid acc epoch: %d" % (epoch + 1, lr, train_loss_average, train_accuracy_average, valid_loss_average,
+                                                                   valid_accuracy_average, max_accuracy, max_accuracy_epoch))
+
+        end_time = time.time()
+        print("Runtime: %.2fs" % (end_time - start_time))
+
+    train_writer_train.close()
+    train_writer_valid.close()
+    sess.close()

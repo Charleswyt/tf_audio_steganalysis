@@ -42,13 +42,3 @@ def pca_selection(data):
 
 def get_confusion_matrix(data, label):
     pass
-
-
-if __name__ == "__main__":
-    iris = load_iris()
-    X, y = iris.data, iris.target
-    print(X.shape)
-    X_new = SelectKBest(chi2, k=3).fit_transform(X, y)
-    print(X_new.shape)
-
-    pca_selection(X)

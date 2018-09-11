@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import csv
 import time
 from utils import *
-from network import *
-from config import file_path_setup
+from networks.tested import *
+from networks.audio_steganalysis import *
+from networks.image_steganalysis import *
 from file_preprocess import get_file_name
-from tensorflow.python.ops import control_flow_ops
 
 """
 Created on 2017.11.27
 Finished on 2017.11.30
+Modified on 2018.08.29
+
 @author: Wang Yuntao
 """
 
@@ -39,7 +40,7 @@ def run_mode(args):
 
 
 def train(args):
-    # hyper parameters (超参)
+    # hyper parameters
     batch_size_train, batch_size_valid = args.batch_size_train, args.batch_size_valid       # batch size (train and valid)
     init_learning_rate = args.learning_rate                                                 # initialized learning rate
     n_epoch = args.epoch                                                                    # epoch
@@ -65,18 +66,18 @@ def train(args):
                                   name="global_step",
                                   dtype=tf.int32)                                           # global step (Variable 变量不能直接分配GPU资源)
 
-    # pre processing (输入数据预处理)
-    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs, downsampling, block = \
-        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs, args.downsampling, args.block
+    # pre processing
+    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs = \
+        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs
 
-    # learning rate decay (学习率递减方法)
+    # learning rate decay
     learning_rate = learning_rate_decay(init_learning_rate=init_learning_rate,
                                         decay_method=decay_method,
                                         global_step=global_step,
                                         decay_steps=decay_steps,
                                         decay_rate=decay_rate)                             # learning rate
 
-    # the height and width of input data (确定输入数据的尺寸)
+    # the height and width of input data
     height, width, channel = args.height, args.width, 1                                    # the height, width and channel of the QMDCT matrix
     if is_diff is True and direction == 0:
         height_new, width_new = height - order, width
@@ -85,28 +86,34 @@ def train(args):
     else:
         height_new, width_new = height, width
 
-    # placeholder (占位符)
-    data = tf.placeholder(dtype=tf.float32, shape=(None, height_new, width_new, channel), name="QMDCTs")
+    # placeholder
+    data = tf.placeholder(dtype=tf.float32, shape=(None, height, width, channel), name="QMDCTs")
     labels = tf.placeholder(dtype=tf.int32, shape=(None, ), name="labels")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
-    # initialize the network (网络结构初始化)
+    # initialize the network
     command = args.network + "(data, classes_num, is_bn)"
     logits = eval(command)
 
-    # evaluation (评估)
+    # evaluation
     loss = loss_layer(logits=logits, labels=labels, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
     train_optimizer = optimizer(losses=loss, learning_rate=learning_rate, global_step=global_step)
     accuracy = accuracy_layer(logits=logits, labels=labels)
 
-    # file path (文件路径)
-    cover_train_files_path, cover_valid_files_path, stego_train_files_path, stego_valid_files_path, model_file_path, log_file_path = file_path_setup(args)
-    print("train files path(cover): %s" % cover_train_files_path)
-    print("valid files path(cover): %s" % cover_valid_files_path)
-    print("train files path(stego): %s" % stego_train_files_path)
-    print("valid files path(stego): %s" % stego_valid_files_path)
+    # file path
+    cover_train_path = args.cover_train_path
+    stego_train_path = args.stego_train_path
+    cover_valid_path = args.cover_valid_path
+    stego_valid_path = args.stego_valid_path
+    model_file_path = args.model_path
+    log_path = args.log_path
+
+    print("train files path(cover): %s" % cover_train_path)
+    print("valid files path(cover): %s" % cover_valid_path)
+    print("train files path(stego): %s" % stego_train_path)
+    print("valid files path(stego): %s" % stego_valid_path)
     print("model files path: %s" % model_file_path)
-    print("log files path: %s" % log_file_path)
+    print("log files path: %s" % log_path)
 
     # information output
     print("batch size(train): %d, batch size(valid): %d, total epoch: %d, class number: %d, initial learning rate: %f, "
@@ -121,10 +128,10 @@ def train(args):
         saver = tf.train.Saver(max_to_keep=max_to_keep,
                                keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
 
-    # initialize (初始化)
+    # initialize
     sess = tf.InteractiveSession()
-    train_writer_train = tf.summary.FileWriter(log_file_path + "/train", tf.get_default_graph())
-    train_writer_valid = tf.summary.FileWriter(log_file_path + "/valid", tf.get_default_graph())
+    train_writer_train = tf.summary.FileWriter(log_path + "/train", tf.get_default_graph())
+    train_writer_valid = tf.summary.FileWriter(log_path + "/valid", tf.get_default_graph())
     init = tf.global_variables_initializer()
     sess.run(init)
 
@@ -132,29 +139,29 @@ def train(args):
     for epoch in range(n_epoch):
         start_time = time.time()
 
-        # read files list(train, 读取文件列表, default: shuffle)
-        cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_files_path,
-                                                                                                                 stego_train_files_path,
+        # read files list
+        cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_path,
+                                                                                                                 stego_train_path,
                                                                                                                  start_index_train,
                                                                                                                  end_index_train)
 
-        # read files list(valid, 读取文件列表, default: shuffle)
-        cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_files_path,
-                                                                                                                 stego_valid_files_path,
+        # read files list
+        cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_path,
+                                                                                                                 stego_valid_path,
                                                                                                                  start_index_valid,
                                                                                                                  end_index_valid)
-        # update the learning rate (学习率更新)
+        # update the learning rate
         lr = sess.run(learning_rate)
 
-        # train (训练)
+        # train
         train_iterations, train_loss, train_accuracy = 0, 0, 0
         for x_train_batch, y_train_batch in \
                 minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size_train):
-            # data read and process (数据读取与处理)
+            # data read and process
             x_train_data = get_data_batch(x_train_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
                                           is_trunc=is_trunc, threshold=threshold)
 
-            # get the accuracy and loss (训练与指标显示)
+            # get the accuracy and loss
             _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op],
                                                      feed_dict={data: x_train_data, labels: y_train_batch, is_bn: True})
 
@@ -168,15 +175,15 @@ def train(args):
 
         print("==================================================================================")
 
-        # valid (验证)
+        # validation
         valid_iterations, valid_loss, valid_accuracy = 0, 0, 0
         for x_valid_batch, y_valid_batch in \
                 minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size_valid):
-            # data read and process (数据读取与处理)
+            # data read and process
             x_valid_data = get_data_batch(x_valid_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
                                           is_trunc=is_trunc, threshold=threshold)
 
-            # get the accuracy and loss (验证与指标显示)
+            # get the accuracy and loss
             err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
                                                   feed_dict={data: x_valid_data, labels: y_valid_batch, is_bn: True})
             valid_loss += err
@@ -187,13 +194,13 @@ def train(args):
 
             print("epoch: %003d, valid iterations: %003d, valid loss: %f, valid accuracy: %f" % (epoch + 1, valid_iterations, err, ac))
 
-        # calculate the average in a batch (计算每个batch内的平均值)
+        # calculate the average in a batch
         train_loss_average = train_loss / train_iterations
         valid_loss_average = valid_loss / valid_iterations
         train_accuracy_average = train_accuracy / train_iterations
         valid_accuracy_average = valid_accuracy / valid_iterations
 
-        # model save (保存模型)
+        # model save
         if valid_accuracy_average > max_accuracy:
             max_accuracy = valid_accuracy_average
             max_accuracy_epoch = epoch + 1
@@ -216,11 +223,11 @@ def test(args):
     carrier = args.carrier
     batch_size_test = args.batch_size_test
 
-    # pre processing (输入数据预处理)
-    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs, downsampling, block = \
-        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs, args.downsampling, args.block
+    # pre processing
+    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs = \
+        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs
 
-    # the height and width of input data (确定输入数据的尺寸)
+    # the height and width of input data
     height, width, channel = args.height, args.width, 1  # the height, width and channel of the QMDCT matrix
     if is_diff is True and direction == 0:
         height_new, width_new = height - order, width
@@ -233,12 +240,12 @@ def test(args):
     cover_test_files_path = args.cover_test_path
     stego_test_files_path = args.stego_test_path
 
-    # placeholder (占位符)
+    # placeholder
     data = tf.placeholder(dtype=tf.float32, shape=(None, height_new, width_new, channel), name="QMDCTs")
     labels = tf.placeholder(dtype=tf.int32, shape=(None, ), name="labels")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
-    # initialize the network (网络结构初始化)
+    # initialize the network
     command = args.network + "(data, 2, is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
@@ -266,11 +273,11 @@ def test(args):
             test_iterations, test_accuracy = 0, 0
             for x_test_batch, y_test_batch in \
                     minibatches(cover_test_data_list, cover_test_label_list, stego_test_data_list, stego_test_label_list, batch_size_test):
-                # data read and process (数据读取与处理)
+                # data read and process
                 x_test_data = get_data(x_test_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
                                        is_trunc=is_trunc, threshold=threshold)
 
-                # get the accuracy and loss (验证与指标显示)
+                # get the accuracy and loss
                 acc = sess.run(accuracy, feed_dict={data: x_test_data, labels: y_test_batch, is_bn: True})
                 test_accuracy += acc
                 test_iterations += 1

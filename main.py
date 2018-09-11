@@ -42,7 +42,7 @@ def main():
         else:
             os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
 
-        # run_mode(arguments)
+    run_mode(arguments)
 
 
 if __name__ == "__main__":

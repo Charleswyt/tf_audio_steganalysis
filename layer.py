@@ -3,6 +3,7 @@
 
 from math import floor
 import tensorflow as tf
+from filters import *
 from tensorflow.contrib.layers.python.layers import batch_norm, layer_norm
 
 """
@@ -33,7 +34,7 @@ function:
 """
 
 
-def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=True, padding="SAME"):
+def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=True, padding="VALID"):
     """
     pooling layer
     :param input_data: the input data
@@ -209,7 +210,7 @@ def activation_layer(input_data, activation_method="None", alpha=0.2):
 
 
 def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
-               activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+               activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
                init_method="xavier", bias_term=True, is_pretrain=True):
     """
     convolutional layer
@@ -286,7 +287,7 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
         return output
 
 
-def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAME"):
+def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VALID"):
     """
         convolutional layer with static kernel which can be seen as a HPF
         :param input_data: the input data tensor [batch_size, height, width, channels]
@@ -309,6 +310,46 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAM
               % (name, shape[1], shape[2], shape[3]))
 
         return feature_map
+
+
+def down_sampling(input_data, x_stride, y_stride, name, padding="VALID"):
+    """
+    get m * m(m is 2 in general) down sampling layer
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param x_stride: stride in X axis
+    :param y_stride: stride in Y axis
+    :param name: the name of the layer
+    :param padding: the padding method, "SAME" | "VALID"
+    :return:
+        feature_map: 4-D tensor [number, height, width, channel]
+    """
+    conv1 = tf.nn.conv2d(input=input_data,
+                         filter=downsampling_kernel1,
+                         strides=[1, x_stride, y_stride, 1],
+                         padding=padding,
+                         name="conv1")
+
+    conv2 = tf.nn.conv2d(input=input_data,
+                         filter=downsampling_kernel1,
+                         strides=[1, x_stride, y_stride, 1],
+                         padding=padding,
+                         name="conv2")
+
+    conv3 = tf.nn.conv2d(input=input_data,
+                         filter=downsampling_kernel1,
+                         strides=[1, x_stride, y_stride, 1],
+                         padding=padding,
+                         name="conv3")
+
+    conv4 = tf.nn.conv2d(input=input_data,
+                         filter=downsampling_kernel1,
+                         strides=[1, x_stride, y_stride, 1],
+                         padding=padding,
+                         name="conv4")
+
+    conv_concat = tf.concat([conv1, conv2, conv3, conv4], 3, name=name)
+
+    return conv_concat
 
 
 def loss_layer(logits, labels, is_regulation=False, coeff=1e-3, method="sparse_softmax_cross_entropy"):
@@ -488,7 +529,7 @@ def size_tune(input_data):
     return output
 
 
-def inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+def inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
                  init_method="xavier", bias_term=True, is_pretrain=True):
     """
     the structure of inception V1

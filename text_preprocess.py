@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from utils import get_files_list
+import numpy as np
 
 """
 Created on 2017.11.27
@@ -41,34 +41,11 @@ def text_read(text_file_path, height=200, width=576, separator=","):
         content.append(numbers)
 
     # reshape
-    content = np.reshape(content, [height, width, 1])
+    [h, w] = np.shape(content)
+    content = np.reshape(content, [h, w, 1])
+    content = content[0:height, 0:width, :]
 
     return content
-
-
-def text_read_all(text_files_dir, height=200, width=576, separator=","):
-    """
-    read all txt files into the memory (not recommend)
-
-    :param text_files_dir: the folder of txt files
-    :param height: the height of QMDCT matrix
-    :param width: the width of QMDCT matrix
-    :param separator: separator of each elements in text file
-    :return:
-        data: QMDCT matrices, ndarry, shape: [files_num, height, width, 1]
-    """
-    text_files_list = get_files_list(text_files_dir)                            # get the files list
-    files_num = len(text_files_list)                                            # get the number of files in the folder
-
-    data = np.zeros([files_num, height, width, 1], dtype=np.float32)
-
-    i = 0
-    for text_file in text_files_list:
-        content = text_read(text_file, height, width, separator)
-        data[i] = content
-        i = i + 1
-    
-    return data
 
 
 def text_read_batch(text_files_list, height=200, width=576, separator=","):

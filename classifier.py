@@ -21,7 +21,6 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.metrics import roc_curve, auc
-
 from scipy import interp
 import matplotlib.pyplot as plt
 
@@ -104,5 +103,3 @@ if __name__ == "__main__":
     plt.title('Receiver operating characteristic example')
     plt.legend(loc="lower right")
     plt.show()
-
-    
