@@ -39,7 +39,7 @@ def command_parse():
     parser.add_argument("--gpu", type=str, default="0", help="the index of GPU")
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
     parser.add_argument("--submode", type=str, default="one", help="one | batch (default one)")
-    parser.add_argument("--carrier", type=str, default="audio", help="image | audio (default audio)")
+    parser.add_argument("--carrier", type=str, default="qmdct", help="qmdct | image | audio (default qmdct)")
     parser.add_argument("--network", type=str, default="network1", help="the index of the network (default: network1), "
                                                                         "the detailed introduction of each network is in readme")
 
@@ -119,9 +119,8 @@ def config_train_file_read(config_file_path):
                 self.cover_valid_path = file_content['files_path']['cover_valid_path']
                 self.stego_train_path = file_content['files_path']['stego_train_path']
                 self.stego_valid_path = file_content['files_path']['stego_valid_path']
-                self.model_path = file_content['files_path']['model_path']
-                self.log_path = file_content['files_path']['log_path']
-                self.model_file_name = file_content['files_path']['model_file_name']
+                self.models_path = file_content['files_path']['models_path']
+                self.logs_path = file_content['files_path']['logs_path']
 
                 # mode_config
                 self.gpu_selection = file_content['mode_config']['gpu_selection']

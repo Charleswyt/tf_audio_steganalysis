@@ -11,9 +11,8 @@ Modified on 2018.08.24
 import os
 import sys
 from run import *
-from manager import *
-import tensorflow as tf
 from config import *
+from manager import *
 
 
 def main():
@@ -33,14 +32,17 @@ def main():
     else:
         arguments = command_parse()
 
+    # mode of gpu selection: auto, manu and others
     if is_gpu_available():
         if arguments.gpu_selection == "auto":
             gm = GPUManager()
             gpu_index = gm.auto_choice()
             if not gpu_index == -1:
                 os.environ["CUDA_VISIBLE_DEVICES"] = gpu_index
-        else:
+        elif arguments.gpu_selection == "manu":
             os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
+        else:
+            os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
     run_mode(arguments)
 

@@ -1,12 +1,11 @@
 {
 	"files_path": {
-		"cover_train_path": "/home/user/data/audio/QMDCT/cover/cover_10s/128/train",
+        "cover_train_path": "/home/user/data/audio/QMDCT/cover/cover_10s/128/train",
         "cover_valid_path": "/home/user/data/audio/QMDCT/cover/cover_10s/128/validation",
         "stego_train_path": "/home/user/data/audio/QMDCT/stego/EECS/EECS_B_128_W_2_H_7_ER_10/train",
         "stego_valid_path": "/home/user/data/audio/QMDCT/stego/EECS/EECS_B_128_W_2_H_7_ER_10/validation",
-        "model_path": "/home/user/code/CatKing/steganalysis_CNN/models/steganalysis",
-        "log_path": "/home/user/code/CatKing/steganalysis_CNN/logs/steganalysis",
-        "model_file_name": "down_sampling"
+        "models_path": "/home/user/code/CatKing/steganalysis_CNN/models/steganalysis",
+        "logs_path": "/home/user/code/CatKing/steganalysis_CNN/logs/steganalysis"
     },
     "index": {
         "start_index_train": null,
@@ -15,17 +14,17 @@
         "end_index_valid": null
     },
 	"mode_config": {
-		"gpu_selection": "None",
+		"gpu_selection": "manu",
         "gpu": "0",
         "mode": "train",
-        "carrier": "audio",
+        "carrier": "qmdct",
         "network": "downsampling_network"
     },
     "hyper_parameters": {
-        "batch_size_train": 64,
-        "batch_size_valid": 16,
+        "batch_size_train": 128,
+        "batch_size_valid": 128,
         "learning_rate": 0.001,
-        "epoch": 500,
+        "epoch": 100,
         "seed": 1,
         "is_regulation": true,
         "coeff_regulation": 0.001,
@@ -34,7 +33,7 @@
     },
     "preprocessing_method": {
         "height": 200,
-        "width": 450,
+        "width": 380,
         "channel": 1,
         "is_abs": false,
         "is_trunc": false,

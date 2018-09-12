@@ -31,6 +31,7 @@
       <w>downsampling</w>
       <w>dtype</w>
       <w>eecs</w>
+      <w>fconv</w>
       <w>filetype</w>
       <w>fmpeg</w>
       <w>framenum</w>
@@ -99,6 +100,7 @@
       <w>tensorlayer</w>
       <w>tfrecord</w>
       <w>tfrecords</w>
+      <w>tobytes</w>
       <w>uint</w>
       <w>wasdn</w>
       <w>wbmp</w>

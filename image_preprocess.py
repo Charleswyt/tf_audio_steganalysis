@@ -55,10 +55,6 @@ def image_read(image_file_path, height=None, width=None, as_grey=False):
         image data ndarry type, shape: [height, width, channel]
     """
     image = io.imread(image_file_path, as_grey=as_grey)
-    if is_trunc is True:
-        image = truncate(image, threshold=threshold, threshold_left=threshold_left, threshold_right=threshold_right)
-    if is_diff is True:
-        image = np.diff(image, n=order, axis=direction)
 
     # reshape
     image_shape = np.shape(image)
@@ -71,21 +67,24 @@ def image_read(image_file_path, height=None, width=None, as_grey=False):
     return image
 
 
-def image_read_batch(image_files_list, height=None, width=None):
+def image_read_batch(image_files_list, height=None, width=None, as_grey=False):
     """
     read images batch by batch
     :param image_files_list: image files list
     :param height: the height of images
     :param width: the width of images
+    :param as_grey: whether grays-cale or not (default: False)
     :return:
-        data, a 4-D tensor, [batch_size, height, width, channel]
+        data, a 4-D ndarray, [batch_size, height, width, channel]
     """
     files_num = len(image_files_list)
-    data = np.zeros([files_num, height, width, 1], dtype=np.float32)
+    channel = 1 if as_grey is True else 3
+
+    data = np.zeros([files_num, height, width, channel], dtype=np.float32)
 
     i = 0
     for image_file in image_files_list:
-        content = image_read(image_file, height=height, width=width)
+        content = image_read(image_file, height=height, width=width, as_grey=as_grey)
         data[i] = content
         i = i + 1
 

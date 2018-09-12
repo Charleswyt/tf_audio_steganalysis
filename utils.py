@@ -5,6 +5,7 @@
 Created on 2017.11.20
 Finished on 2017.11.20
 Modified on 2018.08.29
+
 @author: Wang Yuntao
 """
 
@@ -16,6 +17,8 @@ import tensorflow as tf
 from matplotlib.pylab import plt
 from file_preprocess import get_path_type
 from text_preprocess import text_read_batch
+from image_preprocess import image_read_batch
+from audio_preprocess import audio_read_batch
 
 """
     function:
@@ -162,34 +165,22 @@ def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_lab
         yield datas, labels
 
 
-def get_data_batch(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0,
-                   is_trunc=False, threshold=15, threshold_left=-15, threshold_right=15):
+def get_data_batch(files_list, height, width, carrier="qmdct", as_grey=False):
     """
     read data batch by batch
     :param files_list: files list (audio | image | text)
     :param height: the height of the data matrix
     :param width: the width of the data matrix
-    :param carrier: the type of carrier (audio | image, here if choose audio, use QMDCT matrix)
-    :param is_abs: whether abs or not (default: False)
-    :param is_diff: whether difference or not (default: False)
-    :param is_diff_abs: whether abs after difference or not (default: False)
-    :param order: the order of difference
-    :param direction: the direction of difference (default: row)
-    :param is_trunc: whether truncation or not (default: False)
-    :param threshold: the threshold of truncation
-    :param threshold_left: the threshold of truncation
-    :param threshold_right: the threshold of truncation
+    :param carrier: the type of carrier (qmdct | audio | image)
+    :param as_grey: whether grays-cale or not (default: False)
     :return:
-        data: the data list 4-D tensor [batch_size, height, width, channel]
     """
     if carrier == "audio":
-        data = text_read_batch(text_files_list=files_list, height=height, width=width)
+        data = audio_read_batch(audio_files_list=files_list)
     elif carrier == "image":
-        data = image_read_batch(image_files_list=files_list, height=height, width=width, is_diff=is_diff, order=order, direction=direction,
-                                is_trunc=is_trunc, threshold=threshold, threshold_left=threshold_left, threshold_right=threshold_right)
+        data = image_read_batch(image_files_list=files_list, height=height, width=width, as_grey=as_grey)
     else:
-        data = read_text_batch(text_files_list=files_list, height=height, width=width, is_abs=is_abs, is_diff=is_diff, order=order, direction=direction,
-                               is_trunc=is_trunc, threshold=threshold)
+        data = text_read_batch(text_files_list=files_list, height=height, width=width)
 
     return data
 
@@ -260,13 +251,6 @@ def qmdct_extractor(mp3_file_path, width=576, frame_num=50, coeff_num=576):
     os.remove(txt_file_path)
 
     return content
-
-
-def get_batch(cover_datas, cover_labels, stego_datas, stego_labels, batch_size):
-    cover_datas = tf.cast(cover_datas, tf.string)
-    cover_datas = tf.cast(cover_labels, tf.int32)
-    cover_datas = tf.cast(stego_datas, tf.string)
-    cover_datas = tf.cast(stego_labels, tf.string)
 
 
 def get_model_file_path(path):

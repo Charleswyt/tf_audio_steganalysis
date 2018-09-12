@@ -56,7 +56,6 @@ def train(args):
     keep_checkpoint_every_n_hours = args.keep_checkpoint_every_n_hours                      # how often to keep checkpoints
     start_index_train, end_index_train = args.start_index_train, args.end_index_train       # the scale of the dataset (train)
     start_index_valid, end_index_valid = args.start_index_valid, args.end_index_valid       # the scale of the dataset (valid)
-    model_file_name = args.model_file_name                                                  # model file name
     step_train, step_valid = 0, 0                                                           # train step and valid step
     max_accuracy, max_accuracy_epoch = 0, 0                                                 # max valid accuracy and corresponding epoch
 
@@ -105,18 +104,21 @@ def train(args):
     stego_train_path = args.stego_train_path
     cover_valid_path = args.cover_valid_path
     stego_valid_path = args.stego_valid_path
-    model_file_path = args.model_path
-    log_path = args.log_path
 
+    models_file_path = args.models_path
+    logs_path = args.logs_path
+
+    log_path = fullfile(logs_path, args.network)
+    model_file_path = fullfile(models_file_path, args.network)
+
+    # information output
     print("train files path(cover): %s" % cover_train_path)
     print("valid files path(cover): %s" % cover_valid_path)
     print("train files path(stego): %s" % stego_train_path)
     print("valid files path(stego): %s" % stego_valid_path)
     print("model files path: %s" % model_file_path)
     print("log files path: %s" % log_path)
-
-    # information output
-    print("batch size(train): %d, batch size(valid): %d, total epoch: %d, class number: %d, initial learning rate: %f, "
+    print("batch size(train): %d, batch size(validation): %d, total epoch: %d, class number: %d, initial learning rate: %f, "
           "decay method: %s, decay rate: %f, decay steps: %d" % (batch_size_train, batch_size_valid, n_epoch, classes_num,
                                                                  init_learning_rate, decay_method, decay_rate, decay_steps))
     print("start load network...")
@@ -131,7 +133,7 @@ def train(args):
     # initialize
     sess = tf.InteractiveSession()
     train_writer_train = tf.summary.FileWriter(log_path + "/train", tf.get_default_graph())
-    train_writer_valid = tf.summary.FileWriter(log_path + "/valid", tf.get_default_graph())
+    train_writer_valid = tf.summary.FileWriter(log_path + "/validion", tf.get_default_graph())
     init = tf.global_variables_initializer()
     sess.run(init)
 
@@ -139,13 +141,13 @@ def train(args):
     for epoch in range(n_epoch):
         start_time = time.time()
 
-        # read files list
+        # read files list (train)
         cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_path,
                                                                                                                  stego_train_path,
                                                                                                                  start_index_train,
                                                                                                                  end_index_train)
 
-        # read files list
+        # read files list (validation)
         cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_path,
                                                                                                                  stego_valid_path,
                                                                                                                  start_index_valid,
@@ -158,8 +160,10 @@ def train(args):
         for x_train_batch, y_train_batch in \
                 minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size_train):
             # data read and process
-            x_train_data = get_data_batch(x_train_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
-                                          is_trunc=is_trunc, threshold=threshold)
+            x_train_data = get_data_batch(x_train_batch, height, width, carrier=carrier)
+
+            # data preprocessing
+
 
             # get the accuracy and loss
             _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op],
@@ -180,8 +184,7 @@ def train(args):
         for x_valid_batch, y_valid_batch in \
                 minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size_valid):
             # data read and process
-            x_valid_data = get_data_batch(x_valid_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
-                                          is_trunc=is_trunc, threshold=threshold)
+            x_valid_data = get_data_batch(x_valid_batch, height, width, carrier=carrier)
 
             # get the accuracy and loss
             err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
@@ -204,7 +207,7 @@ def train(args):
         if valid_accuracy_average > max_accuracy:
             max_accuracy = valid_accuracy_average
             max_accuracy_epoch = epoch + 1
-            saver.save(sess, os.path.join(model_file_path, model_file_name), global_step=global_step)
+            saver.save(sess, model_file_path, global_step=global_step)
             print("The model is saved successfully.")
 
         print("epoch: %003d, learning rate: %f, train loss: %f, train accuracy: %f, valid loss: %f, valid accuracy: %f, "

@@ -86,7 +86,8 @@ def batch_normalization(input_data, name, activation_method="relu", is_train=Tru
                         reuse=False, is_training=is_train, zero_debias_moving_mean=True)
     output = activation_layer(input_data=output,
                               activation_method=activation_method)
-    print("name: %s, activation: %s, is_training: %r" % (name, activation_method, is_train))
+
+    print("name: %s, activation: %s, is_train: %r" % (name, activation_method, is_train))
 
     return output
 
@@ -122,7 +123,7 @@ def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, 
     fully-connected layer
     :param input_data: the input data
     :param output_dim: the dimension of the output data
-    :param name: name
+    :param name: name of the layer
     :param activation_method: the type of activation function
     :param alpha: leakey relu alpha
     :param is_train: if False, skip this layer, default is True
@@ -163,6 +164,67 @@ def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, 
                       % (name, input_dim, output_dim, activation_method))
     else:
         output = input_data
+
+    return output
+
+
+def fconv_layer(input_data, filter_num, name, is_train=True, padding="VALID", init_method="xavier", bias_term=True, is_pretrain=True):
+    """
+    fully conv layer
+    :param input_data: the input data
+    :param filter_num: the number of the convolutional kernel
+    :param name: name of the layer
+    :param is_train: if False, skip this layer, default is True
+    :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
+    :param init_method: the method of weights initialization (default: xavier)
+    :param bias_term: whether the bias term exists or not (default: False)
+    :param is_pretrain: whether the parameters are trainable (default: True)
+    :return:
+        output: a 4-D tensor [batch_size, height, width. channel]
+    """
+    if is_train is True:
+        shape = input_data.get_shape()
+        conv_height, conv_width, conv_channel = shape[1].value, shape[2].value, shape[3].value
+
+        with tf.variable_scope(name):
+
+            # the method of weights initialization
+            if init_method == "xavier":
+                initializer = tf.contrib.layers.xavier_initializer()
+            elif init_method == "gaussian":
+                initializer = tf.random_normal_initializer(stddev=0.01)
+            else:
+                initializer = tf.truncated_normal_initializer(stddev=0.01)
+
+            weights = tf.get_variable(name="weights",
+                                      shape=[conv_height, conv_width, conv_channel, filter_num],
+                                      dtype=tf.float32,
+                                      initializer=initializer,
+                                      trainable=is_pretrain)
+            biases = tf.get_variable(name="biases",
+                                     shape=[filter_num],
+                                     dtype=tf.float32,
+                                     initializer=tf.constant_initializer(0.0),
+                                     trainable=is_pretrain)
+            feature_map = tf.nn.conv2d(input=input_data,
+                                       filter=weights,
+                                       strides=[1, 1, 1, 1],
+                                       padding=padding,
+                                       name="conv")
+            # biases term
+            if bias_term is True:
+                output = tf.nn.bias_add(value=feature_map,
+                                        bias=biases,
+                                        name="biases_add")
+            else:
+                output = feature_map
+    else:
+        output = input_data
+
+    # info show
+    shape = output.get_shape()
+    print("name: %s, shape: (%d, %d, %d)"
+          % (name, shape[1], shape[2], shape[3]))
 
     return output
 
@@ -223,7 +285,7 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
     :param name: the name of the layer
     :param activation_method: the type of activation function (default: relu)
     :param alpha: leaky relu alpha (default: 0.2)
-    :param padding: the padding method, "SAME" | "VALID" (default: "SAME")
+    :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
     :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
     :param init_method: the method of weights initialization (default: xavier)
     :param bias_term: whether the bias term exists or not (default: False)
@@ -295,7 +357,7 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VAL
         :param x_stride: stride in X axis
         :param y_stride: stride in Y axis
         :param name: the name of the layer
-        :param padding: the padding method, "SAME" | "VALID"
+        :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
         :return:
             feature_map: 4-D tensor [number, height, width, channel]
         """
@@ -319,7 +381,7 @@ def down_sampling(input_data, x_stride, y_stride, name, padding="VALID"):
     :param x_stride: stride in X axis
     :param y_stride: stride in Y axis
     :param name: the name of the layer
-    :param padding: the padding method, "SAME" | "VALID"
+    :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
     :return:
         feature_map: 4-D tensor [number, height, width, channel]
     """
