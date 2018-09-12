@@ -11,3 +11,4 @@
 .idea\workspace.xml
 samples_make.py
 test_script.py
+jupyter/*
