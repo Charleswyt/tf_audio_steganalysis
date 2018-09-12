@@ -65,7 +65,6 @@ def get_files_list(file_dir, file_type="txt", start_idx=None, end_idx=None):
         start_idx = None
     if type(end_idx) is int and end_idx > total_num:
         end_idx = None
-    print(start_idx, end_idx)
     file_list = file_list[start_idx:end_idx]
 
     return file_list
@@ -122,25 +121,22 @@ def read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, 
     cover_label_list = np.zeros(sample_num, np.int32)           # label list of cover files
     stego_label_list = np.ones(sample_num, np.int32)            # label list of stego files
 
-    temp_cover = np.array([cover_files_list, cover_label_list])
-    temp_cover = temp_cover.transpose()
-
-    temp_stego = np.array([stego_files_list, stego_label_list])
-    temp_stego = temp_stego.transpose()
+    temp = np.array([cover_files_list, cover_label_list, stego_files_list, stego_label_list])
+    temp_t = temp.transpose()
 
     if is_shuffle is True:
-        np.random.shuffle(temp_cover)
-        np.random.shuffle(temp_stego)
+        np.random.shuffle(temp_t)
 
     if start_idx is not None and start_idx > sample_num:
         start_idx = 0
     if end_idx is not None and end_idx > sample_num:
         end_idx = sample_num + 1
 
-    cover_data_list = list(temp_cover[start_idx:end_idx, 0])
-    stego_data_list = list(temp_stego[start_idx:end_idx, 0])
-    cover_label_list = list(temp_cover[start_idx:end_idx, 1])
-    stego_label_list = list(temp_stego[start_idx:end_idx, 1])
+    cover_data_list = list(temp_t[start_idx:end_idx, 0])
+    cover_label_list = list(temp_t[start_idx:end_idx, 1])
+
+    stego_data_list = list(temp_t[start_idx:end_idx, 2])
+    stego_label_list = list(temp_t[start_idx:end_idx, 3])
 
     return cover_data_list, cover_label_list, stego_data_list, stego_label_list
 
