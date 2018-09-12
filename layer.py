@@ -118,7 +118,7 @@ def dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True):
     return output
 
 
-def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, is_train=True):
+def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=None, init_method="xavier", is_train=True):
     """
     fully-connected layer
     :param input_data: the input data
@@ -126,9 +126,10 @@ def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, 
     :param name: name of the layer
     :param activation_method: the type of activation function
     :param alpha: leakey relu alpha
+    :param init_method: the method of weights initialization (default: xavier)
     :param is_train: if False, skip this layer, default is True
     :return:
-        output: a 4-D tensor [batch_size, height, width. channel]
+        output: a 2-D tensor [batch_size, channel]
     """
     if is_train is True:
         shape = input_data.get_shape()
@@ -138,30 +139,38 @@ def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, 
             input_dim = shape[-1].value
 
         flat_input_data = tf.reshape(input_data, [-1, input_dim])
+        if init_method is None:
+            output = input_data
+        else:
+            with tf.variable_scope(name):
+                # the method of weights initialization
+                if init_method == "xavier":
+                    initializer = tf.contrib.layers.xavier_initializer()
+                elif init_method == "gaussian":
+                    initializer = tf.random_normal_initializer(stddev=0.01)
+                else:
+                    initializer = tf.truncated_normal_initializer(stddev=0.01)
 
-        with tf.variable_scope(name):
-            weights = tf.get_variable(name="weight",
-                                      shape=[input_dim, output_dim],
-                                      dtype=tf.float32,
-                                      initializer=tf.contrib.layers.xavier_initializer())
-            biases = tf.get_variable(name="biases",
-                                     shape=[output_dim],
-                                     dtype=tf.float32,
-                                     initializer=tf.constant_initializer(0.0))
-            output = tf.nn.bias_add(value=tf.matmul(flat_input_data, weights),
-                                    bias=biases,
-                                    name="fc_bias_add")
+                weights = tf.get_variable(name="weight",
+                                          shape=[input_dim, output_dim],
+                                          dtype=tf.float32,
+                                          initializer=initializer)
 
-            output = activation_layer(input_data=output,
-                                      activation_method=activation_method,
-                                      alpha=alpha)
+                biases = tf.get_variable(name="biases",
+                                         shape=[output_dim],
+                                         dtype=tf.float32,
+                                         initializer=tf.constant_initializer(0.0))
 
-            if activation_method == "leakrelu":
-                print("name: %s, shape: %d -> %d, activation:%s, alpha = %f"
+                output = tf.nn.bias_add(value=tf.matmul(flat_input_data, weights),
+                                        bias=biases,
+                                        name="fc_bias_add")
+
+                output = activation_layer(input_data=output,
+                                          activation_method=activation_method,
+                                          alpha=alpha)
+
+                print("name: %s, shape: %d -> %d, activation:%s, alpha = %r"
                       % (name, input_dim, output_dim, activation_method, alpha))
-            else:
-                print("name: %s, shape: %d -> %d, activation:%s"
-                      % (name, input_dim, output_dim, activation_method))
     else:
         output = input_data
 
@@ -592,7 +601,7 @@ def size_tune(input_data):
 
 
 def inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
-                 init_method="xavier", bias_term=True, is_pretrain=True):
+                 is_max_pool=True, init_method="xavier", bias_term=True, is_pretrain=True):
     """
     the structure of inception V1
     :param input_data: the input data tensor [batch_size, height, width, channels]
@@ -601,6 +610,7 @@ def inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0
     :param activation_method: the type of activation function (default: relu)
     :param alpha: leaky relu alpha (default: 0.2)
     :param padding: the padding method, "SAME" | "VALID" (default: "SAME")
+    :param is_max_pool: whether max pooling or not (default: True)
     :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
     :param init_method: the method of weights initialization (default: xavier)
     :param bias_term: whether the bias term exists or not (default: False)
@@ -621,10 +631,82 @@ def inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0
     branch3 = conv_layer(branch3, 5, 5, 1, 1, filter_num, name + "branch_3_5_5",
                          activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
 
-    branch4 = pool_layer(input_data, 3, 3, 1, 1, name+"branch_4_pool", False, padding)
+    branch4 = pool_layer(input_data, 3, 3, 1, 1, name+"branch_4_pool", is_max_pool, padding)
     branch4 = conv_layer(branch4, 1, 1, 1, 1, filter_num, name + "branch_4_1_1",
                          activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
 
     output = tf.concat([branch1, branch2, branch3, branch4], 3)
+
+    return output
+
+
+def res_conv_block(input_data, height, width, x_stride, y_stride, filter_num, name,
+                   activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+                   init_method="xavier", bias_term=True, is_pretrain=True):
+    """
+    residual convolutional layer
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param height: the height of the convolutional kernel
+    :param width: the width of the convolutional kernel
+    :param x_stride: stride in X axis
+    :param y_stride: stride in Y axis
+    :param filter_num: the number of the convolutional kernel
+    :param name: the name of the layer
+    :param activation_method: the type of activation function (default: relu)
+    :param alpha: leaky relu alpha (default: 0.2)
+    :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
+    :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
+    :param init_method: the method of weights initialization (default: xavier)
+    :param bias_term: whether the bias term exists or not (default: False)
+    :param is_pretrain: whether the parameters are trainable (default: True)
+
+    :return:
+        output: a 4-D tensor [number, height, width, channel]
+    """
+    conv1 = conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name=name+"_conv1", activation_method=activation_method, alpha=alpha,
+                       padding=padding, atrous=atrous, init_method=init_method, bias_term=bias_term, is_pretrain=is_pretrain)
+    conv2 = conv_layer(conv1, height, width, x_stride, y_stride, filter_num, name=name + "_conv2", activation_method="None", alpha=alpha,
+                       padding=padding, atrous=atrous, init_method=init_method, bias_term=bias_term, is_pretrain=is_pretrain)
+    output = tf.add(input_data, conv2, name=name+"add")
+
+    output = activation_layer(input_data=output,
+                              activation_method=activation_method,
+                              alpha=alpha)
+
+    return output
+
+
+def res_conv_block_beta(input_data, height, width, x_stride, y_stride, filter_num, name,
+                        activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+                        init_method="xavier", bias_term=True, is_pretrain=True):
+    """
+    residual convolutional layer
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param height: the height of the convolutional kernel
+    :param width: the width of the convolutional kernel
+    :param x_stride: stride in X axis
+    :param y_stride: stride in Y axis
+    :param filter_num: the number of the convolutional kernel
+    :param name: the name of the layer
+    :param activation_method: the type of activation function (default: relu)
+    :param alpha: leaky relu alpha (default: 0.2)
+    :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
+    :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
+    :param init_method: the method of weights initialization (default: xavier)
+    :param bias_term: whether the bias term exists or not (default: False)
+    :param is_pretrain: whether the parameters are trainable (default: True)
+
+    :return:
+        output: a 4-D tensor [number, height, width, channel]
+    """
+    conv1 = conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name=name+"_conv1", activation_method=activation_method, alpha=alpha,
+                       padding=padding, atrous=atrous, init_method=init_method, bias_term=bias_term, is_pretrain=is_pretrain)
+    conv2 = conv_layer(conv1, height, width, x_stride, y_stride, filter_num, name=name + "_conv2", activation_method="None", alpha=alpha,
+                       padding=padding, atrous=atrous, init_method=init_method, bias_term=bias_term, is_pretrain=is_pretrain)
+    output = tf.add(input_data, conv2, name=name+"add")
+
+    output = activation_layer(input_data=output,
+                              activation_method=activation_method,
+                              alpha=alpha)
 
     return output
