@@ -8,7 +8,6 @@
 *.ckpt
 *.meta
 *.gz
-.idea/workspace.xml
+.idea\workspace.xml
 samples_make.py
-test_scipt.py
-TODO
+test_script.py

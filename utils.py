@@ -10,11 +10,9 @@ Modified on 2018.08.29
 """
 
 import os
-import csv
 import numpy as np
 from glob import glob
 import tensorflow as tf
-from matplotlib.pylab import plt
 from file_preprocess import get_path_type
 from text_preprocess import text_read_batch
 from image_preprocess import image_read_batch
