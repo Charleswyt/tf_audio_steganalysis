@@ -163,7 +163,8 @@ def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_lab
         yield datas, labels
 
 
-def get_data_batch(files_list, height, width, carrier="qmdct", as_grey=False):
+def get_data_batch(files_list, height, width, carrier="qmdct", as_grey=False,
+                   is_abs=False, is_diff=False, is_abs_diff=False, is_diff_abs=False, order=2, direction=0, is_trunc=False, threshold=15):
     """
     read data batch by batch
     :param files_list: files list (audio | image | text)
@@ -171,6 +172,15 @@ def get_data_batch(files_list, height, width, carrier="qmdct", as_grey=False):
     :param width: the width of the data matrix
     :param carrier: the type of carrier (qmdct | audio | image)
     :param as_grey: whether grays-cale or not (default: False)
+    :param is_abs: whether make absolute or not
+    :param is_diff: whether make difference or not
+    :param is_abs_diff: whether make absolute and difference or not
+    :param is_diff_abs: whether make difference and absolute or not
+    :param order: order of difference
+    :param direction: direction of difference
+    :param is_trunc: whether make truncation or not
+    :param threshold: threshold of truncation
+
     :return:
     """
     if carrier == "audio":
@@ -178,7 +188,9 @@ def get_data_batch(files_list, height, width, carrier="qmdct", as_grey=False):
     elif carrier == "image":
         data = image_read_batch(image_files_list=files_list, height=height, width=width, as_grey=as_grey)
     else:
-        data = text_read_batch(text_files_list=files_list, height=height, width=width)
+        data = text_read_batch(text_files_list=files_list, height=height, width=width,
+                               is_abs=is_abs, is_diff=is_diff, is_abs_diff=is_abs_diff, is_diff_abs=is_diff_abs,
+                               order=order, direction=direction, is_trunc=is_trunc, threshold=threshold)
 
     return data
 

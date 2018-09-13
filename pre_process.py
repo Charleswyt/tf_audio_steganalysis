@@ -29,7 +29,7 @@ def truncate(matrix, threshold=None, threshold_left=None, threshold_right=None):
     :return:
     """
     if threshold_left is not None and threshold_right is not None:
-        matrix[matrix > threshold_left] = threshold_left
+        matrix[matrix < threshold_left] = threshold_left
         matrix[matrix > threshold_right] = threshold_right
     else:
         matrix[matrix > threshold] = threshold
@@ -51,6 +51,7 @@ def preprocess(content, is_abs=False, is_diff=False, is_abs_diff=False, is_diff_
     :param direction: direction of difference
     :param is_trunc: whether make truncation or not
     :param threshold: threshold of truncation
+
     :return:
     """
     if is_abs is True:

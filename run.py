@@ -66,8 +66,8 @@ def train(args):
                                   dtype=tf.int32)                                           # global step (Variable 变量不能直接分配GPU资源)
 
     # pre processing
-    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs = \
-        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs
+    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs, is_abs_diff = \
+        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs, args.is_abs_diff
 
     # learning rate decay
     learning_rate = learning_rate_decay(init_learning_rate=init_learning_rate,
@@ -77,16 +77,16 @@ def train(args):
                                         decay_rate=decay_rate)                             # learning rate
 
     # the height and width of input data
-    height, width, channel = args.height, args.width, 1                                    # the height, width and channel of the QMDCT matrix
-    if is_diff is True and direction == 0:
+    height, width, channel = args.height, args.width, args.channel                         # the height, width and channel of the QMDCT matrix
+    if (is_diff is True or is_abs_diff is True or is_diff_abs is True) and direction == 0:
         height_new, width_new = height - order, width
-    elif is_diff is True and direction == 1:
+    elif (is_diff is True or is_abs_diff is True or is_diff_abs is True) and direction == 1:
         height_new, width_new = height, width - order
     else:
         height_new, width_new = height, width
 
     # placeholder
-    data = tf.placeholder(dtype=tf.float32, shape=(None, height, width, channel), name="QMDCTs")
+    data = tf.placeholder(dtype=tf.float32, shape=(None, height_new, width_new, channel), name="QMDCTs")
     labels = tf.placeholder(dtype=tf.int32, shape=(None, ), name="labels")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
@@ -160,7 +160,9 @@ def train(args):
         for x_train_batch, y_train_batch in \
                 minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size_train):
             # data read and process
-            x_train_data = get_data_batch(x_train_batch, height, width, carrier=carrier)
+            x_train_data = get_data_batch(x_train_batch, height=height_new, width=width_new, carrier=carrier,
+                                          is_abs=is_abs, is_diff=is_diff, is_abs_diff=is_abs_diff, is_diff_abs=is_diff_abs,
+                                          order=order, direction=direction, is_trunc=is_trunc, threshold=threshold)
 
             # data preprocessing
 
@@ -184,7 +186,9 @@ def train(args):
         for x_valid_batch, y_valid_batch in \
                 minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size_valid):
             # data read and process
-            x_valid_data = get_data_batch(x_valid_batch, height, width, carrier=carrier)
+            x_valid_data = get_data_batch(x_valid_batch, height=height_new, width=width_new, carrier=carrier,
+                                          is_abs=is_abs, is_diff=is_diff, is_abs_diff=is_abs_diff, is_diff_abs=is_diff_abs,
+                                          order=order, direction=direction, is_trunc=is_trunc, threshold=threshold)
 
             # get the accuracy and loss
             err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
