@@ -383,17 +383,19 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VAL
         return feature_map
 
 
-def down_sampling(input_data, x_stride, y_stride, name, padding="VALID"):
+def down_sampling(input_data, x_stride, y_stride, name, with_original=True, padding="VALID"):
     """
     get m * m(m is 2 in general) down sampling layer
     :param input_data: the input data tensor [batch_size, height, width, channels]
     :param x_stride: stride in X axis
     :param y_stride: stride in Y axis
     :param name: the name of the layer
+    :param with_original: whether the output is with the crop of original
     :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
     :return:
         feature_map: 4-D tensor [number, height, width, channel]
     """
+
     conv1 = tf.nn.conv2d(input=input_data,
                          filter=downsampling_kernel1,
                          strides=[1, x_stride, y_stride, 1],
@@ -418,7 +420,24 @@ def down_sampling(input_data, x_stride, y_stride, name, padding="VALID"):
                          padding=padding,
                          name="conv4")
 
-    conv_concat = tf.concat([conv1, conv2, conv3, conv4], 3, name=name)
+    if with_original is True:
+        input_shape = input_data.get_shape()
+        batch_size, height, width, channel = input_shape[0].value, input_shape[1].value, input_shape[2].value, input_shape[3].value
+
+        ori1 = tf.slice(input_=input_data,
+                        begin=[0, 0, 0, 0],
+                        size=[batch_size, int(height / x_stride), int(width / y_stride), channel])
+
+        ori2 = tf.slice(input_=input_data,
+                        begin=[0, int(height / x_stride + 1), 0, 0],
+                        size=[batch_size, int(height / x_stride), int(width / y_stride), channel])
+        conv_concat = tf.concat([ori1, ori2, conv1, conv2, conv3, conv4], 3, name=name)
+    else:
+        conv_concat = tf.concat([conv1, conv2, conv3, conv4], 3, name=name)
+
+    shape = conv_concat.get_shape()
+    print("name: %s, shape: (%d, %d, %d)"
+          % (name, shape[1], shape[2], shape[3]))
 
     return conv_concat
 
