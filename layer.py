@@ -422,15 +422,15 @@ def down_sampling(input_data, x_stride, y_stride, name, with_original=True, padd
 
     if with_original is True:
         input_shape = input_data.get_shape()
-        batch_size, height, width, channel = input_shape[0].value, input_shape[1].value, input_shape[2].value, input_shape[3].value
+        height, width, channel = input_shape[1].value, input_shape[2].value, input_shape[3].value
 
         ori1 = tf.slice(input_=input_data,
                         begin=[0, 0, 0, 0],
-                        size=[batch_size, int(height / x_stride), int(width / y_stride), channel])
+                        size=[128, int(height / x_stride), int(width / y_stride), channel])
 
         ori2 = tf.slice(input_=input_data,
-                        begin=[0, int(height / x_stride + 1), 0, 0],
-                        size=[batch_size, int(height / x_stride), int(width / y_stride), channel])
+                        begin=[0, int(height / x_stride), 0, 0],
+                        size=[128, int(height / x_stride), int(width / y_stride), channel])
         conv_concat = tf.concat([ori1, ori2, conv1, conv2, conv3, conv4], 3, name=name)
     else:
         conv_concat = tf.concat([conv1, conv2, conv3, conv4], 3, name=name)

@@ -138,6 +138,8 @@ def train(args):
     sess.run(init)
 
     print("Start training...")
+    print("Input data: (%d, %d, %d)" % (height_new, width_new, channel))
+
     for epoch in range(n_epoch):
         start_time = time.time()
 
