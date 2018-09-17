@@ -9,6 +9,8 @@ from tensorflow.contrib.layers.python.layers import batch_norm, layer_norm
 """
 Created on 2017.12.29
 Finished on 2017.12.29
+Modified on 2018.09.17
+
 @author: Wang Yuntao
 """
 
@@ -20,17 +22,29 @@ function:
     2.  batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3, activation_method="relu", is_train=True)
     3.  dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True)
     4.  fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, is_train=True)
-    5.  activation_layer(input_data, activation_method="None", alpha=0.2)
-    6.  conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name, activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+    5.  fconv_layer(input_data, filter_num, name, is_train=True, padding="VALID", init_method="xavier", bias_term=True, is_pretrain=True)
+    6.  activation_layer(input_data, activation_method="None", alpha=0.2)
+    7.  conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name, activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
                init_method="xavier", bias_term=False, is_pretrain=True)
-    7.  static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAME")
-    8.  loss_layer(logits, label)
-    9.  accuracy(logits, label)
-    10. optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
+    8.  static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAME")
+    9.  truncation_layer(input_data, is_turnc, min_value, max_value, name)
+    10. diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, padding="SAME")
+    11. down_sampling(input_data, x_stride, y_stride, name, with_original=True, padding="VALID")
+    12. loss_layer(logits, label)
+    13. accuracy_layer(logits, label)
+    14. optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
               epsilon=1e-8, initial_accumulator_value=0.1, momentum=0.9, decay=0.9)
-    11. learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
+    15. learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
                         end_learning_rate=0.0001, power=1.0, cycle=False)
-    12. size_tune(input_data)
+    16. size_tune(input_data)
+    17. inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
+                 is_max_pool=True, init_method="xavier", bias_term=True, is_pretrain=True)
+    18. res_conv_block(input_data, height, width, x_stride, y_stride, filter_num, name,
+                   activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+                   init_method="xavier", bias_term=True, is_pretrain=True)
+    19. res_conv_block_beta(input_data, height, width, x_stride, y_stride, filter_num, name,
+                        activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
+                        init_method="xavier", bias_term=True, is_pretrain=True)
 """
 
 
@@ -360,16 +374,17 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
 
 def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VALID"):
     """
-        convolutional layer with static kernel which can be seen as a HPF
-        :param input_data: the input data tensor [batch_size, height, width, channels]
-        :param kernel: the filter kernel
-        :param x_stride: stride in X axis
-        :param y_stride: stride in Y axis
-        :param name: the name of the layer
-        :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
-        :return:
-            feature_map: 4-D tensor [number, height, width, channel]
-        """
+    convolutional layer with static kernel which can be seen as a HPF
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param kernel: the filter kernel
+    :param x_stride: stride in X axis
+    :param y_stride: stride in Y axis
+    :param name: the name of the layer
+    :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
+
+    :return:
+        feature_map: 4-D tensor [number, height, width, channel]
+    """
     with tf.variable_scope(name):
         feature_map = tf.nn.conv2d(input=input_data,
                                    filter=kernel,
@@ -381,6 +396,106 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VAL
               % (name, shape[1], shape[2], shape[3]))
 
         return feature_map
+
+
+def truncation_layer(input_data, is_turnc, min_value, max_value, name):
+    """
+    the layer which is used for truncation
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param is_turnc: whether make truncation or not
+    :param min_value: min value for truncation
+    :param max_value: max value for truncation
+    :param name: the name of the truncation layer
+
+    :return:
+        feature_map: 4-D tensor [number, height, width, channel]
+    """
+    if is_turnc is True:
+        output = tf.clip_by_value(input_data, min_value, max_value, name)
+    else:
+        output = input_data
+
+    print("name: truncation layer, threshold_left: %d, threshold_right: %d" % (min_value, max_value))
+
+    return output
+
+
+def diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, name, padding="SAME"):
+    """
+    the layer which is used for difference
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param is_diff: whether make difference or not
+    :param is_diff_abs: whether make difference and abs or not
+    :param is_abs_diff: whether make abs and difference or not
+    :param order: the order of difference
+    :param direction: the direction of difference, "inter"(between row) or "intra"(between col)
+    :param name: the name of the layer
+    :param padding: the method of padding, default is "SAME"
+
+    :return:
+        feature_map: 4-D tensor [number, height, width, channel]
+    """
+
+    print("name: %s, is_diff: %r, is_diff_abs: %r, is_abs_diff: %r, order: %d, direction: %s"
+          % (name, is_diff, is_diff_abs, is_abs_diff, order, direction))
+
+    if order == 0:
+        return input_data
+    else:
+        if order == 1 and direction == "inter":
+            filter_diff = tf.constant(value=[1, -1],
+                                      dtype=tf.float32,
+                                      shape=[2, 1, 1, 1],
+                                      name="diff_inter_1")
+        elif order == 1 and direction == "intra":
+            filter_diff = tf.constant(value=[1, -1],
+                                      dtype=tf.float32,
+                                      shape=[1, 2, 1, 1],
+                                      name="diff_intra_1")
+        elif order == 2 and direction == "inter":
+            filter_diff = tf.constant(value=[1, -2, 1],
+                                      dtype=tf.float32,
+                                      shape=[3, 1, 1, 1],
+                                      name="diff_inter_2")
+        elif order == 2 and direction == "intra":
+            filter_diff = tf.constant(value=[1, -2, 1],
+                                      dtype=tf.float32,
+                                      shape=[1, 3, 1, 1],
+                                      name="diff_intra_2")
+        else:
+            filter_diff = tf.constant(value=[1],
+                                      dtype=tf.float32,
+                                      shape=[1, 1, 1, 1],
+                                      name="None")
+
+        if is_diff is True:
+            output = tf.nn.conv2d(input=input_data,
+                                  filter=filter_diff,
+                                  strides=[1, 1, 1, 1],
+                                  padding=padding)
+
+            return output
+
+        elif is_diff_abs is True:
+            output = tf.nn.conv2d(input=input_data,
+                                  filter=filter_diff,
+                                  strides=[1, 1, 1, 1],
+                                  padding=padding)
+            output = tf.abs(output)
+
+            return output
+
+        elif is_abs_diff is True:
+            input_data = tf.abs(input_data)
+            output = tf.nn.conv2d(input=input_data,
+                                  filter=filter_diff,
+                                  strides=[1, 1, 1, 1],
+                                  padding=padding)
+
+            return output
+
+        else:
+            return input_data
 
 
 def down_sampling(input_data, x_stride, y_stride, name, with_original=True, padding="VALID"):
@@ -422,15 +537,16 @@ def down_sampling(input_data, x_stride, y_stride, name, with_original=True, padd
 
     if with_original is True:
         input_shape = input_data.get_shape()
-        height, width, channel = input_shape[1].value, input_shape[2].value, input_shape[3].value
+        batch_size, height, width, channel = input_shape[0].value, input_shape[1].value, input_shape[2].value, input_shape[3].value
 
         ori1 = tf.slice(input_=input_data,
                         begin=[0, 0, 0, 0],
-                        size=[128, int(height / x_stride), int(width / y_stride), channel])
+                        size=[batch_size, int(height / x_stride), int(width / y_stride), channel])
 
         ori2 = tf.slice(input_=input_data,
                         begin=[0, int(height / x_stride), 0, 0],
-                        size=[128, int(height / x_stride), int(width / y_stride), channel])
+                        size=[batch_size, int(height / x_stride), int(width / y_stride), channel])
+
         conv_concat = tf.concat([ori1, ori2, conv1, conv2, conv3, conv4], 3, name=name)
     else:
         conv_concat = tf.concat([conv1, conv2, conv3, conv4], 3, name=name)
