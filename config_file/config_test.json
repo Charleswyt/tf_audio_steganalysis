@@ -1,31 +1,27 @@
 {
     "files_path": {
-        "cover_test_path": null,
-        "stego_test_path": null,
-        "model_path": null,
+        "cover_test_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/test",
+        "stego_test_path": "/home/user/data/audio/QMDCT/stego/EECS/EECS_B_320_W_3_H_7_ER_10/test",
+        "models_path": "/home/user/code/CatKing/steganalysis_CNN/models/steganalysis"
+    },
+    "index": {
+        "start_index_test": null,
+        "end_index_test": null
     },
     "mode_config": {
-        "gpu_selection": "auto",
+        "gpu_selection": "manu",
         "gpu": "0",
         "mode": "test",
-        "carrier": "audio",
+        "carrier": "qmdct",
         "network": "network1"
     },
     "hyper_parameters": {
-        "batch_size_test": 64,
+        "batch_size": 128,
         "class_num": 2
     },
-    "preprocessing_method": {
+    "shape": {
         "height": 200,
-        "width": 576,
-        "channel": 1,
-        "is_abs": false,
-        "is_trunc": false,
-        "is_diff": false,
-        "is_diff_abs": false,
-        "is_abs_diff": false,
-        "threshold": 15,
-        "order": 0,
-        "direction": 0
+        "width": 500,
+        "channel": 1
     }
 }

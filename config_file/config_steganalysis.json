@@ -1,30 +1,23 @@
 {
 	"files_path": {
-		"files_path": null,
-        "model_path": null,
+        "steganalysis_file_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/test/wav0001.txt",
+        "steganalysis_files_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/test",
+        "models_path": "/home/user/code/CatKing/steganalysis_CNN/models/steganalysis"
 	},
 	"mode_config": {
-		"gpu_selection": "auto",
+		"gpu_selection": "manu",
         "gpu": "0",
-        "mode": "train",
+        "mode": "steganalysis",
         "submode": "one",
-        "carrier": "audio",
+        "carrier": "qmdct",
         "network": "network1"
     },
     "hyper_parameters": {
         "class_num": 2
     },
-    "preprocessing_method": {
+    "shape": {
         "height": 200,
         "width": 576,
-        "channel": 1,
-        "is_abs": false,
-        "is_trunc": false,
-        "is_diff": false,
-        "is_diff_abs": false,
-        "is_abs_diff": false,
-        "threshold": 15,
-        "order": 0,
-        "direction": 0
+        "channel": 1
     }
 }
