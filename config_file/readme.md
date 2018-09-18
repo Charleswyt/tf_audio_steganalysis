@@ -19,7 +19,7 @@ Param                       | Function                          | option
   **learing_rate**          | initialized learing rate          | 1e-3(default)
  **epoch**                  | epoch of training                 | 500(default)
  seed                       | seed of random generation         | 1(defalut)
- **is_regulation**          | whether add regulation or not     | True(default), false
+ **is_regulation**          | whether add regulation or not     | True(default), False
  coeff_regulation           | coefficient of regulation         | 1e-3(default)
  loss_method                | method of loss funcion            | sigmoid_cross_entropy, softmax_cross_entropy, sparse_softmax_cross_entropy(default)
  class_num                  | number of classifier              | 2(default)
