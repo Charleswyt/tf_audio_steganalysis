@@ -15,7 +15,7 @@ import argparse
 """
 function:
         command_parse()                                     parse command line parameters
-        config_train_file_read                              read config json file for trainng
+        config_train_file_read                              read config json file for training
         config_test_file_read                               read config json file for test
         config_steganalysis_file_read                       read config json file for steganalysis
 """
@@ -35,43 +35,42 @@ def command_parse():
     # mode
     parser.add_argument("--gpu_selection", type=str, default="auto",
                         help="GPU selection mode, if \"auto\", no serial number is needed, otherwise appoint the serial number "
-                             "(default: auto, other choice is manual)")
+                             "(default: auto, another choice is manu)")
     parser.add_argument("--gpu", type=str, default="0", help="the index of GPU")
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
     parser.add_argument("--submode", type=str, default="one", help="one | batch (default one)")
     parser.add_argument("--carrier", type=str, default="qmdct", help="qmdct | image | audio (default qmdct)")
-    parser.add_argument("--network", type=str, default="network1", help="the index of the network (default: network1), "
+    parser.add_argument("--network", type=str, default="network1", help="the index of the network (default: wasdn), "
                                                                         "the detailed introduction of each network is in readme")
 
     # data info
-    parser.add_argument("--height", type=int, default=200, help="the height of the QMDCT matrix (default: 200)")
-    parser.add_argument("--width", type=int, default=576, help="the width of the QMDCT matrix (default: 576)")
-    parser.add_argument("--channel", type=int, default=1, help="the channel of the QMDCT matrix (default: 1)")
+    parser.add_argument("--height", type=int, default=200, help="the height of the input data matrix (default: 200)")
+    parser.add_argument("--width", type=int, default=576, help="the width of the input data matrix (default: 576)")
+    parser.add_argument("--channel", type=int, default=1, help="the channel of the input data matrix (default: 1)")
+
+    # index
     parser.add_argument("--start_index_train", type=int, default=None, help="the start index of file in train folders (default: None)")
     parser.add_argument("--end_index_train", type=int, default=None, help="the end index of file in train folders (default: None)")
     parser.add_argument("--start_index_valid", type=int, default=None, help="the start index of file in valid folders (default: None)")
     parser.add_argument("--end_index_valid", type=int, default=None, help="the end index of file in valid folders (default: None)")
-    parser.add_argument("--model_file_name", type=str, default="audio_steganalysis", help="model file name (default: audio_steganalysis)")
 
-    # test and steganalysis
+    # path of steganalysis file(s)
     parser.add_argument("--steganalysis_file_path", type=str, help="the file path used for steganalysis")
     parser.add_argument("--steganalysis_files_path", type=str, help="the files folder path used for steganalysis")
 
     # path of files
     parser.add_argument("--cover_train_path", type=str, help="the path of directory containing cover files for train")
-    parser.add_argument("--cover_valid_path", type=str, help="the path of directory containing cover files for valid")
+    parser.add_argument("--cover_valid_path", type=str, help="the path of directory containing cover files for validation")
     parser.add_argument("--cover_test_path", type=str, help="the path of directory containing cover files for test")
     parser.add_argument("--stego_train_path", type=str, help="the path of directory containing stego files for train")
-    parser.add_argument("--stego_valid_path", type=str, help="the path of directory containing stego files for valid")
+    parser.add_argument("--stego_valid_path", type=str, help="the path of directory containing stego files for validation")
     parser.add_argument("--stego_test_path", type=str, help="the path of directory containing stego files for test")
-    parser.add_argument("--model_path", type=str, help="the path of directory containing models")
-    parser.add_argument("--log_path", type=str, help="the path of directory containing logs")
+    parser.add_argument("--models_path", type=str, help="the path of directory containing models")
+    parser.add_argument("--logs_path", type=str, help="the path of directory containing logs")
+    parser.add_argument("--task_name", type=str, help="the name of task")
 
     # hyper parameters
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
-    parser.add_argument("--batch_size_train", type=int, default=64, help="batch size for train (default: 64 (32 cover/stego pairs))")
-    parser.add_argument("--batch_size_valid", type=int, default=64, help="batch size for valid (default: 64 (32 cover/stego pairs))")
-    parser.add_argument("--batch_size_test", type=int, default=64, help="batch size for test (default: 64 (32 cover/stego pairs))")
     parser.add_argument("--learning_rate", type=float, default=1e-3, help="the value of initialized learning rate (default: 1e-3 (0.001))")
     parser.add_argument("--seed", type=int, default=1, help="random seed (default: 1)")
     parser.add_argument("--is_regulation", type=bool, default=True, help="whether regulation or not (default: True)")
@@ -91,18 +90,6 @@ def command_parse():
     parser.add_argument("--max_to_keep", type=int, default=3, help="the number of models needed to be saved (default: 3)")
     parser.add_argument("--keep_checkpoint_every_n_hours", type=float, default=0.5, help="how often to keep checkpoints (default: 0.5)")
 
-    # pre-processing
-    parser.add_argument("--is_abs", type=bool, default=False, help="abs or not (default: False)")
-    parser.add_argument("--is_trunc", type=bool, default=False, help="truncation or not (default: False)")
-    parser.add_argument("--threshold", type=int, default=15, help="threshold (default: 15)")
-    parser.add_argument("--is_diff", type=bool, default=False, help="threshold (default: False)")
-    parser.add_argument("--order", type=int, default=2, help="the order of the difference (default: 2)")
-    parser.add_argument("--direction", type=int, default=0, help="0 - row, 1 - col (default: 0)")
-    parser.add_argument("--is_diff_abs", type=bool, default=False, help="abs or not after difference (default: False)")
-    parser.add_argument("--is_abs_diff", type=bool, default=False, help="difference or not after abs (default: False)")
-    parser.add_argument("--downsampling", type=bool, default=False, help="downsampling or not (default: False)")
-    parser.add_argument("--block", type=int, default=2, help=" (default: 2)")
-
     arguments = parser.parse_args()
 
     return arguments
@@ -121,6 +108,7 @@ def config_train_file_read(config_file_path):
                 self.stego_valid_path = file_content['files_path']['stego_valid_path']
                 self.models_path = file_content['files_path']['models_path']
                 self.logs_path = file_content['files_path']['logs_path']
+                self.task_name = file_content['files_path']['task_name']
 
                 # mode_config
                 self.gpu_selection = file_content['mode_config']['gpu_selection']
@@ -130,28 +118,19 @@ def config_train_file_read(config_file_path):
                 self.network = file_content['mode_config']['network']
 
                 # hyper_parameters
-                self.batch_size_train = file_content['hyper_parameters']['batch_size_train']
-                self.batch_size_valid = file_content['hyper_parameters']['batch_size_valid']
+                self.batch_size = file_content['hyper_parameters']['batch_size']
                 self.learning_rate = file_content['hyper_parameters']['learning_rate']
-                self.epoch = file_content['hyper_parameters']['epoch']
                 self.seed = file_content['hyper_parameters']['seed']
+                self.epoch = file_content['hyper_parameters']['epoch']
                 self.is_regulation = file_content['hyper_parameters']['is_regulation']
                 self.coeff_regulation = file_content['hyper_parameters']['coeff_regulation']
                 self.loss_method = file_content['hyper_parameters']['loss_method']
                 self.class_num = file_content['hyper_parameters']['class_num']
 
-                # preprocessing_method
-                self.height = file_content['preprocessing_method']['height']
-                self.width = file_content['preprocessing_method']['width']
-                self.channel = file_content['preprocessing_method']['channel']
-                self.is_abs = file_content['preprocessing_method']['is_abs']
-                self.is_trunc = file_content['preprocessing_method']['is_trunc']
-                self.is_diff = file_content['preprocessing_method']['is_diff']
-                self.is_diff_abs = file_content['preprocessing_method']['is_diff_abs']
-                self.is_abs_diff = file_content['preprocessing_method']['is_abs_diff']
-                self.threshold = file_content['preprocessing_method']['threshold']
-                self.order = file_content['preprocessing_method']['order']
-                self.direction = file_content['preprocessing_method']['direction']
+                # data info
+                self.height = file_content['shape']['height']
+                self.width = file_content['shape']['width']
+                self.channel = file_content['shape']['channel']
 
                 # learning_rate_method
                 self.decay_method = file_content['learning_rate_method']['decay_method']
@@ -183,7 +162,7 @@ def config_test_file_read(config_file_path):
                 # files_path
                 self.cover_test_path = file_content['files_path']['cover_test_path']
                 self.stego_test_path = file_content['files_path']['stego_test_path']
-                self.model_path = file_content['files_path']['model_path']
+                self.models_path = file_content['files_path']['models_path']
 
                 # mode_config
                 self.gpu_selection = file_content['mode_config']['gpu_selection']
@@ -193,21 +172,17 @@ def config_test_file_read(config_file_path):
                 self.network = file_content['mode_config']['network']
 
                 # hyper_parameters
-                self.batch_size_test = file_content['hyper_parameters']['batch_size_test']
+                self.batch_size = file_content['hyper_parameters']['batch_size']
                 self.class_num = file_content['hyper_parameters']['class_num']
 
-                # preprocessing_method
-                self.height = file_content['preprocessing_method']['height']
-                self.width = file_content['preprocessing_method']['width']
-                self.channel = file_content['preprocessing_method']['channel']
-                self.is_abs = file_content['preprocessing_method']['is_abs']
-                self.is_trunc = file_content['preprocessing_method']['is_trunc']
-                self.is_diff = file_content['preprocessing_method']['is_diff']
-                self.is_diff_abs = file_content['preprocessing_method']['is_diff_abs']
-                self.is_abs_diff = file_content['preprocessing_method']['is_abs_diff']
-                self.threshold = file_content['preprocessing_method']['threshold']
-                self.order = file_content['preprocessing_method']['order']
-                self.direction = file_content['preprocessing_method']['direction']
+                # shape of input data
+                self.height = file_content['shape']['height']
+                self.width = file_content['shape']['width']
+                self.channel = file_content['shape']['channel']
+
+                # index
+                self.start_index_test = file_content["index"]["start_index_test"]
+                self.end_index_test = file_content["index"]["end_index_test"]
 
         argument = Variable()
 
@@ -221,31 +196,25 @@ def config_steganalysis_file_read(config_file_path):
         class Variable:
             def __init__(self):
                 # files_path
-                self.files_path = file_content['files_path']['files_path']
-                self.model_path = file_content['files_path']['model_path']
+                self.steganalysis_file_path = file_content['files_path']['steganalysis_file_path']
+                self.steganalysis_files_path = file_content['files_path']['steganalysis_files_path']
+                self.models_path = file_content['files_path']['models_path']
 
                 # mode_config
                 self.gpu_selection = file_content['mode_config']['gpu_selection']
                 self.gpu = file_content['mode_config']['gpu']
                 self.mode = file_content['mode_config']['mode']
+                self.submode = file_content['mode_config']['submode']
                 self.carrier = file_content['mode_config']['carrier']
                 self.network = file_content['mode_config']['network']
 
                 # hyper_parameters
                 self.class_num = file_content['hyper_parameters']['class_num']
 
-                # preprocessing_method
-                self.height = file_content['preprocessing_method']['height']
-                self.width = file_content['preprocessing_method']['width']
-                self.channel = file_content['preprocessing_method']['channel']
-                self.is_abs = file_content['preprocessing_method']['is_abs']
-                self.is_trunc = file_content['preprocessing_method']['is_trunc']
-                self.is_diff = file_content['preprocessing_method']['is_diff']
-                self.is_diff_abs = file_content['preprocessing_method']['is_diff_abs']
-                self.is_abs_diff = file_content['preprocessing_method']['is_abs_diff']
-                self.threshold = file_content['preprocessing_method']['threshold']
-                self.order = file_content['preprocessing_method']['order']
-                self.direction = file_content['preprocessing_method']['direction']
+                # data info
+                self.height = file_content['shape']['height']
+                self.width = file_content['shape']['width']
+                self.channel = file_content['shape']['channel']
 
         argument = Variable()
 
