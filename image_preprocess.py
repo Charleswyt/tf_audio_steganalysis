@@ -10,7 +10,6 @@ Modified on 2018.08.27
 """
 
 import numpy as np
-from pre_process import *
 from skimage import io, util
 
 """
@@ -44,17 +43,20 @@ def image_info_show(image_file_path):
     plt.show()
 
 
-def image_read(image_file_path, height=None, width=None, as_grey=False):
+def image_read(image_file_path, height=None, width=None, channel=None):
     """
     read image
     :param image_file_path: the file path of image
     :param height: the height of image (default: None)
     :param width: the width of image (default: None)
-    :param as_grey: whether grays-cale or not (default: False)
+    :param channel: the channel of image (default: None)
     :return:
         image data ndarry type, shape: [height, width, channel]
     """
-    image = io.imread(image_file_path, as_grey=as_grey)
+    if channel == 1:
+        image = io.imread(image_file_path, as_grey=True)
+    else:
+        image = io.imread(image_file_path, as_grey=False)
 
     # reshape
     image_shape = np.shape(image)
@@ -67,24 +69,22 @@ def image_read(image_file_path, height=None, width=None, as_grey=False):
     return image
 
 
-def image_read_batch(image_files_list, height=None, width=None, as_grey=False):
+def image_read_batch(image_files_list, height=None, width=None, channel=None):
     """
     read images batch by batch
     :param image_files_list: image files list
     :param height: the height of images
     :param width: the width of images
-    :param as_grey: whether grays-cale or not (default: False)
+    :param channel: the channel of image (default: None)
     :return:
         data, a 4-D ndarray, [batch_size, height, width, channel]
     """
     files_num = len(image_files_list)
-    channel = 1 if as_grey is True else 3
-
     data = np.zeros([files_num, height, width, channel], dtype=np.float32)
 
     i = 0
     for image_file in image_files_list:
-        content = image_read(image_file, height=height, width=width, as_grey=as_grey)
+        content = image_read(image_file, height=height, width=width, channel=channel)
         data[i] = content
         i = i + 1
 
