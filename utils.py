@@ -14,9 +14,9 @@ import numpy as np
 from glob import glob
 import tensorflow as tf
 from file_preprocess import get_path_type
-from text_preprocess import text_read_batch
-from image_preprocess import image_read_batch
-from audio_preprocess import audio_read_batch
+from text_preprocess import text_read, text_read_batch
+from image_preprocess import image_read, image_read_batch
+from audio_preprocess import audio_read, audio_read_batch
 
 """
     function:
@@ -163,25 +163,46 @@ def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_lab
         yield datas, labels
 
 
-def get_data_batch(files_list, height, width, carrier="qmdct", as_grey=False, is_trunc=False, threshold=15):
+def get_data(file_path, height, width, channel, carrier="qmdct"):
+    """
+    read data batch by batch
+    :param file_path: path of file
+    :param height: the height of the data matrix
+    :param width: the width of the data matrix
+    :param channel: the channel of the data matrix
+    :param carrier: the type of carrier (qmdct | audio | image)
+
+    :return:
+    """
+
+    if carrier == "audio":
+        data = audio_read(audio_file_path=file_path)
+    elif carrier == "image":
+        data = image_read(image_file_path=file_path, height=height, width=width, channel=channel)
+    else:
+        data = text_read(text_file_path=file_path, height=height, width=width, channel=channel)
+
+    return data
+
+
+def get_data_batch(files_list, height, width, channel, carrier="qmdct"):
     """
     read data batch by batch
     :param files_list: files list (audio | image | text)
     :param height: the height of the data matrix
     :param width: the width of the data matrix
+    :param channel: the channel of the data matrix
     :param carrier: the type of carrier (qmdct | audio | image)
     :param as_grey: whether grays-cale or not (default: False)
-    :param is_trunc: whether make truncation or not
-    :param threshold: threshold of truncation
 
     :return:
     """
     if carrier == "audio":
         data = audio_read_batch(audio_files_list=files_list)
     elif carrier == "image":
-        data = image_read_batch(image_files_list=files_list, height=height, width=width, as_grey=as_grey)
+        data = image_read_batch(image_files_list=files_list, height=height, width=width, channel=channel)
     else:
-        data = text_read_batch(text_files_list=files_list, height=height, width=width, is_trunc=is_trunc, threshold=threshold)
+        data = text_read_batch(text_files_list=files_list, height=height, width=width, channel=channel)
 
     return data
 
@@ -262,7 +283,7 @@ def get_model_file_path(path):
         the path of trained tensorflow model
     """
     if get_path_type(path) == "file":
-        return path
+        return path.split(".")[0]
     elif get_path_type(path) == "folder":
         return tf.train.latest_checkpoint(path)
     else:
