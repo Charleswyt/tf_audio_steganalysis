@@ -2,10 +2,11 @@
 	"files_path": {
         "cover_train_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/train",
         "cover_valid_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/validation",
-        "stego_train_path": "/home/user/data/audio/QMDCT/stego/EECS/EECS_B_320_W_3_H_7_ER_10/train",
-        "stego_valid_path": "/home/user/data/audio/QMDCT/stego/EECS/EECS_B_320_W_3_H_7_ER_10/validation",
+        "stego_train_path": "/home/user/data/audio/QMDCT/stego/EECS/EECS_B_320_W_4_H_7_ER_10/train",
+        "stego_valid_path": "/home/user/data/audio/QMDCT/stego/EECS/EECS_B_320_W_4_H_7_ER_10/validation",
         "models_path": "/home/user/code/CatKing/steganalysis_CNN/models/steganalysis",
-        "logs_path": "/home/user/code/CatKing/steganalysis_CNN/logs/steganalysis"
+        "logs_path": "/home/user/code/CatKing/steganalysis_CNN/logs/steganalysis",
+        "task_name": "EECS_B_320_W_4_H_7_ER_10"
     },
     "index": {
         "start_index_train": null,
@@ -15,7 +16,7 @@
     },
 	"mode_config": {
 		"gpu_selection": "manu",
-        "gpu": "2",
+        "gpu": "3",
         "mode": "train",
         "carrier": "qmdct",
         "network": "downsampling_network1"

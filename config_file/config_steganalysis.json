@@ -1,23 +1,23 @@
 {
 	"files_path": {
-        "steganalysis_file_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/test/wav0001.txt",
+        "steganalysis_file_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/test/wav10s_32002.txt",
         "steganalysis_files_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/test",
-        "models_path": "/home/user/code/CatKing/steganalysis_CNN/models/steganalysis"
+        "models_path": "/home/user/code/CatKing/steganalysis_CNN/models/steganalysis/downsampling_network1-3600.data-00000-of-00001"
 	},
 	"mode_config": {
 		"gpu_selection": "manu",
         "gpu": "0",
         "mode": "steganalysis",
-        "submode": "one",
+        "submode": "batch",
         "carrier": "qmdct",
-        "network": "network1"
+        "network": "downsampling_network1"
     },
     "hyper_parameters": {
         "class_num": 2
     },
     "shape": {
         "height": 200,
-        "width": 576,
+        "width": 500,
         "channel": 1
     }
 }

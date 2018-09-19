@@ -13,7 +13,7 @@
         "gpu": "0",
         "mode": "test",
         "carrier": "qmdct",
-        "network": "network1"
+        "network": "downsampling_network1"
     },
     "hyper_parameters": {
         "batch_size": 128,
