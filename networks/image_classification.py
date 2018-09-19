@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-Created on
-Finished on
-Modified on
+Created on 2018.08.19
+Finished on 2018.08.19
+Modified on 
 
 @author: Wang Yuntao
 """
@@ -22,7 +22,7 @@ from layer import *
 
 def le_net(input_data, class_num=10):
     """
-        Le-Net for image classification
+    Le-Net for image classification
     """
     print("le_net: Remove the 1x1 conv layers.")
     print("Network Structure: ")
@@ -46,7 +46,7 @@ def le_net(input_data, class_num=10):
 
 def vgg16(input_data, class_num=4096):
     """
-        vgg16 for image classification
+    vgg16 for image classification
     """
     print("vgg16: Remove the 1x1 conv layers.")
     print("Network Structure: ")
@@ -86,7 +86,7 @@ def vgg16(input_data, class_num=4096):
 
 def vgg19(input_data, class_num=4096):
     """
-        vgg19 for image classification
+    vgg19 for image classification
     """
     print("vgg19: Remove the 1x1 conv layers.")
     print("Network Structure: ")
