@@ -3,15 +3,17 @@
 
 import time
 from utils import *
-from networks.tested import *
+from networks.networks import networks
+from file_preprocess import get_file_name
 from networks.audio_steganalysis import *
 from networks.image_steganalysis import *
-from file_preprocess import get_file_name
+from networks.tested_steganalysis import *
+from networks.image_classification import *
 
 """
 Created on 2017.11.27
 Finished on 2017.11.30
-Modified on 2018.08.29
+Modified on 2018.09.18
 
 @author: Wang Yuntao
 """
@@ -32,16 +34,24 @@ def run_mode(args):
         test(args)
     elif args.mode == "steganalysis":                           # steganalysis mode
         if args.submode == "one":
-            steganalysis_one(args)
+            if get_path_type(args.steganalysis_file_path) == "file":
+                steganalysis_one(args)
+            else:
+                print("The submode miss-matches the file path, please try again.")
+
         if args.submode == "batch":
-            steganalysis_batch(args)
+            if get_path_type(args.steganalysis_files_path) == "folder":
+                steganalysis_batch(args)
+            else:
+                print("The submode miss-matches the files path, please try again.")
     else:
         print("Mode Error")
 
 
 def train(args):
     # hyper parameters
-    batch_size_train, batch_size_valid = args.batch_size_train, args.batch_size_valid       # batch size (train and valid)
+    batch_size = args.batch_size                                                            # batch size
+    height, width, channel = args.height, args.width, args.channel                          # height and width of input matrix
     init_learning_rate = args.learning_rate                                                 # initialized learning rate
     n_epoch = args.epoch                                                                    # epoch
     decay_method = args.decay_method                                                        # decay method
@@ -50,7 +60,8 @@ def train(args):
     is_regulation = args.is_regulation                                                      # regulation or not
     coeff_regulation = args.coeff_regulation                                                # the gain of regulation
     classes_num = args.class_num                                                            # classes number
-    carrier = args.carrier                                                                  # carrier (audio | image)
+    carrier = args.carrier                                                                  # carrier (qmdct | audio | image)
+    task_name = args.task_name                                                              # name of task
 
     max_to_keep = args.max_to_keep                                                          # maximum number of recent checkpoints to keep
     keep_checkpoint_every_n_hours = args.keep_checkpoint_every_n_hours                      # how often to keep checkpoints
@@ -65,10 +76,6 @@ def train(args):
                                   name="global_step",
                                   dtype=tf.int32)                                           # global step (Variable 变量不能直接分配GPU资源)
 
-    # pre processing
-    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs, is_abs_diff = \
-        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs, args.is_abs_diff
-
     # learning rate decay
     learning_rate = learning_rate_decay(init_learning_rate=init_learning_rate,
                                         decay_method=decay_method,
@@ -76,21 +83,16 @@ def train(args):
                                         decay_steps=decay_steps,
                                         decay_rate=decay_rate)                             # learning rate
 
-    # the height and width of input data
-    height, width, channel = args.height, args.width, args.channel                         # the height, width and channel of the QMDCT matrix
-    if (is_diff is True or is_abs_diff is True or is_diff_abs is True) and direction == 0:
-        height_new, width_new = height - order, width
-    elif (is_diff is True or is_abs_diff is True or is_diff_abs is True) and direction == 1:
-        height_new, width_new = height, width - order
-    else:
-        height_new, width_new = height, width
-
     # placeholder
-    data = tf.placeholder(dtype=tf.float32, shape=(None, height_new, width_new, channel), name="QMDCTs")
-    labels = tf.placeholder(dtype=tf.int32, shape=(None, ), name="labels")
+    data = tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width, channel), name="data")
+    labels = tf.placeholder(dtype=tf.int32, shape=(batch_size, ), name="label")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network
+    if not args.network in networks:
+        print("Network miss-match, please try again")
+        return False
+
     command = args.network + "(data, classes_num, is_bn)"
     logits = eval(command)
 
@@ -108,8 +110,8 @@ def train(args):
     models_file_path = args.models_path
     logs_path = args.logs_path
 
-    log_path = fullfile(logs_path, args.network)
-    model_file_path = fullfile(models_file_path, args.network)
+    log_path = fullfile(fullfile(logs_path, args.network), task_name)
+    model_file_path = fullfile(fullfile(models_file_path, args.network), task_name)
 
     # information output
     print("train files path(cover): %s" % cover_train_path)
@@ -118,9 +120,8 @@ def train(args):
     print("valid files path(stego): %s" % stego_valid_path)
     print("model files path: %s" % model_file_path)
     print("log files path: %s" % log_path)
-    print("batch size(train): %d, batch size(validation): %d, total epoch: %d, class number: %d, initial learning rate: %f, "
-          "decay method: %s, decay rate: %f, decay steps: %d" % (batch_size_train, batch_size_valid, n_epoch, classes_num,
-                                                                 init_learning_rate, decay_method, decay_rate, decay_steps))
+    print("batch size: %d, total epoch: %d, class number: %d, initial learning rate: %f, decay method: %s, decay rate: %f, decay steps: %d"
+          % (batch_size, n_epoch, classes_num, init_learning_rate, decay_method, decay_rate, decay_steps))
     print("start load network...")
 
     with tf.device("/cpu:0"):
@@ -138,7 +139,7 @@ def train(args):
     sess.run(init)
 
     print("Start training...")
-    print("Input data: (%d, %d, %d)" % (height_new, width_new, channel))
+    print("Input data: (%d, %d, %d)" % (height, width, channel))
 
     for epoch in range(n_epoch):
         start_time = time.time()
@@ -160,14 +161,9 @@ def train(args):
         # train
         train_iterations, train_loss, train_accuracy = 0, 0, 0
         for x_train_batch, y_train_batch in \
-                minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size_train):
+                minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size):
             # data read and process
-            x_train_data = get_data_batch(x_train_batch, height=height_new, width=width_new, carrier=carrier,
-                                          is_abs=is_abs, is_diff=is_diff, is_abs_diff=is_abs_diff, is_diff_abs=is_diff_abs,
-                                          order=order, direction=direction, is_trunc=is_trunc, threshold=threshold)
-
-            # data preprocessing
-
+            x_train_data = get_data_batch(x_train_batch, height=height, width=width, channel=channel, carrier=carrier)
 
             # get the accuracy and loss
             _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op],
@@ -181,16 +177,14 @@ def train(args):
 
             print("epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f" % (epoch + 1, train_iterations, err, ac))
 
-        print("==================================================================================")
+        print("====================================================================================")
 
         # validation
         valid_iterations, valid_loss, valid_accuracy = 0, 0, 0
         for x_valid_batch, y_valid_batch in \
-                minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size_valid):
+                minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size):
             # data read and process
-            x_valid_data = get_data_batch(x_valid_batch, height=height_new, width=width_new, carrier=carrier,
-                                          is_abs=is_abs, is_diff=is_diff, is_abs_diff=is_abs_diff, is_diff_abs=is_diff_abs,
-                                          order=order, direction=direction, is_trunc=is_trunc, threshold=threshold)
+            x_valid_data = get_data_batch(x_valid_batch, height=height, width=width, channel=channel, carrier=carrier)
 
             # get the accuracy and loss
             err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
@@ -229,32 +223,27 @@ def train(args):
 
 
 def test(args):
-    carrier = args.carrier
-    batch_size_test = args.batch_size_test
-
-    # pre processing
-    is_abs, is_trunc, threshold, is_diff, order, direction, is_diff_abs = \
-        args.is_abs, args.is_trunc, args.threshold, args.is_diff, args.order, args.direction, args.is_diff_abs
-
-    # the height and width of input data
-    height, width, channel = args.height, args.width, 1  # the height, width and channel of the QMDCT matrix
-    if is_diff is True and direction == 0:
-        height_new, width_new = height - order, width
-    elif is_diff is True and direction == 1:
-        height_new, width_new = height, width - order
-    else:
-        height_new, width_new = height, width
+    # hyper parameters
+    batch_size = args.batch_size                                        # batch size
+    height, width, channel = args.height, args.width, args.channel      # height and width of input matrix
+    carrier = args.carrier                                              # carrier (qmdct | audio | image)
+    classes_num = args.class_num                                        # classes number
+    start_index_test, end_index_test = args.start_index_test, args.end_index_test
 
     # path
     cover_test_files_path = args.cover_test_path
     stego_test_files_path = args.stego_test_path
 
     # placeholder
-    data = tf.placeholder(dtype=tf.float32, shape=(None, height_new, width_new, channel), name="QMDCTs")
-    labels = tf.placeholder(dtype=tf.int32, shape=(None, ), name="labels")
+    data = tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width, channel), name="data")
+    labels = tf.placeholder(dtype=tf.int32, shape=(batch_size, ), name="label")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network
+    if not args.network in networks:
+        print("Network miss-match, please try again")
+        return False
+
     command = args.network + "(data, 2, is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
@@ -265,26 +254,26 @@ def test(args):
     with tf.Session() as sess:
         # load model
         sess.run(tf.global_variables_initializer())
-        if args.model_file_path is None and args.model_files_path is not None:
-            model_file_path = tf.train.latest_checkpoint(args.model_files_path)
-        elif args.model_file_path is not None:
-            model_file_path = args.model_file_path
-        else:
-            model_file_path = None
+        model_file_path = get_model_file_path(args.models_path)
 
         if model_file_path is None:
             print("No model is loaded successfully.")
         else:
             model.restore(sess, model_file_path)
             print("The model is loaded successfully, model file: %s" % model_file_path)
+            # read files list (train)
             cover_test_data_list, cover_test_label_list, stego_test_data_list, stego_test_label_list = read_data(cover_test_files_path,
-                                                                                                                 stego_test_files_path)
+                                                                                                                 stego_test_files_path,
+                                                                                                                 start_index_test,
+                                                                                                                 end_index_test)
+            if len(cover_test_data_list) < batch_size:
+                batch_size = len(cover_test_data_list)
+
             test_iterations, test_accuracy = 0, 0
             for x_test_batch, y_test_batch in \
-                    minibatches(cover_test_data_list, cover_test_label_list, stego_test_data_list, stego_test_label_list, batch_size_test):
+                    minibatches(cover_test_data_list, cover_test_label_list, stego_test_data_list, stego_test_label_list, batch_size):
                 # data read and process
-                x_test_data = get_data(x_test_batch, height, width, carrier=carrier, is_diff=is_diff, order=order, direction=direction, is_diff_abs=is_diff_abs,
-                                       is_trunc=is_trunc, threshold=threshold)
+                x_test_data = get_data_batch(x_test_batch, height=height, width=width, channel=channel, carrier=carrier)
 
                 # get the accuracy and loss
                 acc = sess.run(accuracy, feed_dict={data: x_test_data, labels: y_test_batch, is_bn: True})
@@ -294,29 +283,27 @@ def test(args):
                 print("Batch-%d, accuracy: %f" % (test_iterations, acc))
 
             test_accuracy_average = test_accuracy / test_iterations
-            print("Test accuracy: %.2f%%" % 100 * test_accuracy_average)
+            print("Test accuracy: %.2f%%" % (100. * test_accuracy_average))
 
 
 def steganalysis_one(args):
-    # the info of carrier
-    carrier = args.carrier
-    test_file_path = args.test_file_path
+    # hyper parameters
+    height, width, channel = args.height, args.width, args.channel      # height and width of input matrix
+    carrier = args.carrier                                              # carrier (qmdct | audio | image)
+    classes_num = args.class_num                                        # classes number
 
-    # pre-process
-    is_diff, order, direction = args.is_diff, args.order, args.direction
-
-    # the height, width and channel of the QMDCT matrix
-    height, width, channel = args.height, args.width, args.channel
-    if is_diff is True and direction == 0:
-        height_new, width_new = height - order, width
-    elif is_diff is True and direction == 1:
-        height_new, width_new = height, width - order
-    else:
-        height_new, width_new = height, width
+    # path
+    steganalysis_file_path = args.steganalysis_file_path
 
     # placeholder
-    data = tf.placeholder(tf.float32, [None, height_new, width_new, channel], name="QMDCTs")
+    data = tf.placeholder(dtype=tf.float32, shape=(1, height, width, channel), name="data")
+    labels = tf.placeholder(dtype=tf.int32, shape=(1,), name="label")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
+
+    # initialize the network
+    if not args.network in networks:
+        print("Network miss-match, please try again")
+        return False
 
     # network
     command = args.network + "(data, 2, is_bn)"
@@ -327,66 +314,49 @@ def steganalysis_one(args):
     with tf.Session() as sess:
         # load model
         sess.run(tf.global_variables_initializer())
-        if args.model_file_path is None and args.model_files_path is not None:
-            model_file_path = tf.train.latest_checkpoint(args.model_files_path)
-        elif args.model_file_path is not None:
-            model_file_path = args.model_file_path
-        else:
-            model_file_path = None
-
+        model_file_path = get_model_file_path(args.model_path)
+        print(model_file_path)
         if model_file_path is None:
             print("No model is loaded successfully.")
         else:
             model.restore(sess, model_file_path)
             print("The model is loaded successfully, model file: %s" % model_file_path)
 
-            # predict
-            if carrier == "audio":
-                media = read_text(test_file_path, width=width, is_diff=args.is_diff,
-                                  order=args.order, direction=args.direction)
-            elif carrier == "image":
-                media = io.imread(test_file_path)
-            else:
-                media = None
+            steganalysis_data = get_data_batch([steganalysis_file_path], width=width, height=height, channel=channel, carrier=carrier)
 
-            if media is None:
+            if steganalysis_data is None:
                 print("No model can be used for this carrier. (need image or audio)")
             else:
-                media_name = get_file_name(test_file_path, sep="\\")
-                media = np.reshape(media, [1, height_new, width_new, channel])
-                ret = sess.run(logits, feed_dict={data: media, is_bn: False})
+                file_name = get_file_name(steganalysis_file_path)
+                ret = sess.run(logits, feed_dict={data: steganalysis_data, is_bn: False})
                 result = np.argmax(ret, 1)
                 prob = 100 * ret[0][result]
 
-                media_label = args.label
                 if result[0] == 0:
-                    print("file name: %s, result: cover, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
+                    print("file name: %s, result: cover, prob of prediction: %.2f%%" % (file_name, prob))
 
                 if result[0] == 1:
-                    print("file name: %s, result: stego, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
+                    print("file name: %s, result: stego, prob of prediction: %.2f%%" % (file_name, prob))
 
 
 def steganalysis_batch(args):
-    # the info of carrier
-    carrier = args.carrier
-    test_files_path = args.test_files_path
-    label_file_path = args.label_file_path
+    # hyper parameters
+    height, width, channel = args.height, args.width, args.channel      # height and width of input matrix
+    carrier = args.carrier                                              # carrier (qmdct | audio | image)
+    classes_num = args.class_num                                        # classes number
 
-    # pre-process
-    is_diff, order, direction = args.is_diff, args.order, args.direction
-
-    # the height, width and channel of the QMDCT matrix
-    height, width, channel = args.height, args.width, args.channel
-    if is_diff is True and direction == 0:
-        height_new, width_new = height - order, width
-    elif is_diff is True and direction == 1:
-        height_new, width_new = height, width - order
-    else:
-        height_new, width_new = height, width
+    # path
+    steganalysis_files_path = args.steganalysis_files_path
 
     # placeholder
-    data = tf.placeholder(tf.float32, [None, height_new, width_new, channel], name="QMDCTs")
+    data = tf.placeholder(dtype=tf.float32, shape=(1, height, width, channel), name="data")
+    labels = tf.placeholder(dtype=tf.int32, shape=(1,), name="label")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
+
+    # initialize the network
+    if not args.network in networks:
+        print("Network miss-match, please try again")
+        return False
 
     # network
     command = args.network + "(data, 2, is_bn)"
@@ -397,12 +367,7 @@ def steganalysis_batch(args):
     with tf.Session() as sess:
         # load model
         sess.run(tf.global_variables_initializer())
-        if args.model_file_path is None and args.model_files_path is not None:
-            model_file_path = tf.train.latest_checkpoint(args.model_files_path)
-        elif args.model_file_path is not None:
-            model_file_path = args.model_file_path
-        else:
-            model_file_path = None
+        model_file_path = get_model_file_path(args.models_path)
 
         if model_file_path is None:
             print("No model is loaded successfully.")
@@ -410,45 +375,19 @@ def steganalysis_batch(args):
             model.restore(sess, model_file_path)
             print("The model is loaded successfully, model file: %s" % model_file_path)
 
-            test_file_list = get_files_list(test_files_path)
+            file_list = get_files_list(steganalysis_files_path)
+            print("files path: %s" % steganalysis_files_path)
 
-            # get file label
-            if label_file_path is not None:
-                labels = list()
-                with open(label_file_path) as file:
-                    for line in file.readlines():
-                        labels.append(int(line))
-            else:
-                labels = -np.ones([image_num, 1])
+            for file_path in file_list:
+                steganalysis_data = get_data_batch([file_path], width=width, height=height, channel=channel, carrier=carrier)
 
-            results, number = list(), 0
-            for test_file in test_file_list:
-                # predict
-                if carrier == "audio":
-                    media = read_text(test_file, width=width, is_diff=args.is_diff,
-                                      order=args.order, direction=args.direction)
-                elif carrier == "image":
-                    media = io.imread(test_file)
-                else:
-                    media = None
+                file_name = get_file_name(file_path)
+                ret = sess.run(logits, feed_dict={data: steganalysis_data, is_bn: False})
+                result = np.argmax(ret, 1)
+                prob = 100 * ret[0][result]
 
-                if media is None:
-                    print("No model can be used for this carrier. (need image or audio)")
-                else:
-                    media_name = get_file_name(test_file, sep="\\")
-                    media = np.reshape(media, [1, height_new, width_new, channel])
-                    ret = sess.run(logits, feed_dict={data: media, is_bn: False})
-                    result = np.argmax(ret, 1)
-                    prob = 100 * ret[0][result]
-                    results.append(result[0])
+                if result[0] == 0:
+                    print("file name: %s, result: cover, prob of prediction: %.2f%%" % (file_name, prob))
 
-                    media_label = labels[number]
-                    if result[0] == 0:
-                        print("file name: %s, result: cover, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
-
-                    if result[0] == 1:
-                        print("file name: %s, result: stego, label: %r, prob of prediction: %.2f%%" % (media_name, media_label, prob))
-
-                    number += 1
-            accuracy = 100 * (np.count_nonzero(np.array(results) == labels) / len(results))
-            print("Accuracy = %.2f%%" % accuracy)
+                if result[0] == 1:
+                    print("file name: %s, result: stego, prob of prediction: %.2f%%" % (file_name, prob))
