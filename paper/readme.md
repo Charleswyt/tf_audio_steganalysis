@@ -8,7 +8,6 @@ All steganographic algorithms are coded by Kun Yang (E-Mail: yangkun9076@iie.ac.
 The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1rYCzJRksHkgbOOYI9MqQjA) <br>
 The *extraction password* is "**z28d**".
 
-
 ## The method of pre-processing
     
 There are positive and negative values in QMDCT coefficients matrix. The values in interval **[-15, 15]** is modified.

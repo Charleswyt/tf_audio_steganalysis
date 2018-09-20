@@ -16,6 +16,13 @@ tensorflow-gpu==1.4 or later, numpy, pandas, matplotlib, scikit-image, scikit-le
 
 You can use command **pip install -r requirements.txt** to install all packages mentioned above. If you don't want to change your version of tensorflow, you can use **virtualenv** to create a new python run environment.
 
+## How to use
+1. install [**python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/) and add the path into the environment variable
+2. **GPU** run environment [configure](https://blog.csdn.net/yhaolpz/article/details/71375762?locationNum=14&fps=1) if train the network (optional)
+3. install all dependent packages mentioned above (open setup/requirements.txt and input "pip install -r requirements into your cmd window")
+4. **run** the code as the [example]((https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/config_file)) as follows
+5. use **tensorboard** to visualize the train process such as the accuracy and loss curve of train and valid. The command is "**tensorboard --logdir=/path/to/log-directory**"
+
 ## File description
 ID      |   File                    |   Function
 :-      |   :-                      |    :-
@@ -39,13 +46,6 @@ ID      |   File                    |   Function
 18      |   tools                   |   some useful tools in this folder, which are used to QMDCT coefficients extraction and others
 19      |   data_processing         |   the scripts in this folder are used to make dataset
 20      |   config_file             |   three files, config_train, config_test and config_steganalysis, in this folder are uesd to send the paramters into the network, like the usage in Caffe
-
-## How to use
-1. install [**python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/) and add the path into the environment variable
-2. **GPU** run environment [configure](https://blog.csdn.net/yhaolpz/article/details/71375762?locationNum=14&fps=1) if train the network (optional)
-3. install all dependent packages mentioned above (open setup/requirements.txt and input "pip install -r requirements into your cmd window")
-4. **run** the code as the [example]((https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/config_file)) as follows
-5. use **tensorboard** to visualize the train process such as the accuracy and loss curve of train and valid. The command is "**tensorboard --logdir=/path/to/log-directory**"
 
 ## Reference
 **[1]** **tensorflow** API: https://www.tensorflow.org/ <br>
