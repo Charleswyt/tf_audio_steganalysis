@@ -64,4 +64,79 @@ Param                       | Function                          | option
  **height**                 | height of input data matrix       | -
  **width**                  | width of input data matrix        | -
  **channel**                | channel of input data matrix      | 1(default), 3
+
+### json mode
+    Example(train):
+    sudo python main.py (train)
  
+ ---
+    Example(test):
+    sudo python main.py test
+
+---
+    Example(steganalysis):
+    sudo python main.py steganalysis
+
+### command line mode
+
+    Example(train):
+    sudo python main.py \
+    --mode train \
+    --network wasdn \
+    --carrier qmdct \
+    --gpu_selection manu \
+    --gpu 0 \
+    --height 200 \
+    --width 380 \
+    --channel 1 \
+    --batch_size 64 \
+    --cover_train_path xxx \
+    --cover_valid_path xxx \
+    --stego_train_path xxx \
+    --stego_valid_path xxx \
+    --models_path xxx \
+    --logs_path xxx \
+    --task_name xxx \
+---
+    Example(test): 
+    sudo python main.py \
+    --mode test \
+    --network wasdn \
+    --carrier qmdct \
+    --gpu_selection manu \
+    --gpu 0 \
+    --height 200 \
+    --width 380 \
+    --channel 1 \
+    --batch_size 64 \
+    --cover_test_path xxx \
+    --stego_test_path xxx \
+    --models_path xxx \
+---
+    Example(steganalysis for one): 
+    sudo python main.py \
+    --mode steganalysis \
+    --submode one \
+    --network wasdn \
+    --carrier qmdct \
+    --gpu_selection manu \
+    --gpu 0 \
+    --height 200 \
+    --width 380 \
+    --channel 1 \
+    --steganalysis_file_path xxx \
+    --models_path xxx \
+---
+    Example(steganalysis for batch): 
+    sudo python main.py \
+    --mode steganalysis \
+    --submode batch \
+    --network wasdn \
+    --carrier qmdct \
+    --gpu_selection manu \
+    --gpu 0 \
+    --height 200 \
+    --width 380 \
+    --channel 1 \
+    --steganalysis_files_path xxx \
+    --models_path xxx \

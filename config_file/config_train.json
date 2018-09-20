@@ -16,7 +16,7 @@
     },
 	"mode_config": {
 		"gpu_selection": "manu",
-        "gpu": "3",
+        "gpu": "0",
         "mode": "train",
         "carrier": "qmdct",
         "network": "downsampling_network1"

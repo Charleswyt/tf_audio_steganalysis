@@ -113,7 +113,11 @@ def train(args):
     log_path = fullfile(fullfile(logs_path, args.network), task_name)
     model_file_path = fullfile(fullfile(models_file_path, args.network), task_name)
 
-    # information output
+    # create the path
+    if not os.path.exists(model_file_path):
+        os.mkdir(model_file_path)
+
+        # information output
     print("train files path(cover): %s" % cover_train_path)
     print("valid files path(cover): %s" % cover_valid_path)
     print("train files path(stego): %s" % stego_train_path)
