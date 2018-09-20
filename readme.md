@@ -5,7 +5,7 @@ Hope we can have a friendly communication.
 
 This project is a tensorflow implementation of recent work, you can also design your own network via this platform.
 + [CNN-based Steganalysis of MP3 Steganography in the Entropy
-Code Domain](https://dl.acm.org/citation.cfm?id=3206011) [IH & MMSec 2018, Best Paper Award]
+Code Domain](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/CNN-based%20Steganalysis%20of%20MP3%20Steganography%20in%20the%20Entropy%20Code%20Domain) [IH & MMSec 2018, Best Paper Award]
 **[[paper (ACM)](https://dl.acm.org/citation.cfm?id=3206011)]**
 **[[paper (pdf)](http://www.media-security.net/?p=809)]**
 **[[Others](http://www.media-security.net/?p=809)]**
