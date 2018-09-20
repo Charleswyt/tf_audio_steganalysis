@@ -19,7 +19,7 @@ The ratio of values in **[-15, 15]** is more than **99%**, as the figure shown. 
 The proportion of zero value is far greater than others, so we remove the zero value in the right figure for better visual effects.
 
 ## Steganalysis algorithms
-All eganalysis algorithms are vailable via [audio_steganalysis_ml](https://github.com/Charleswyt/audio_steganalysis_ml).
+All steganalysis algorithms are vailable via [audio_steganalysis_ml](https://github.com/Charleswyt/audio_steganalysis_ml).
 * Qiao<sup>[4]</sup>
 * MDI2<sup>[5]</sup>
 * ADOPT<sup>[6]</sup>
