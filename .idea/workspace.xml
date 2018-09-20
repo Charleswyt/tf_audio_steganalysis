@@ -3,8 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="c2d43106-d1ec-4b75-a6d9-339f7e1bcfc5" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Charles_CatKing.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Charles_CatKing.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_scipt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config_file/config_train.json" beforeDir="false" afterPath="$PROJECT_DIR$/config_file/config_train.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jupyter/.ipynb_checkpoints/Untitled2-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/jupyter/.ipynb_checkpoints/Untitled2-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jupyter/Untitled2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/jupyter/Untitled2.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -16,12 +21,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/tf_audio_steganalysis$feature_selection.coverage" NAME="feature_selection Coverage Results" MODIFIED="1526172767413" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/steganalysis_CNN$main.coverage" NAME="main Coverage Results" MODIFIED="1515134520483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/tf_audio_steganalysis$main.coverage" NAME="main Coverage Results" MODIFIED="1527336720031" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/tf_audio_steganalysis$run.coverage" NAME="run Coverage Results" MODIFIED="1527336709728" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/steganalysis_CNN$utils.coverage" NAME="utils Coverage Results" MODIFIED="1515055529716" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/tf_audio_steganalysis$manager.coverage" NAME="manager Coverage Results" MODIFIED="1524210343465" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tf_audio_steganalysis$run.coverage" NAME="run Coverage Results" MODIFIED="1527336709728" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tf_audio_steganalysis$main.coverage" NAME="main Coverage Results" MODIFIED="1527336720031" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tf_audio_steganalysis$feature_selection.coverage" NAME="feature_selection Coverage Results" MODIFIED="1526172767413" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -45,8 +50,41 @@
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4000">
-              <caret line="20" column="3" lean-forward="true" selection-start-line="20" selection-start-column="3" selection-end-line="20" selection-end-column="3" />
+            <state relative-caret-position="300">
+              <caret line="198" column="26" lean-forward="true" selection-start-line="198" selection-start-column="26" selection-end-line="198" selection-end-column="26" />
+              <folding>
+                <element signature="e#147#156#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="325">
+              <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
+              <folding>
+                <element signature="e#145#154#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="run.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/run.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="200">
+              <caret line="153" column="11" lean-forward="true" selection-start-line="153" selection-start-column="11" selection-end-line="153" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1075">
+              <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
               <folding>
                 <element signature="e#146#155#0" expanded="true" />
               </folding>
@@ -54,11 +92,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="distributed.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/distributed.py">
+      <file leaf-file-name="tested_steganalysis.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/networks/tested_steganalysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="26" column="3" lean-forward="true" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="3" />
+            <state relative-caret-position="425">
+              <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config_train.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config_file/config_train.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-575">
+              <caret line="7" column="79" selection-start-line="7" selection-start-column="79" selection-end-line="7" selection-end-column="79" />
             </state>
           </provider>
         </entry>
@@ -66,47 +113,29 @@
       <file leaf-file-name="file_preprocess.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/file_preprocess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="79" column="12" lean-forward="true" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="12" />
+            <state relative-caret-position="1825">
+              <caret line="75" column="17" selection-start-line="75" selection-start-column="4" selection-end-line="75" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="audio_steganalysis.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/networks/audio_steganalysis.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="375">
+              <caret line="16" column="73" selection-start-line="16" selection-start-column="73" selection-end-line="16" selection-end-column="73" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="layer.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/layer.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7375">
+              <caret line="298" column="64" selection-start-line="298" selection-start-column="53" selection-end-line="298" selection-end-column="64" />
               <folding>
-                <element signature="e#48#57#0" expanded="true" />
+                <element signature="e#48#70#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="filters.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/filters.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="samples_make.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/samples_make.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="10" selection-start-line="10" selection-end-line="10" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test_script.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_script.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
             </state>
           </provider>
         </entry>
@@ -114,29 +143,11 @@
       <file leaf-file-name="text_preprocess.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/text_preprocess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="310">
-              <caret line="69" column="17" lean-forward="true" selection-start-line="69" selection-start-column="17" selection-end-line="69" selection-end-column="17" />
+            <state relative-caret-position="1750">
+              <caret line="71" column="49" selection-start-line="71" selection-start-column="49" selection-end-line="71" selection-end-column="49" />
               <folding>
                 <element signature="e#48#57#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="manager.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/manager.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2840">
-              <caret line="26" column="43" lean-forward="true" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pre_process.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pre_process.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
             </state>
           </provider>
         </entry>
@@ -162,10 +173,15 @@
       <find>gpu_num</find>
       <find>SAME</find>
       <find>is_bn</find>
+      <find>loss</find>
+      <find>hei</find>
+      <find>preprocessing_data</find>
+      <find>batch_no</find>
     </findStrings>
     <replaceStrings>
       <replace>predict</replace>
       <replace>&quot;</replace>
+      <replace>data_diff</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -177,17 +193,17 @@
     <option name="WARN_ABOUT_DETACHED_HEAD" value="false" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/dataset.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/run.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/manager.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/utils.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/config.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/dataset.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/layer.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/manager.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/run.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/confgi.py" />
         <option value="$PROJECT_DIR$/tools.py" />
         <option value="$PROJECT_DIR$/code/utils.py" />
         <option value="$PROJECT_DIR$/logging.py" />
@@ -206,7 +222,6 @@
         <option value="$PROJECT_DIR$/feature_selection.py" />
         <option value="$PROJECT_DIR$/TODO" />
         <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/__init__.py" />
         <option value="D:/Program Files/Python 3.5/Lib/site-packages/filetype/match.py" />
         <option value="D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/archive.py" />
         <option value="$PROJECT_DIR$/file_preprocess.py" />
@@ -216,23 +231,30 @@
         <option value="$PROJECT_DIR$/network.py" />
         <option value="$PROJECT_DIR$/networks/networks_image_classification.py" />
         <option value="$PROJECT_DIR$/networks/networks_tested.py" />
-        <option value="$PROJECT_DIR$/networks/image_steganalysis.py" />
-        <option value="$PROJECT_DIR$/networks/audio_steganalysis.py" />
         <option value="$PROJECT_DIR$/lstm.py" />
         <option value="$PROJECT_DIR$/filters.py" />
-        <option value="$PROJECT_DIR$/text_preprocess.py" />
-        <option value="$PROJECT_DIR$/layer.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/audio_preprocess.py" />
-        <option value="$PROJECT_DIR$/image_preprocess.py" />
         <option value="$PROJECT_DIR$/dataset.py" />
+        <option value="$PROJECT_DIR$/test_scipt.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/setup/requirements.txt" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/pre_process.py" />
+        <option value="$PROJECT_DIR$/networks/image_steganalysis.py" />
+        <option value="$PROJECT_DIR$/layer.py" />
+        <option value="$PROJECT_DIR$/networks/audio_steganalysis.py" />
+        <option value="D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/__init__.py" />
+        <option value="$PROJECT_DIR$/networks/image_classification.py" />
         <option value="$PROJECT_DIR$/networks/tested.py" />
+        <option value="$PROJECT_DIR$/image_preprocess.py" />
+        <option value="$PROJECT_DIR$/networks/networks.py" />
+        <option value="$PROJECT_DIR$/config_file/config_test.json" />
+        <option value="$PROJECT_DIR$/text_preprocess.py" />
         <option value="$PROJECT_DIR$/config.py" />
         <option value="$PROJECT_DIR$/run.py" />
-        <option value="$PROJECT_DIR$/pre_process.py" />
-        <option value="$PROJECT_DIR$/test_scipt.py" />
+        <option value="$PROJECT_DIR$/networks/tested_steganalysis.py" />
         <option value="$PROJECT_DIR$/utils.py" />
-        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/config_file/config_train.json" />
       </list>
     </option>
   </component>
@@ -243,7 +265,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="18" />
+    <option name="x" value="28" />
+    <option name="y" value="4" />
     <option name="width" value="1909" />
     <option name="height" value="1047" />
   </component>
@@ -252,6 +275,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -259,11 +283,20 @@
               <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
               <item name="tf_audio_steganalysis" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tf_audio_steganalysis" type="462c0819:PsiDirectoryNode" />
+              <item name="config_file" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tf_audio_steganalysis" type="462c0819:PsiDirectoryNode" />
+              <item name="networks" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -274,8 +307,8 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../audio_steganalysis/module/x64/Release/script_steganalysis_CNN.py" />
-    <property name="settings.editor.selected.configurable" value="fileTemplates" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -452,20 +485,19 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32826087" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.49307036" side_tool="true" weight="0.2241567" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.6242004" weight="0.27202642" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.49840087" side_tool="true" weight="0.391494" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="File Transfer" order="11" sideWeight="0.50479746" weight="0.39694658" />
-      <window_info anchor="bottom" id="Version Control" order="12" weight="0.32824427" />
-      <window_info anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" visible="true" weight="0.36205018" />
+      <window_info active="true" anchor="bottom" id="File Transfer" order="11" sideWeight="0.50159913" visible="true" weight="0.46673936" />
+      <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.4978678" weight="0.32824427" />
+      <window_info anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" sideWeight="0.49733475" weight="0.43729553" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49520257" weight="0.29007635" />
-      <window_info anchor="bottom" id="Terminal" order="18" sideWeight="0.50692964" weight="0.27262813" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.1444563" />
+      <window_info anchor="bottom" id="Terminal" order="18" sideWeight="0.50159913" weight="0.4185022" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.1130064" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
-      <window_info anchor="right" id="SciView" order="5" weight="0.32995737" />
+      <window_info anchor="right" id="SciView" order="5" weight="0.3065032" />
       <window_info id="Structure" order="1" sideWeight="0.23129252" side_tool="true" weight="0.16071428" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
@@ -495,7 +527,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="23" />
+      <option name="time" value="26" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
@@ -508,84 +540,22 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/tf_regression.py" />
-    <entry file="file://$PROJECT_DIR$/model.py" />
-    <entry file="file://$PROJECT_DIR$/gui.py" />
-    <entry file="file://$USER_HOME$/.PyCharm2017.3/system/remote_sources/-1247342695/1405239563/tensorflow/python/ops/nn_ops.py" />
-    <entry file="file://$PROJECT_DIR$/figure.py" />
-    <entry file="uml://Python/#E:/Myself/1.source_code/tf_audio_steganalysis/layer.py" />
-    <entry file="file://$PROJECT_DIR$/train.py" />
-    <entry file="file://$PROJECT_DIR$/test.py" />
     <entry file="file://$USER_HOME$/.PyCharm2018.1/system/python_stubs/-278875380/builtins.py" />
     <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/ops/nn_impl.py" />
     <entry file="file://$PROJECT_DIR$/training.py" />
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/contrib/layers/python/layers/layers.py" />
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/ops/nn_ops.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48225">
-          <caret line="1949" column="5" selection-start-line="1949" selection-start-column="5" selection-end-line="1949" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/ops/nn_ops.py" />
     <entry file="file://$PROJECT_DIR$/machine_learning.py" />
-    <entry file="file://$PROJECT_DIR$/readme.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-325">
-            <caret line="14" selection-start-line="14" selection-end-line="14" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/readme.md" />
     <entry file="file://$PROJECT_DIR$/TODO" />
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/archive.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="515" lean-forward="true" selection-start-line="515" selection-end-line="515" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/match.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="119" lean-forward="true" selection-start-line="119" selection-end-line="119" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="38" column="12" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/audio.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-100">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="6" column="28" lean-forward="true" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/archive.py" />
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/match.py" />
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/audio.py" />
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/__init__.py" />
     <entry file="file://$PROJECT_DIR$/requirements.txt" />
     <entry file="file://$PROJECT_DIR$/networks/audio_steganalysis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="12" column="37" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/networks/image_classification.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
         </state>
       </provider>
     </entry>
@@ -596,156 +566,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/networks/image_steganalysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1550">
-          <caret line="62" selection-start-line="62" selection-end-line="62" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lstm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-          <folding>
-            <element signature="e#101#124#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python35/site-packages/tensorflow/python/framework/constant_op.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1005">
-          <caret line="53" column="4" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/layer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-808">
-          <caret line="120" column="4" selection-start-line="120" selection-start-column="4" selection-end-line="120" selection-end-column="4" />
-          <folding>
-            <element signature="e#48#70#0" expanded="true" />
-            <element signature="e#6996#8595#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dataset.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="557">
-          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
-          <folding>
-            <element signature="e#147#170#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/networks/audio_steganalysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="64" column="26" selection-start-line="64" selection-start-column="22" selection-end-line="64" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/networks/tested.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="765" column="28" lean-forward="true" selection-start-line="765" selection-start-column="28" selection-end-line="765" selection-end-column="28" />
-          <folding>
-            <element signature="e#50#69#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="41" column="61" selection-start-line="41" selection-start-column="61" selection-end-line="41" selection-end-column="61" />
-          <folding>
-            <element signature="e#145#154#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="46" column="6" selection-start-line="46" selection-start-column="6" selection-end-line="46" selection-end-column="6" />
-          <folding>
-            <element signature="e#146#155#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/audio_preprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="41" column="4" selection-start-line="41" selection-start-column="4" selection-end-line="41" selection-end-column="4" />
-          <folding>
-            <element signature="e#48#62#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/image_preprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="75" column="62" lean-forward="true" selection-start-line="75" selection-start-column="4" selection-end-line="75" selection-end-column="62" />
-          <folding>
-            <element signature="e#147#165#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/run.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="165" lean-forward="true" selection-start-line="165" selection-end-line="165" />
-          <folding>
-            <element signature="e#47#58#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classifier.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2100">
-          <caret line="100" column="37" selection-start-line="100" selection-start-column="37" selection-end-line="100" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/feature_selection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="925">
-          <caret line="43" column="8" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/distributed.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="26" column="3" lean-forward="true" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python35/site-packages/tensorflow/python/framework/constant_op.py" />
+    <entry file="file://$PROJECT_DIR$/classifier.py" />
+    <entry file="file://$PROJECT_DIR$/feature_selection.py" />
     <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-450" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/manager.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2840">
-          <caret line="26" column="43" lean-forward="true" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pre_process.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test_script.py">
@@ -755,63 +588,243 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/text_preprocess.py">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="69" column="17" lean-forward="true" selection-start-line="69" selection-start-column="17" selection-end-line="69" selection-end-column="17" />
-          <folding>
-            <element signature="e#48#57#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="325">
+          <caret line="13" column="9" lean-forward="true" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python35/site-packages/tensorflow/python/ops/nn_ops.py" />
+    <entry file="file://$PROJECT_DIR$/dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="557">
+          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/distributed.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="26" column="3" lean-forward="true" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/samples_make.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="700">
+          <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/setup/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="8" lean-forward="true" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
+        <state relative-caret-position="225">
+          <caret line="9" selection-start-line="9" selection-end-line="9" selection-end-column="10" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils.py">
+    <entry file="file://$PROJECT_DIR$/manager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4000">
-          <caret line="20" column="3" lean-forward="true" selection-start-line="20" selection-start-column="3" selection-end-line="20" selection-end-column="3" />
+        <state relative-caret-position="525">
+          <caret line="24" column="4" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/framework/constant_op.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1398">
+          <caret line="53" column="32" selection-start-line="53" selection-start-column="32" selection-end-line="53" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/networks/image_steganalysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="650">
+          <caret line="26" column="13" lean-forward="true" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/ops/gen_nn_ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="1485" column="29" selection-start-line="1485" selection-start-column="29" selection-end-line="1485" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/framework/op_def_library.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1221">
+          <caret line="287" column="6" selection-start-line="287" selection-start-column="6" selection-end-line="287" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/contrib/layers/python/layers/layers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="904">
+          <caret line="453" column="22" selection-start-line="453" selection-start-column="13" selection-end-line="453" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/filters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="13" column="43" lean-forward="true" selection-start-line="13" selection-start-column="43" selection-end-line="13" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pre_process.py" />
+    <entry file="file://$PROJECT_DIR$/networks/image_classification.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="127" lean-forward="true" selection-start-line="127" selection-end-line="127" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="78" column="17" selection-start-line="78" selection-start-column="17" selection-end-line="78" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/audio_preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="61" column="28" selection-start-line="61" selection-start-column="18" selection-end-line="61" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/image_preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="499">
+          <caret line="85" column="39" lean-forward="true" selection-start-line="85" selection-start-column="39" selection-end-line="85" selection-end-column="39" />
           <folding>
-            <element signature="e#146#155#0" expanded="true" />
+            <element signature="e#147#165#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/ops/losses/losses_impl.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-359">
+          <caret line="713" column="51" lean-forward="true" selection-start-line="713" selection-start-column="51" selection-end-line="713" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/networks/networks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="13" column="88" selection-start-line="13" selection-start-column="67" selection-end-line="13" selection-end-column="88" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config_file/config_test.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="6" column="10" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/text_preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1750">
+          <caret line="71" column="49" selection-start-line="71" selection-start-column="49" selection-end-line="71" selection-end-column="49" />
+          <folding>
+            <element signature="e#48#57#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/file_preprocess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="79" column="12" lean-forward="true" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="12" />
+        <state relative-caret-position="1825">
+          <caret line="75" column="17" selection-start-line="75" selection-start-column="4" selection-end-line="75" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/layer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7375">
+          <caret line="298" column="64" selection-start-line="298" selection-start-column="53" selection-end-line="298" selection-end-column="64" />
           <folding>
-            <element signature="e#48#57#0" expanded="true" />
+            <element signature="e#48#70#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/filters.py">
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
+        <state relative-caret-position="1075">
+          <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
+          <folding>
+            <element signature="e#146#155#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/samples_make.py">
+    <entry file="file://$PROJECT_DIR$/networks/audio_steganalysis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
+        <state relative-caret-position="375">
+          <caret line="16" column="73" selection-start-line="16" selection-start-column="73" selection-end-line="16" selection-end-column="73" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/networks/tested_steganalysis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        <state relative-caret-position="425">
+          <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="198" column="26" lean-forward="true" selection-start-line="198" selection-start-column="26" selection-end-line="198" selection-end-column="26" />
+          <folding>
+            <element signature="e#147#156#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
+          <folding>
+            <element signature="e#145#154#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config_file/config_train.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-575">
+          <caret line="7" column="79" selection-start-line="7" selection-start-column="79" selection-end-line="7" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="153" column="11" lean-forward="true" selection-start-line="153" selection-start-column="11" selection-end-line="153" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>

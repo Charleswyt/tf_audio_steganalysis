@@ -193,7 +193,6 @@ def get_data_batch(files_list, height, width, channel, carrier="qmdct"):
     :param width: the width of the data matrix
     :param channel: the channel of the data matrix
     :param carrier: the type of carrier (qmdct | audio | image)
-    :param as_grey: whether grays-cale or not (default: False)
 
     :return:
     """

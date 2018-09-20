@@ -33,17 +33,18 @@ def main():
         arguments = command_parse()
 
     # mode of gpu selection: auto, manu and others
-    if is_gpu_available():
-        if arguments.gpu_selection == "auto":
-            gm = GPUManager()
-            gpu_index = gm.auto_choice()
-            if not gpu_index == -1:
-                os.environ["CUDA_VISIBLE_DEVICES"] = gpu_index
-        elif arguments.gpu_selection == "manu":
-            os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
-        else:
-            os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+    # if is_gpu_available():
+    #     if arguments.gpu_selection == "auto":
+    #         gm = GPUManager()
+    #         gpu_index = gm.auto_choice()
+    #         if not gpu_index == -1:
+    #             os.environ["CUDA_VISIBLE_DEVICES"] = gpu_index
+    #     elif arguments.gpu_selection == "manu":
+    #         os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
+    #     else:
+    #         os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
+    os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
     run_mode(arguments)
 
 

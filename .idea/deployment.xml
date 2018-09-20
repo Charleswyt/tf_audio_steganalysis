@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="audio" filePermissions="420" folderPermissions="493" autoUploadExternalChanges="true" showNewOnSourceInSync="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="audio_wyt" filePermissions="420" folderPermissions="493" autoUploadExternalChanges="true" showNewOnSourceInSync="false">
     <serverData>
-      <paths name="audio">
+      <paths name="audio_wyt">
         <serverdata>
           <mappings>
-            <mapping deploy="/code/CatKing/steganalysis_CNN" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="zq">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/tmp/pycharm_project_163" local="$PROJECT_DIR$" />
+            <mapping deploy="/code/tf_audio_steganalysis" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
