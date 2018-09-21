@@ -30,8 +30,9 @@ def get_file_name(file_path):
         the name of the file
     """
     if os.path.exists(file_path):
-        file_path.replace("\\", "/")
-        file_name = file_path.split(sep="/")[-1]
+        file_path_new = file_path.replace("\\", "/")
+        file_name = file_path_new.split(sep="/")[-1]
+
     else:
         file_name = None
 

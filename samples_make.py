@@ -57,7 +57,7 @@ def cover_make_lame(wav_files_path, mp3_files_path, bitrate, start_idx=None, end
     if not os.path.exists(wav_files_path):
         print("The wav files path does not exist.")
     else:
-        wav_files_list = get_files_list(file_dir=wav_files_path, start_idx=start_idx, end_idx=end_idx)
+        wav_files_list = get_files_list(file_dir=wav_files_path, file_type="wav", start_idx=start_idx, end_idx=end_idx)
         if not os.path.exists(mp3_files_path):
             os.mkdir(mp3_files_path)
         for wav_file_path in wav_files_list:
@@ -85,7 +85,7 @@ def cover_make_mp3stego(wav_files_path, mp3_files_path, bitrate, start_idx=None,
     if not os.path.exists(wav_files_path):
         print("The wav files path does not exist.")
     else:
-        wav_files_list = get_files_list(file_dir=wav_files_path, start_idx=start_idx, end_idx=end_idx)
+        wav_files_list = get_files_list(file_dir=wav_files_path, file_type="wav", start_idx=start_idx, end_idx=end_idx)
         if not os.path.exists(mp3_files_path):
             os.mkdir(mp3_files_path)
         for wav_file_path in wav_files_list:
@@ -123,7 +123,7 @@ def stego_make_mp3stego(wav_files_path, mp3_files_path, bitrate, embedding_rate=
     if not os.path.exists(wav_files_path):
         print("The wav files path does not exist.")
     else:
-        wav_files_list = get_files_list(file_dir=wav_files_path, start_idx=start_idx, end_idx=end_idx)
+        wav_files_list = get_files_list(file_dir=wav_files_path, file_type="wav", start_idx=start_idx, end_idx=end_idx)
         if not os.path.exists(mp3_files_path):
             os.mkdir(mp3_files_path)
         embedding_file_name = "stego_0" + embedding_rate + ".txt" if len(embedding_rate) == 1 else "stego_" + embedding_rate + ".txt"
@@ -158,7 +158,7 @@ def stego_make_hcm(wav_files_path, mp3_files_path, bitrate, cost="2",
     if not os.path.exists(wav_files_path):
         print("The wav files path does not exist.")
     else:
-        wav_files_list = get_files_list(file_dir=wav_files_path, start_idx=start_idx, end_idx=end_idx)
+        wav_files_list = get_files_list(file_dir=wav_files_path, file_type="wav", start_idx=start_idx, end_idx=end_idx)
         if not os.path.exists(mp3_files_path):
             os.mkdir(mp3_files_path)
         for wav_file_path in wav_files_list:
@@ -192,12 +192,13 @@ def stego_make_eecs(wav_files_path, mp3_files_path, bitrate, width, height="7",
     if not os.path.exists(wav_files_path):
         print("The wav files path does not exist.")
     else:
-        wav_files_list = get_files_list(file_dir=wav_files_path, start_idx=start_idx, end_idx=end_idx)
+        wav_files_list = get_files_list(file_dir=wav_files_path, file_type="wav", start_idx=start_idx, end_idx=end_idx)
         if not os.path.exists(mp3_files_path):
             os.mkdir(mp3_files_path)
         for wav_file_path in wav_files_list:
             file_name = get_file_name(wav_file_path)
             mp3_file_name = file_name.replace(".wav", ".mp3")
+            print(mp3_file_name)
             mp3_file_path = fullfile(mp3_files_path, mp3_file_name)
             if not os.path.exists(mp3_file_path):
                 command = "encode_EECS.exe -b " + bitrate + " -embed " + embed + " -width " + width + " -height " + height + " -er " + embedding_rate \
@@ -225,7 +226,7 @@ def stego_make_acs(wav_files_path, mp3_files_path, bitrate, width, height="7",
     if not os.path.exists(wav_files_path):
         print("The wav files path does not exist.")
     else:
-        wav_files_list = get_files_list(file_dir=wav_files_path, start_idx=start_idx, end_idx=end_idx)
+        wav_files_list = get_files_list(file_dir=wav_files_path, file_type="wav", start_idx=start_idx, end_idx=end_idx)
         if not os.path.exists(mp3_files_path):
             os.mkdir(mp3_files_path)
         for wav_file_path in wav_files_list:
@@ -321,8 +322,8 @@ def stego_make_eecs_batch(wav_files_path, mp3_files_path, frame_num="50",
         stego_files_dir = fullfile(mp3_files_path, "EECS")
         if not os.path.exists(stego_files_dir):
             os.mkdir(stego_files_dir)
-        bitrates = ["128", "192", "256", "320"]
-        widths = ["2", "3", "4", "5", "6", "7"]
+        bitrates = ["320"]
+        widths = ["5"]
         heights = ["7"]
         embedding_rates = ["10"]
         if not os.path.exists(mp3_files_path):
@@ -453,5 +454,6 @@ if __name__ == "__main__":
 
     # cover_make_batch(wav_audio_files_path, mp3_audio_cover_files_path)
     stego_make_eecs_batch(wav_audio_files_path, mp3_audio_stego_files_path)
+
     # stego_make_acs_batch(wav_audio_files_path, mp3_audio_stego_files_path)
     # stego_make_mp3stego_batch(wav_audio_files_path, mp3_audio_stego_files_path)

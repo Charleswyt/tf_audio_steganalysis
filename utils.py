@@ -10,6 +10,7 @@ Modified on 2018.08.29
 """
 
 import os
+import time
 import numpy as np
 from glob import glob
 import tensorflow as tf
@@ -33,6 +34,18 @@ from audio_preprocess import audio_read, audio_read_batch
         tfrecord_read(tfrecord_file_name)                                                                       read the data info from tfrecord (读取tfrecord文件)
         qmdct_extractor(mp3_file_path, height=200, width=576, frame_num=50, coeff_num=576)                      qmdct coefficients extraction (提取音频的QMDCT)
 """
+
+
+def folder_make(path):
+    """
+    create a folder
+    :param path: the path to be created
+    :return:
+    """
+    if os.path.exists(path) and not os.path.isfile(path):
+        os.mkdir(path)
+    else:
+        pass
 
 
 def fullfile(file_dir, file_name):
