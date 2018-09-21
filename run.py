@@ -62,6 +62,7 @@ def train(args):
     classes_num = args.class_num                                                            # classes number
     carrier = args.carrier                                                                  # carrier (qmdct | audio | image)
     task_name = args.task_name                                                              # name of task
+    checkpoint = args.checkpoint                                                            # checkpoint
 
     max_to_keep = args.max_to_keep                                                          # maximum number of recent checkpoints to keep
     keep_checkpoint_every_n_hours = args.keep_checkpoint_every_n_hours                      # how often to keep checkpoints
@@ -81,7 +82,7 @@ def train(args):
                                         decay_method=decay_method,
                                         global_step=global_step,
                                         decay_steps=decay_steps,
-                                        decay_rate=decay_rate)                             # learning rate
+                                        decay_rate=decay_rate)                              # learning rate
 
     # placeholder
     data = tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width, channel), name="data")
@@ -107,22 +108,15 @@ def train(args):
     cover_valid_path = args.cover_valid_path
     stego_valid_path = args.stego_valid_path
 
-    models_file_path = args.models_path
-    logs_path = args.logs_path
+    model_path = args.model_path
+    log_path = args.log_path
 
-    log_path = fullfile(fullfile(logs_path, args.network), task_name)
-    model_file_path = fullfile(fullfile(models_file_path, args.network), task_name)
-
-    # create the path
-    if not os.path.exists(model_file_path):
-        os.mkdir(model_file_path)
-
-        # information output
+    # information output
     print("train files path(cover): %s" % cover_train_path)
     print("valid files path(cover): %s" % cover_valid_path)
     print("train files path(stego): %s" % stego_train_path)
     print("valid files path(stego): %s" % stego_valid_path)
-    print("model files path: %s" % model_file_path)
+    print("model files path: %s" % model_path)
     print("log files path: %s" % log_path)
     print("batch size: %d, total epoch: %d, class number: %d, initial learning rate: %f, decay method: %s, decay rate: %f, decay steps: %d"
           % (batch_size, n_epoch, classes_num, init_learning_rate, decay_method, decay_rate, decay_steps))
@@ -141,6 +135,12 @@ def train(args):
     train_writer_valid = tf.summary.FileWriter(log_path + "/validion", tf.get_default_graph())
     init = tf.global_variables_initializer()
     sess.run(init)
+
+    # restore the model and keep training from the current breakpoint
+    if checkpoint is True:
+        model_file_path = get_model_file_path(args.model_path)
+        if model_file_path is not None:
+            saver.restore(sess, model_file_path)
 
     print("Start training...")
     print("Input data: (%d, %d, %d)" % (height, width, channel))
@@ -211,7 +211,7 @@ def train(args):
         if valid_accuracy_average > max_accuracy:
             max_accuracy = valid_accuracy_average
             max_accuracy_epoch = epoch + 1
-            saver.save(sess, model_file_path, global_step=global_step)
+            saver.save(sess, model_path, global_step=global_step)
             print("The model is saved successfully.")
 
         print("epoch: %003d, learning rate: %f, train loss: %f, train accuracy: %f, valid loss: %f, valid accuracy: %f, "

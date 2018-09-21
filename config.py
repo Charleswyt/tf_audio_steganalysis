@@ -11,6 +11,8 @@ Modified on 2018.08.23
 import os
 import json
 import argparse
+from utils import folder_make, fullfile
+from utils import get_unix_stamp, get_time
 
 """
 function:
@@ -38,6 +40,7 @@ def command_parse():
                              "(default: auto, another choice is manu)")
     parser.add_argument("--gpu", type=str, default="0", help="the index of GPU")
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
+    parser.add_argument("--checkpoint", type=bool, default=True, help="whether there is checkpoint or not (default: True)")
     parser.add_argument("--submode", type=str, default="one", help="one | batch (default one)")
     parser.add_argument("--carrier", type=str, default="qmdct", help="qmdct | image | audio (default qmdct)")
     parser.add_argument("--network", type=str, default="network1", help="the index of the network (default: wasdn), "
@@ -92,6 +95,30 @@ def command_parse():
 
     arguments = parser.parse_args()
 
+    # create folder (models and logs)
+    # level: root
+    models_path_root, logs_path_root = arguments.models_path, arguments.logs_path
+    folder_make(models_path_root), folder_make(logs_path_root)
+
+    # level: network
+    models_path_network, logs_path_network = fullfile(models_path_root, arguments.network), fullfile(logs_path_root, arguments.network)
+    folder_make(models_path_network), folder_make(logs_path_network)
+
+    # level: task
+    models_path_task, logs_path_task = fullfile(models_path_network, arguments.task_name), fullfile(logs_path_network, arguments.task_name)
+    folder_make(models_path_task), folder_make(logs_path_task)
+
+    # level: training start time
+    current_time_stamp = str(get_unix_stamp(get_time()))
+    models_path_current, logs_path_current = fullfile(models_path_task, current_time_stamp), fullfile(logs_path_task, current_time_stamp)
+    folder_make(models_path_current), folder_make(logs_path_current)
+
+    arguments.model_path = models_path_current
+    arguments.log_path = logs_path_current
+
+    print(arguments.model_path)
+    print(arguments.log_path)
+
     return arguments
 
 
@@ -114,6 +141,7 @@ def config_train_file_read(config_file_path):
                 self.gpu_selection = file_content['mode_config']['gpu_selection']
                 self.gpu = file_content['mode_config']['gpu']
                 self.mode = file_content['mode_config']['mode']
+                self.checkpoint = file_content['mode_config']['checkpoint']
                 self.carrier = file_content['mode_config']['carrier']
                 self.network = file_content['mode_config']['network']
 
@@ -148,9 +176,30 @@ def config_train_file_read(config_file_path):
                 self.start_index_valid = file_content["index"]["start_index_valid"]
                 self.end_index_valid = file_content["index"]["end_index_valid"]
 
-        argument = Variable()
+        arguments = Variable()
 
-        return argument
+        # create folder (models and logs)
+        # level: root
+        models_path_root, logs_path_root = arguments.models_path, arguments.logs_path
+        folder_make(models_path_root), folder_make(logs_path_root)
+
+        # level: network
+        models_path_network, logs_path_network = fullfile(models_path_root, arguments.network), fullfile(logs_path_root, arguments.network)
+        folder_make(models_path_network), folder_make(logs_path_network)
+
+        # level: task
+        models_path_task, logs_path_task = fullfile(models_path_network, arguments.task_name), fullfile(logs_path_network, arguments.task_name)
+        folder_make(models_path_task), folder_make(logs_path_task)
+
+        # level: training start time
+        current_time_stamp = str(get_unix_stamp(get_time()))
+        models_path_current, logs_path_current = fullfile(models_path_task, current_time_stamp), fullfile(logs_path_task, current_time_stamp)
+        folder_make(models_path_current), folder_make(logs_path_current)
+
+        arguments.model_path = models_path_current
+        arguments.log_path = logs_path_current
+
+        return arguments
 
 
 def config_test_file_read(config_file_path):
