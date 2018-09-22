@@ -1,4 +1,4 @@
-# Audio and Image Steganalysis with CNN
+# Audio Steganalysis with CNN
 @ Author: **Wang Yuntao (Charles_wyt)** <br>
 @ Email: wangyuntao2@iie.ac.cn <br>
 Hope we can have a happy communication.
