@@ -9,3 +9,9 @@ tools
 .idea
 *.pyc
 /config_file
+!lame_qmdct.exe
+!decode_MP3Stego.exe
+!Encode__mp3stego.exe
+!lena.bmp
+!bird.mp3
+!stego_info_full.txt
