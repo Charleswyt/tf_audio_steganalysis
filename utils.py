@@ -42,7 +42,7 @@ def folder_make(path):
     :param path: the path to be created
     :return:
     """
-    if os.path.exists(path) and not os.path.isfile(path):
+    if not os.path.exists(path) and not os.path.isfile(path):
         os.mkdir(path)
     else:
         pass

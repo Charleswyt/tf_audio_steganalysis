@@ -755,7 +755,7 @@ def network1__4(input_data, class_num=2, is_bn=True, activation_method="tanh", p
 
 def siamese_network(input_data1, input_data2, network=None, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-        Siamese network for steganalysis
+    Siamese network for steganalysis
     """
     print("Siamese Network, Two input, Shared parameters")
     print("Network Structure: ")
