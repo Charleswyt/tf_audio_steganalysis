@@ -498,9 +498,9 @@ def diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, 
             return input_data
 
 
-def down_sampling(input_data, x_stride, y_stride, name, with_original=True, padding="VALID"):
+def phase_split(input_data, x_stride, y_stride, name, with_original=True, padding="VALID"):
     """
-    get m * m(m is 2 in general) down sampling layer
+    get m * m(m is 2 in general) phase_split layer
     :param input_data: the input data tensor [batch_size, height, width, channels]
     :param x_stride: stride in X axis
     :param y_stride: stride in Y axis

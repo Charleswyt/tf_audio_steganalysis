@@ -76,19 +76,19 @@ def wasdn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding
     return logits
 
 
-def downsampling_network1(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tpan(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    downsampling network
+    CNN with truncation and phase-aware for audio steganalysis
     """
 
-    print("network: downsampling network1")
+    print("network: TPA-Net")
     print("Network Structure: ")
 
     # preprocessing
     data_trunc = truncation_layer(input_data, is_turnc=True, min_value=-8, max_value=8, name="truncation")
 
     # down sampling
-    conv0 = down_sampling(data_trunc, 2, 2, "down_sampling")
+    conv0 = phase_split(data_trunc, 2, 2, "phase_split")
 
     # Group1
     conv1_1 = conv_layer(conv0, 3, 3, 1, 1, 32, name="conv1_1", activation_method=activation_method, padding=padding)
