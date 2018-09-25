@@ -27,17 +27,17 @@
     }
 
 ## The description of each network
-        WASDN      : The proposed network for MP3 steganalysis (Wang Audio Steganalysis Deep Network)
-        network1_1 : Remove the BN layer
-        network1_2 : Average pooling layer is used for subsampling
-        network1_3 : Convolutional layer with stride 2 is used for subsampling
-        network1_4 : Replace the convolutional kernel with 5x5 kernel
-        network1_5 : ReLu is used as the activation function
-        network1_6 : Leaky-ReLu is used as the activation function
-        network1_7 : Deepen the network to block convolutional layers
-        network1_8 : Remove the 1x1 convolutional layers
-        network1_9 : Remove the HPF layer
-        network1__1: Remove the first BN layer in the first group
-        network1__2: Remove the first BN layers in the first two groups
-        network1__3: Remove the first BN layers in the first four groups
-        network1__4: Add BN layers at the top of 3x3 conv layer
+        WASDN   : The proposed network for MP3 steganalysis (Wang Audio Steganalysis Deep Network)
+        WASDN1_1: Remove the BN layer
+        WASDN1_2: Average pooling layer is used for subsampling
+        WASDN1_3: Convolutional layer with stride 2 is used for subsampling
+        WASDN1_4: Replace the convolutional kernel with 5x5 kernel
+        WASDN1_5: ReLu is used as the activation function
+        WASDN1_6: Leaky-ReLu is used as the activation function
+        WASDN1_7: Deepen the network to block convolutional layers
+        WASDN1_8: Remove the 1x1 convolutional layers
+        WASDN1_9: Remove the HPF layer
+        WASDN2_1: Remove the first BN layer in the first group
+        WASDN2_2: Remove the first BN layers in the first two groups
+        WASDN2_3: Remove the first BN layers in the first four groups
+        WASDN2_4: Add BN layers at the top of 3x3 conv layer
