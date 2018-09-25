@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+import datetime
 from utils import *
 from networks.networks import networks
 from file_preprocess import get_file_name
@@ -61,7 +62,6 @@ def train(args):
     coeff_regulation = args.coeff_regulation                                                # the gain of regulation
     classes_num = args.class_num                                                            # classes number
     carrier = args.carrier                                                                  # carrier (qmdct | audio | image)
-    task_name = args.task_name                                                              # name of task
     checkpoint = args.checkpoint                                                            # checkpoint
 
     max_to_keep = args.max_to_keep                                                          # maximum number of recent checkpoints to keep
@@ -90,7 +90,7 @@ def train(args):
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network
-    if not args.network in networks:
+    if args.network not in networks:
         print("Network miss-match, please try again")
         return False
 
@@ -132,7 +132,7 @@ def train(args):
     # initialize
     sess = tf.InteractiveSession()
     train_writer_train = tf.summary.FileWriter(log_path + "/train", tf.get_default_graph())
-    train_writer_valid = tf.summary.FileWriter(log_path + "/validion", tf.get_default_graph())
+    train_writer_valid = tf.summary.FileWriter(log_path + "/validation", tf.get_default_graph())
     init = tf.global_variables_initializer()
     sess.run(init)
 
@@ -145,8 +145,9 @@ def train(args):
     print("Start training...")
     print("Input data: (%d, %d, %d)" % (height, width, channel))
 
+    start_time_all = time.time()
     for epoch in range(n_epoch):
-        start_time = time.time()
+        start_time_epoch = time.time()
 
         # read files list (train)
         cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_path,
@@ -179,7 +180,10 @@ def train(args):
             train_iterations += 1
             train_writer_train.add_summary(summary_str_train, global_step=step_train)
 
-            print("epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f" % (epoch + 1, train_iterations, err, ac))
+            et = time.time() - start_time_all
+            et = str(datetime.timedelta(seconds=et))[:-7]
+            print("network: %s, task: %s, elapsed: %s, epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f"
+                  % (args.network, args.task_name, et, epoch + 1, train_iterations, err, ac))
 
         print("====================================================================================")
 
@@ -199,7 +203,10 @@ def train(args):
             step_valid += 1
             train_writer_valid.add_summary(summary_str_valid, global_step=step_valid)
 
-            print("epoch: %003d, valid iterations: %003d, valid loss: %f, valid accuracy: %f" % (epoch + 1, valid_iterations, err, ac))
+            et = time.time() - start_time_all
+            et = str(datetime.timedelta(seconds=et))[:-7]
+            print("network: %s, task: %s, elapsed: %s, epoch: %003d, valid iterations: %003d, valid loss: %-8f, valid accuracy: %f"
+                  % (args.network, args.task_name, et, epoch + 1, valid_iterations, err, ac))
 
         # calculate the average in a batch
         train_loss_average = train_loss / train_iterations
@@ -218,8 +225,8 @@ def train(args):
               "max valid accuracy: %f, max valid acc epoch: %d" % (epoch + 1, lr, train_loss_average, train_accuracy_average, valid_loss_average,
                                                                    valid_accuracy_average, max_accuracy, max_accuracy_epoch))
 
-        end_time = time.time()
-        print("Runtime: %.2fs" % (end_time - start_time))
+        end_time_epoch = time.time()
+        print("Runtime: %.2fs" % (end_time_epoch - start_time_epoch))
 
     train_writer_train.close()
     train_writer_valid.close()
@@ -244,15 +251,21 @@ def test(args):
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network
-    if not args.network in networks:
+    if args.network not in networks:
         print("Network miss-match, please try again")
         return False
 
-    command = args.network + "(data, 2, is_bn)"
+    command = args.network + "(data, classes_num, is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
     accuracy = accuracy_layer(logits=logits, labels=labels)
+
+    # information output
+    print("train files path(cover): %s" % cover_test_files_path)
+    print("valid files path(stego): %s" % stego_test_files_path)
+    print("class number: %d" % classes_num)
+    print("start load network...")
 
     model = tf.train.Saver()
     with tf.Session() as sess:
@@ -294,23 +307,22 @@ def steganalysis_one(args):
     # hyper parameters
     height, width, channel = args.height, args.width, args.channel      # height and width of input matrix
     carrier = args.carrier                                              # carrier (qmdct | audio | image)
-    classes_num = args.class_num                                        # classes number
+    classes_num = args.classes_num                                      # classes for classification
 
     # path
     steganalysis_file_path = args.steganalysis_file_path
 
     # placeholder
     data = tf.placeholder(dtype=tf.float32, shape=(1, height, width, channel), name="data")
-    labels = tf.placeholder(dtype=tf.int32, shape=(1,), name="label")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network
-    if not args.network in networks:
+    if args.network not in networks:
         print("Network miss-match, please try again")
         return False
 
     # network
-    command = args.network + "(data, 2, is_bn)"
+    command = args.network + "(data," + classes_num + ",is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
@@ -354,16 +366,15 @@ def steganalysis_batch(args):
 
     # placeholder
     data = tf.placeholder(dtype=tf.float32, shape=(1, height, width, channel), name="data")
-    labels = tf.placeholder(dtype=tf.int32, shape=(1,), name="label")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network
-    if not args.network in networks:
+    if args.network not in networks:
         print("Network miss-match, please try again")
         return False
 
     # network
-    command = args.network + "(data, 2, is_bn)"
+    command = args.network + "(data," + classes_num + ",is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
