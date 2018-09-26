@@ -8,3 +8,4 @@ scikit-image
 librosa
 filetype
 virtualenv
+jupyter

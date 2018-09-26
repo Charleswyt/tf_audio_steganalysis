@@ -130,107 +130,101 @@ def train(args):
                                keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
 
     # initialize
-    sess = tf.InteractiveSession()
-    train_writer_train = tf.summary.FileWriter(log_path + "/train", tf.get_default_graph())
-    train_writer_valid = tf.summary.FileWriter(log_path + "/validation", tf.get_default_graph())
-    init = tf.global_variables_initializer()
-    sess.run(init)
+    with tf.Session() as sess:
+        train_writer_train = tf.summary.FileWriter(log_path + "/train", tf.get_default_graph())
+        train_writer_valid = tf.summary.FileWriter(log_path + "/validation", tf.get_default_graph())
+        init = tf.global_variables_initializer()
+        sess.run(init)
 
-    # restore the model and keep training from the current breakpoint
-    if checkpoint is True:
-        model_file_path = get_model_file_path(args.model_path)
-        if model_file_path is not None:
-            saver.restore(sess, model_file_path)
+        # restore the model and keep training from the current breakpoint
+        if checkpoint is True:
+            model_file_path = get_model_file_path(args.model_path)
+            if model_file_path is not None:
+                saver.restore(sess, model_file_path)
 
-    print("Start training...")
-    print("Input data: (%d, %d, %d)" % (height, width, channel))
+        print("Start training...")
+        print("Input data: (%d, %d, %d)" % (height, width, channel))
 
-    start_time_all = time.time()
-    for epoch in range(n_epoch):
-        start_time_epoch = time.time()
+        start_time_all = time.time()
+        for epoch in range(n_epoch):
+            # read files list (train)
+            cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_path,
+                                                                                                                     stego_train_path,
+                                                                                                                     start_index_train,
+                                                                                                                     end_index_train)
 
-        # read files list (train)
-        cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_path,
-                                                                                                                 stego_train_path,
-                                                                                                                 start_index_train,
-                                                                                                                 end_index_train)
+            # read files list (validation)
+            cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_path,
+                                                                                                                     stego_valid_path,
+                                                                                                                     start_index_valid,
+                                                                                                                     end_index_valid)
+            # update the learning rate
+            lr = sess.run(learning_rate)
 
-        # read files list (validation)
-        cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_path,
-                                                                                                                 stego_valid_path,
-                                                                                                                 start_index_valid,
-                                                                                                                 end_index_valid)
-        # update the learning rate
-        lr = sess.run(learning_rate)
+            # train
+            train_iterations, train_loss, train_accuracy = 0, 0, 0
+            for x_train_batch, y_train_batch in \
+                    minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size):
+                # data read and process
+                x_train_data = get_data_batch(x_train_batch, height=height, width=width, channel=channel, carrier=carrier)
 
-        # train
-        train_iterations, train_loss, train_accuracy = 0, 0, 0
-        for x_train_batch, y_train_batch in \
-                minibatches(cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list, batch_size):
-            # data read and process
-            x_train_data = get_data_batch(x_train_batch, height=height, width=width, channel=channel, carrier=carrier)
+                # get the accuracy and loss
+                _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op],
+                                                         feed_dict={data: x_train_data, labels: y_train_batch, is_bn: True})
 
-            # get the accuracy and loss
-            _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op],
-                                                     feed_dict={data: x_train_data, labels: y_train_batch, is_bn: True})
+                train_loss += err
+                train_accuracy += ac
+                step_train += 1
+                train_iterations += 1
+                train_writer_train.add_summary(summary_str_train, global_step=step_train)
 
-            train_loss += err
-            train_accuracy += ac
-            step_train += 1
-            train_iterations += 1
-            train_writer_train.add_summary(summary_str_train, global_step=step_train)
+                et = time.time() - start_time_all
+                et = str(datetime.timedelta(seconds=et))[:-7]
+                print("[network: %s, task: %s] elapsed: %s, epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f"
+                      % (args.network, args.task_name, et, epoch + 1, train_iterations, err, ac))
 
-            et = time.time() - start_time_all
-            et = str(datetime.timedelta(seconds=et))[:-7]
-            print("network: %s, task: %s, elapsed: %s, epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f"
-                  % (args.network, args.task_name, et, epoch + 1, train_iterations, err, ac))
+            print("=====================================================================================================================================")
 
-        print("====================================================================================")
+            # validation
+            valid_iterations, valid_loss, valid_accuracy = 0, 0, 0
+            for x_valid_batch, y_valid_batch in \
+                    minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size):
+                # data read and process
+                x_valid_data = get_data_batch(x_valid_batch, height=height, width=width, channel=channel, carrier=carrier)
 
-        # validation
-        valid_iterations, valid_loss, valid_accuracy = 0, 0, 0
-        for x_valid_batch, y_valid_batch in \
-                minibatches(cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list, batch_size):
-            # data read and process
-            x_valid_data = get_data_batch(x_valid_batch, height=height, width=width, channel=channel, carrier=carrier)
+                # get the accuracy and loss
+                err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
+                                                      feed_dict={data: x_valid_data, labels: y_valid_batch, is_bn: True})
+                valid_loss += err
+                valid_accuracy += ac
+                valid_iterations += 1
+                step_valid += 1
+                train_writer_valid.add_summary(summary_str_valid, global_step=step_valid)
 
-            # get the accuracy and loss
-            err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
-                                                  feed_dict={data: x_valid_data, labels: y_valid_batch, is_bn: True})
-            valid_loss += err
-            valid_accuracy += ac
-            valid_iterations += 1
-            step_valid += 1
-            train_writer_valid.add_summary(summary_str_valid, global_step=step_valid)
+                et = time.time() - start_time_all
+                et = str(datetime.timedelta(seconds=et))[:-7]
+                print("[network: %s, task: %s] elapsed: %s, epoch: %003d, valid iterations: %003d, valid loss: %-8f, valid accuracy: %f"
+                      % (args.network, args.task_name, et, epoch + 1, valid_iterations, err, ac))
 
-            et = time.time() - start_time_all
-            et = str(datetime.timedelta(seconds=et))[:-7]
-            print("network: %s, task: %s, elapsed: %s, epoch: %003d, valid iterations: %003d, valid loss: %-8f, valid accuracy: %f"
-                  % (args.network, args.task_name, et, epoch + 1, valid_iterations, err, ac))
+            # calculate the average in a batch
+            train_loss_average = train_loss / train_iterations
+            valid_loss_average = valid_loss / valid_iterations
+            train_accuracy_average = train_accuracy / train_iterations
+            valid_accuracy_average = valid_accuracy / valid_iterations
 
-        # calculate the average in a batch
-        train_loss_average = train_loss / train_iterations
-        valid_loss_average = valid_loss / valid_iterations
-        train_accuracy_average = train_accuracy / train_iterations
-        valid_accuracy_average = valid_accuracy / valid_iterations
+            # model save
+            if valid_accuracy_average > max_accuracy:
+                max_accuracy = valid_accuracy_average
+                max_accuracy_epoch = epoch + 1
+                saver.save(sess, model_path, global_step=global_step)
+                print("The model is saved successfully.")
 
-        # model save
-        if valid_accuracy_average > max_accuracy:
-            max_accuracy = valid_accuracy_average
-            max_accuracy_epoch = epoch + 1
-            saver.save(sess, model_path, global_step=global_step)
-            print("The model is saved successfully.")
+            print("[network: %s, task: %s] epoch: %003d, learning rate: %f, train loss: %f, train accuracy: %f, valid loss: %f, valid accuracy: %f, "
+                  "max valid accuracy: %f, max valid acc epoch: %d" % (args.network, args.task_name, epoch + 1, lr, train_loss_average, train_accuracy_average, valid_loss_average,
+                                                                       valid_accuracy_average, max_accuracy, max_accuracy_epoch))
 
-        print("epoch: %003d, learning rate: %f, train loss: %f, train accuracy: %f, valid loss: %f, valid accuracy: %f, "
-              "max valid accuracy: %f, max valid acc epoch: %d" % (epoch + 1, lr, train_loss_average, train_accuracy_average, valid_loss_average,
-                                                                   valid_accuracy_average, max_accuracy, max_accuracy_epoch))
-
-        end_time_epoch = time.time()
-        print("Runtime: %.2fs" % (end_time_epoch - start_time_epoch))
-
-    train_writer_train.close()
-    train_writer_valid.close()
-    sess.close()
+        train_writer_train.close()
+        train_writer_valid.close()
 
 
 def test(args):

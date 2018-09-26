@@ -21,3 +21,4 @@ samples_make.py
 !bird.mp3
 !stego_info_full.txt
 jupyter/data/
+!data_processing
