@@ -2,28 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c2d43106-d1ec-4b75-a6d9-339f7e1bcfc5" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Charles_CatKing.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/zhanghong.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/other.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/preferred-vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/steganalysis_CNN.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jupyter/.ipynb_checkpoints/Untitled1-checkpoint.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jupyter/.ipynb_checkpoints/Untitled2-checkpoint.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jupyter/Untitled1.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jupyter/Untitled2.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config_file/config_steganalysis.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config_file/config_test.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config_file/config_train.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config_file/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -72,26 +51,26 @@
       <file leaf-file-name="run.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/run.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
+            <state relative-caret-position="3950">
               <caret line="166" column="20" selection-start-line="166" selection-start-column="20" selection-end-line="166" selection-end-column="20" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config_train.json" pinned="false" current-in-tab="true">
+      <file leaf-file-name="config_train.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
+            <state relative-caret-position="300">
+              <caret line="12" column="32" lean-forward="true" selection-start-line="12" selection-start-column="32" selection-end-line="12" selection-end-column="32" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/utils.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="350">
-              <caret line="154" column="79" lean-forward="true" selection-start-line="154" selection-start-column="11" selection-end-line="154" selection-end-column="79" />
+              <caret line="172" column="7" lean-forward="true" selection-start-line="172" selection-start-column="7" selection-end-line="172" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -194,7 +173,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/manager.py" />
         <option value="$PROJECT_DIR$/classifier.py" />
         <option value="$PROJECT_DIR$/feature_selection.py" />
         <option value="$PROJECT_DIR$/TODO" />
@@ -245,6 +223,7 @@
         <option value="$PROJECT_DIR$/src/networks/audio_steganalysis.py" />
         <option value="$PROJECT_DIR$/src/run.py" />
         <option value="$PROJECT_DIR$/src/config_file/config_train.json" />
+        <option value="$PROJECT_DIR$/src/utils.py" />
       </list>
     </option>
   </component>
@@ -478,12 +457,12 @@
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.6242004" weight="0.27202642" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.49840087" side_tool="true" weight="0.391494" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="File Transfer" order="11" sideWeight="0.50159913" visible="true" weight="0.26390404" />
+      <window_info anchor="bottom" id="File Transfer" order="11" sideWeight="0.50159913" weight="0.26390404" />
       <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.4978678" weight="0.32824427" />
-      <window_info anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" sideWeight="0.49733475" weight="0.3456925" />
+      <window_info active="true" anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" sideWeight="0.49733475" visible="true" weight="0.3456925" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49520257" weight="0.29007635" />
       <window_info anchor="bottom" id="Terminal" order="18" sideWeight="0.50159913" weight="0.4612868" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.16311301" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.16311301" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
       <window_info anchor="right" id="SciView" order="5" weight="0.3065032" />
@@ -697,22 +676,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/run.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
+        <state relative-caret-position="3950">
           <caret line="166" column="20" selection-start-line="166" selection-start-column="20" selection-end-line="166" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="12" column="32" lean-forward="true" selection-start-line="12" selection-start-column="32" selection-end-line="12" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
-          <caret line="154" column="79" lean-forward="true" selection-start-line="154" selection-start-column="11" selection-end-line="154" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
+          <caret line="172" column="7" lean-forward="true" selection-start-line="172" selection-start-column="7" selection-end-line="172" selection-end-column="7" />
         </state>
       </provider>
     </entry>

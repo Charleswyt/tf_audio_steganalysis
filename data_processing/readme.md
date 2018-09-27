@@ -1,11 +1,18 @@
 ## Tools for steganalysis
 
-## File description
+### File description
 ID      |   File                    |   Function
 :-      |   :-                      |    :-
-1       |   tools                   |   QMDCT coefficients extractor and steganographic algorithm encoders
-2       |   secret_message          |   secret message file for embedding
-3       |   file_move.py            |   a script for file move in batch
-4       |   samples_make.py         |   a script for samples(cover & stego) make
-5       |   QMDCT_extraction.py     |   a script for QMDCT coefficients matrix extraction
-6       |   train_test_split.py     |   a script for dataset split
+1       |   batch_scripts           |   batch scripts for run of python scripts
+2       |   python_scripts          |   python scripts for samples make, QMDCT extraction and so on
+3       |   secret_message          |   secret message file for embedding
+4       |   BatchRename.exe         |   an *.exe for file rename in batch
+
+### Procedure of data processing
+1. samples make
+2. samples check (bitrate, file size, embedding rate)
+3. QMDCT extraction
+4. train and test split
+5. feature extraction
+6. SVM train, validation and test
+7. record the results

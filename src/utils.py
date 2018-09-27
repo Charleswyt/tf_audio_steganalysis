@@ -131,7 +131,12 @@ def read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, 
     """
     cover_files_list = get_files_list(cover_files_path)         # data list of cover files
     stego_files_list = get_files_list(stego_files_path)         # data list of stego files
-    sample_num = len(cover_files_list)                          # total pairs of samples
+    sample_num_cover = len(cover_files_list)                    # total pairs of samples (cover)
+    sample_num_stego = len(stego_files_list)                    # total pairs of samples (stego)
+    sample_num = min(sample_num_cover, sample_num_stego)        # deal with the quantity inequality of cover and stego
+
+    cover_files_list = cover_files_list[:sample_num]            # data list of cover files
+    stego_files_list = stego_files_list[:sample_num]            # data list of stego files
     cover_label_list = np.zeros(sample_num, np.int32)           # label list of cover files
     stego_label_list = np.ones(sample_num, np.int32)            # label list of stego files
 
@@ -144,7 +149,7 @@ def read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, 
     if start_idx is not None and start_idx > sample_num:
         start_idx = 0
     if end_idx is not None and end_idx > sample_num:
-        end_idx = sample_num + 1
+        end_idx = sample_num
 
     cover_data_list = list(temp_t[start_idx:end_idx, 0])
     cover_label_list = list(temp_t[start_idx:end_idx, 1])

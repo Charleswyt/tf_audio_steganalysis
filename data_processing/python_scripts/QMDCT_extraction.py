@@ -10,6 +10,8 @@ Finished on 2018.01.09
 import os
 import sys
 
+sys.path.append("tools")
+
 def QMDCT_extract(files_path, file_num=None, file_type="mp3"):
     """
     :param files_path: path of MP3 files for QMDCT extraction
