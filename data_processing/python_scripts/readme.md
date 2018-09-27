@@ -38,6 +38,7 @@ If the sum of two percent is not 1.0, an error is presented.
 
 ### Tools for sample make
 The usage of each encoder is shown as follows.
+
 Encoder         |   Command
 :-:      	    |    :-
 Encode          |   encode.exe -b "bitrate" "path of wav audio" "path of mp3 audio"

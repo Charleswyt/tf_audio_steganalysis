@@ -8,11 +8,19 @@ ID      |   File                    |   Function
 3       |   secret_message          |   secret message file for embedding
 4       |   BatchRename.exe         |   an *.exe for file rename in batch
 
-### Procedure of data processing
+### Procedure of data processing (machine learning)
 1. samples make
 2. samples check (bitrate, file size, embedding rate)
 3. QMDCT extraction
 4. train and test split
-5. feature extraction
+5. [feature extraction](https://github.com/Charleswyt/audio_steganalysis_ml/tree/master/feature_extract)
 6. SVM train, validation and test
 7. record the results
+
+### Procedure of data processing (deep learning)
+1. samples make
+2. samples check (bitrate, file size, embedding rate)
+3. QMDCT extraction
+4. train and test split
+5. training and validation
+6. record the results
