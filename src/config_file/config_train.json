@@ -1,12 +1,12 @@
 {
 	"files_path": {
-        "cover_train_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/320/train",
-        "cover_valid_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/320/validation",
-        "stego_train_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_320_W_5_H_7_ER_10/train",
-        "stego_valid_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_320_W_5_H_7_ER_10/validation",
+        "cover_train_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/train",
+        "cover_valid_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/validation",
+        "stego_train_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_128_W_7_H_7_ER_10/train",
+        "stego_valid_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_128_W_7_H_7_ER_10/validation",
         "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis",
         "logs_path": "/home1/wyt/code/tf_audio_steganalysis/logs/steganalysis",
-        "task_name": "EECS_B_320_W_5_H_7_ER_10"
+        "task_name": "EECS_B_128_W_7_H_7_ER_10"
     },
     "index": {
         "start_index_train": null,
@@ -20,11 +20,11 @@
         "mode": "train",
         "checkpoint": true,
         "carrier": "qmdct",
-        "network": "downsampling_network1"
+        "network": "tpan"
     },
     "hyper_parameters": {
         "batch_size": 128,
-        "learning_rate": 0.001,
+        "learning_rate": 0.000975,
         "epoch": 100,
         "seed": 1,
         "is_regulation": true,
@@ -39,7 +39,7 @@
     },
     "learning_rate_method":{
         "decay_method": "exponential",
-        "decay_step": 10000,
+        "decay_step": 5000,
         "decay_rate": 0.9,
         "staircase": false
     },

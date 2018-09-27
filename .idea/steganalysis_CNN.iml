@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/jupyter" />
-      <excludeFolder url="file://$MODULE_DIR$/venv" />
-      <excludePattern pattern="__pycache__" />
-    </content>
+    <content url="file://$MODULE_DIR$/src" />
     <orderEntry type="jdk" jdkName="Python 3.5" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
