@@ -1,4 +1,4 @@
-## Usage of python scipts
+## Usage of python scripts
 
 ### QMDCT extraction
 python QMDCT_extract.py "files_path" "file_num"
@@ -9,19 +9,19 @@ usage:
 1. python QMDCT_extract.py ***
 2. python QMDCT_extract.py *** 1000
 
-### File move
+### File move (Optional)
 The extracted QMDCT coefficients files and audio files are kept in the same path. To move these coefficients files, you need this python scripts.
 
 python file_move.py "root_old" "root_new" "file_type"
 + **files_path**: original file path
 + **file_num**: new file path
-+ **file_type**: type of files to be moved, defualt: txt
++ **file_type**: type of files to be moved, default: txt
   
 usage: 
 1. python file_move.py *** ***
 2. python file_move.py *** *** txt
 
-### Train and test dataset aplit
+### Train and test dataset split (Optional)
 If you need to split the dataset into train and test, this python script may satisfy you.
 
 python file_move.py "files_path" "percent_train" "percent_validation"
@@ -36,7 +36,7 @@ usage:
 
 If the sum of two percent is not 1.0, an error is presented.
 
-### Tools for sample make
+### Tools for sample making
 The usage of each encoder is shown as follows.
 
 Encoder         |   Command
@@ -47,10 +47,10 @@ MP3Stego(stego) |   encode_MP3Stego.exe -b "bitrate" -E "path of embedding file"
 MP3Stego(stego) |   encode_MP3Stego.exe -b "bitrate" -E "path of embedding file" -P "password" "path of wav audio" "path of mp3 audio"
 HCM             |   encode_HCM.exe -b "bitrate" -embed "path of embedding file" -cost "type of cost function" -er "embedding_rate" -framenumber "maximum number of embedding frames" "path of wav audio" "path of mp3 audio"
 
-There are points which are needde to be paid attention.
+There are points which are needed to be paid attention.
 + MP3Stego can be used to encode MP3, however the structure of LAME and MP3Stego is not fully the same. Thus, the cover samples of HCM, EECS and others are encoded via LAME and the cover samples of MP3Stego are encoder via MP3Stego.
 + The MP3Stego encoder is not reformed by us, which means we can't decide the length of secret messages via command line. And we complete the change of message length via the change of embedding file path. 
-+ The meaning of each parameters are:
++ The meaning of each parameter are:
     * -**b**: bitrate, 128, 192, 256, 320.
     * -**E**: path of embedding file, any valid path is okay, just for MP3Stego.
     * -**P**: password, just for MP3Stego.
