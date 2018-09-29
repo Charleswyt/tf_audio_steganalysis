@@ -11,8 +11,7 @@ Modified on 2018.08.23
 import os
 import json
 import argparse
-from utils import folder_make, fullfile
-from utils import get_unix_stamp, get_time
+from utils import *
 
 """
 function:
@@ -108,16 +107,19 @@ def command_parse():
     models_path_task, logs_path_task = fullfile(models_path_network, arguments.task_name), fullfile(logs_path_network, arguments.task_name)
     folder_make(models_path_task), folder_make(logs_path_task)
 
-    # level: training start time
-    current_time_stamp = str(get_unix_stamp(get_time()))
-    models_path_current, logs_path_current = fullfile(models_path_task, current_time_stamp), fullfile(logs_path_task, current_time_stamp)
-    folder_make(models_path_current), folder_make(logs_path_current)
+    # process for checkpoint
+    sub_directory = get_sub_directory(models_path_task)
+    if arguments.checkpoint is True and len(sub_directory) > 0:
+        models_path_current = sub_directory[-1]
+        logs_path_current = models_path_current.replace("models", "logs")
+    else:
+        # level: training start time
+        current_time_stamp = str(get_unix_stamp(get_time()))
+        models_path_current, logs_path_current = fullfile(models_path_task, current_time_stamp), fullfile(logs_path_task, current_time_stamp)
+        folder_make(models_path_current), folder_make(logs_path_current)
 
     arguments.model_path = models_path_current
     arguments.log_path = logs_path_current
-
-    print(arguments.model_path)
-    print(arguments.log_path)
 
     return arguments
 
@@ -191,10 +193,16 @@ def config_train_file_read(config_file_path):
         models_path_task, logs_path_task = fullfile(models_path_network, arguments.task_name), fullfile(logs_path_network, arguments.task_name)
         folder_make(models_path_task), folder_make(logs_path_task)
 
-        # level: training start time
-        current_time_stamp = str(get_unix_stamp(get_time()))
-        models_path_current, logs_path_current = fullfile(models_path_task, current_time_stamp), fullfile(logs_path_task, current_time_stamp)
-        folder_make(models_path_current), folder_make(logs_path_current)
+        # process for checkpoint
+        sub_directory = get_sub_directory(models_path_task)
+        if arguments.checkpoint is True and len(sub_directory) > 0:
+            models_path_current = sub_directory[-1]
+            logs_path_current = models_path_current.replace("models", "logs")
+        else:
+            # level: training start time
+            current_time_stamp = str(get_unix_stamp(get_time()))
+            models_path_current, logs_path_current = fullfile(models_path_task, current_time_stamp), fullfile(logs_path_task, current_time_stamp)
+            folder_make(models_path_current), folder_make(logs_path_current)
 
         arguments.model_path = models_path_current
         arguments.log_path = logs_path_current

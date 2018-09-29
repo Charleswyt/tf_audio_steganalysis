@@ -305,3 +305,21 @@ def get_model_file_path(path):
         return tf.train.latest_checkpoint(path)
     else:
         return None
+
+
+def get_sub_directory(directory_path):
+    """
+    get subdirectory in a directory
+    :param directory_path: directory path to be retrieved
+    :return:
+        sub_directory_list
+    """
+    sub_directory_list = []
+    file_path_list = os.listdir(directory_path)
+    file_path_list.sort()
+    for file_path in file_path_list:
+        full_path = fullfile(directory_path, file_path)
+        if os.path.isdir(full_path):
+            sub_directory_list.append(full_path)
+
+    return sub_directory_list

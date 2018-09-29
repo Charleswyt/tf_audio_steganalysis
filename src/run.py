@@ -62,6 +62,7 @@ def train(args):
     coeff_regulation = args.coeff_regulation                                                # the gain of regulation
     classes_num = args.class_num                                                            # classes number
     carrier = args.carrier                                                                  # carrier (qmdct | audio | image)
+    task_name = args.task_name                                                              # task name
     checkpoint = args.checkpoint                                                            # checkpoint
 
     max_to_keep = args.max_to_keep                                                          # maximum number of recent checkpoints to keep
@@ -85,9 +86,10 @@ def train(args):
                                         decay_rate=decay_rate)                              # learning rate
 
     # placeholder
-    data = tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width, channel), name="data")
-    labels = tf.placeholder(dtype=tf.int32, shape=(batch_size, ), name="label")
-    is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
+    with tf.variable_scope("placeholder"):
+        data = tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width, channel), name="data")
+        labels = tf.placeholder(dtype=tf.int32, shape=(batch_size, ), name="label")
+        is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network
     if args.network not in networks:
@@ -130,7 +132,9 @@ def train(args):
                                keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
 
     # initialize
-    with tf.Session() as sess:
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+    with tf.Session(config=config) as sess:
         train_writer_train = tf.summary.FileWriter(log_path + "/train", tf.get_default_graph())
         train_writer_valid = tf.summary.FileWriter(log_path + "/validation", tf.get_default_graph())
         init = tf.global_variables_initializer()
@@ -138,9 +142,11 @@ def train(args):
 
         # restore the model and keep training from the current breakpoint
         if checkpoint is True:
-            model_file_path = get_model_file_path(args.model_path)
+            model_file_path = get_model_file_path(model_path)
             if model_file_path is not None:
                 saver.restore(sess, model_file_path)
+        else:
+            model_file_path = fullfile(model_path, task_name)
 
         print("Start training...")
         print("Input data: (%d, %d, %d)" % (height, width, channel))
@@ -180,8 +186,8 @@ def train(args):
 
                 et = time.time() - start_time_all
                 et = str(datetime.timedelta(seconds=et))[:-7]
-                print("[network: %s, task: %s] elapsed: %s, epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f"
-                      % (args.network, args.task_name, et, epoch + 1, train_iterations, err, ac))
+                print("[network: %s, task: %s, global_step: %d] elapsed: %s, epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f"
+                      % (args.network, args.task_name, step_train, et, epoch + 1, train_iterations, err, ac))
 
             print("=====================================================================================================================================")
 
@@ -216,7 +222,7 @@ def train(args):
             if valid_accuracy_average > max_accuracy:
                 max_accuracy = valid_accuracy_average
                 max_accuracy_epoch = epoch + 1
-                saver.save(sess, model_path, global_step=global_step)
+                saver.save(sess, model_file_path, global_step=global_step)
                 print("The model is saved successfully.")
 
             print("[network: %s, task: %s] epoch: %003d, learning rate: %f, train loss: %f, train accuracy: %f, valid loss: %f, valid accuracy: %f, "
