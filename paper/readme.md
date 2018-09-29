@@ -8,19 +8,9 @@ All steganographic algorithms are coded by **Kun Yang** (E-Mail: yangkun9076@iie
 The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1rYCzJRksHkgbOOYI9MqQjA) <br>
 The *extraction password* is "**z28d**".
 
-## The method of pre-processing
-There are positive and negative values in QMDCT coefficients matrix. The values in interval **[-15, 15]** is modified.
-The ratio of values in **[-15, 15]** is more than **99%**, as the figure shown. <br>
-
-* Abs <br>
-* Truncation <br>
-* Down-sampling <br>
-![The distribution of QMDCT coefficients](https://i.imgur.com/vDJ2gWm.jpg)
-The proportion of zero value is far greater than others, so we remove the zero value in the right figure for better visual effects.
-
 ## Steganalysis algorithms
 All steganalysis algorithms are vailable via [audio_steganalysis_ml](https://github.com/Charleswyt/audio_steganalysis_ml).
-* Qiao<sup>[4]</sup>
+* D2MA<sup>[4]</sup>
 * MDI2<sup>[5]</sup>
 * ADOPT<sup>[6]</sup>
 
