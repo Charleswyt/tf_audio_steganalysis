@@ -8,11 +8,15 @@ All steganographic algorithms are coded by **Kun Yang** (E-Mail: yangkun9076@iie
 The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1rYCzJRksHkgbOOYI9MqQjA) <br>
 The *extraction password* is "**z28d**".
 
-## Steganalysis algorithms
+## Steganalytic algorithms based on machine learning
 All steganalysis algorithms are vailable via [audio_steganalysis_ml](https://github.com/Charleswyt/audio_steganalysis_ml).
 * D2MA<sup>[4]</sup>
 * MDI2<sup>[5]</sup>
 * ADOPT<sup>[6]</sup>
+
+## Steganalytic algorithms based on deep learning
+* [WASDN](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/CNN-based%20Steganalysis%20of%20MP3%20Steganography%20in%20the%20Entropy%20Code%20Domain)
+* [TPA-Net](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/TPA-Net%20-%20QMDCT%20Coefficients%20Phase-Aware%20and%20Distribution-based%20CNN%20for%20MP3%20Steganalysis)
 
 ## Reference
 **[1]** Haiying Gao. 2007. [**The MP3 steganography algorithm based on Huffman coding**](https://www.researchgate.net/publication/290779951_The_MP3_steganography_algorithm_based_on_huffman_coding). Acta Scientiarum Naturalium Universitatis Sunyatseni 4 (2007), 009. <br>

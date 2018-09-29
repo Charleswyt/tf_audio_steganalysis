@@ -1,4 +1,4 @@
-## The architecture of the network (Wang Audio Steganalysis Deep Network, WASDN)
+## WASDN: Wang Audio Steganalysis Deep Network
 ## Structure
 ![The structure of the proposed network](https://i.imgur.com/h0o5lfB.jpg)
 
