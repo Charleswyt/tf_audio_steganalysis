@@ -22,5 +22,5 @@ ID      |   File                    |   Function
 2. samples check (bitrate, file size, embedding rate)
 3. QMDCT extraction
 4. train and test split
-5. [steganalysis via deep learning-based method](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/CNN-based%20Steganalysis%20of%20MP3%20Steganography%20in%20the%20Entropy%20Code%20Domain)
+5. [steganalysis via deep learning-based method](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)
 6. record the results
