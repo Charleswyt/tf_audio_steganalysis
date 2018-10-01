@@ -9,6 +9,9 @@ Modified on
 @author: Wang Yuntao
 """
 
+from layer import *
+from filters import *
+
 """
     function:
         all versions are modified on the basis of tpan

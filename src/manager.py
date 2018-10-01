@@ -24,11 +24,11 @@ with gm.auto_choice():
 
 def is_gpu_available(cuda_only=True):
     if cuda_only:
-        return any((x.device_type == 'GPU')
-                   for x in _device_lib.list_local_devices())
+        result = any((x.device_type == 'GPU') for x in _device_lib.list_local_devices())
     else:
-        return any((x.device_type == 'GPU' or x.device_type == 'SYCL')
-                   for x in _device_lib.list_local_devices())
+        result = any((x.device_type == 'GPU' or x.device_type == 'SYCL') for x in _device_lib.list_local_devices())
+
+    return result
 
 
 def parse(line, query_args):
@@ -45,7 +45,6 @@ def parse(line, query_args):
     power_manage_enable = lambda v: ("Not Support" not in v)                                    # whether the GPU supports power management
     to_countable = lambda v: float(v.upper().strip().replace("MIB", "").replace("W", ""))       # remove the unit
     process = lambda k, v: ((int(to_countable(v)) if power_manage_enable(v) else 1) if k in countable_args else v.strip())
-
     return {k: process(k, v) for k, v in zip(query_args, line.strip().split(","))}
 
 
@@ -127,29 +126,25 @@ class GPUManager:
             a TF device object
         Auto choice the freest GPU device,not specified ones
         """
-        if is_gpu_available() is True:
-            for old_info, new_info in zip(self.gpus, query_gpu(self.query_args)):
-                old_info.update(new_info)
-            unspecified_gpus = [gpu for gpu in self.gpus if not gpu["specified"]] or self.gpus
+        for old_info, new_info in zip(self.gpus, query_gpu(self.query_args)):
+            old_info.update(new_info)
+        unspecified_gpus = [gpu for gpu in self.gpus if not gpu["specified"]] or self.gpus
 
-            if mode == 0:
-                print("Choosing the GPU device has largest free memory...")
-                chosen_gpu = self._sort_by_memory(unspecified_gpus, True)[0]
-            elif mode == 1:
-                print("Choosing the GPU device has highest free memory rate...")
-                chosen_gpu = self._sort_by_power(unspecified_gpus)[0]
-            elif mode == 2:
-                print("Choosing the GPU device by power...")
-                chosen_gpu = self._sort_by_power(unspecified_gpus)[0]
-            else:
-                print("Given an unavailable mode,will be chosen by memory")
-                chosen_gpu = self._sort_by_memory(unspecified_gpus)[0]
-            chosen_gpu["specified"] = True
-            index = chosen_gpu["index"]
-            print("Using GPU {i}:\n{info}".format(i=index, info="\n".join([str(k) + ":" + str(v) for k, v in chosen_gpu.items()])))
-            print("GPU %s is selected." % index)
+        if mode == 0:
+            print("Choosing the GPU device has largest free memory...")
+            chosen_gpu = self._sort_by_memory(unspecified_gpus, True)[0]
+        elif mode == 1:
+            print("Choosing the GPU device has highest free memory rate...")
+            chosen_gpu = self._sort_by_power(unspecified_gpus)[0]
+        elif mode == 2:
+            print("Choosing the GPU device by power...")
+            chosen_gpu = self._sort_by_power(unspecified_gpus)[0]
         else:
-            index = -1
-            print("No GPU is selected.")
+            print("Given an unavailable mode,will be chosen by memory")
+            chosen_gpu = self._sort_by_memory(unspecified_gpus)[0]
+        chosen_gpu["specified"] = True
+        index = chosen_gpu["index"]
+        print("Using GPU {i}:\n{info}".format(i=index, info="\n".join([str(k) + ":" + str(v) for k, v in chosen_gpu.items()])))
+        print("GPU-%s is selected." % index)
 
         return index
