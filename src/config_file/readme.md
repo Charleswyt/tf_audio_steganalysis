@@ -28,6 +28,7 @@
     --cover_valid_path xxx \
     --stego_train_path xxx \
     --stego_valid_path xxx \
+    --tfreocrds_path xxx \
     --models_path xxx \
     --logs_path xxx \
     --task_name xxx \
@@ -86,6 +87,7 @@ Param                       | Function                          | option
  **cover_valid_path**       | path of cover validation files    | -
  **stego_train_path**       | path of stego train files         | -
  **stego_valid_path**       | path of stego validation files    | -
+ **tfrecords_path**         | path of tfreocrds                 | -
  **models_path**            | path of models including checkpoint, data, index and meta files   | -
  **logs_path**              | path of log files including train and validation                  | -
  gpu_selection              | mode of gpu selection             | auto(default), manu

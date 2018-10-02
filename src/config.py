@@ -67,6 +67,7 @@ def command_parse():
     parser.add_argument("--stego_train_path", type=str, help="the path of directory containing stego files for train")
     parser.add_argument("--stego_valid_path", type=str, help="the path of directory containing stego files for validation")
     parser.add_argument("--stego_test_path", type=str, help="the path of directory containing stego files for test")
+    parser.add_argument("--tfrecords_path", type=str, help="the path of directory containing all tfrecord files")
     parser.add_argument("--models_path", type=str, help="the path of directory containing models")
     parser.add_argument("--logs_path", type=str, help="the path of directory containing logs")
     parser.add_argument("--task_name", type=str, help="the name of task")
@@ -93,6 +94,15 @@ def command_parse():
     parser.add_argument("--keep_checkpoint_every_n_hours", type=float, default=0.5, help="how often to keep checkpoints (default: 0.5)")
 
     arguments = parser.parse_args()
+
+    # create folder (tfrecord)
+    # level: root
+    tfrecords_path = arguments.tfrecords_path
+    folder_make(tfrecords_path)
+
+    # level: task
+    tfrecords_path_task = fullfile(tfrecords_path, arguments.task_name)
+    folder_make(tfrecords_path_task)
 
     # create folder (models and logs)
     # level: root
@@ -135,6 +145,7 @@ def config_train_file_read(config_file_path):
                 self.cover_valid_path = file_content['files_path']['cover_valid_path']
                 self.stego_train_path = file_content['files_path']['stego_train_path']
                 self.stego_valid_path = file_content['files_path']['stego_valid_path']
+                self.tfrecords_path = file_content['files_path']['tfrecords_path']
                 self.models_path = file_content['files_path']['models_path']
                 self.logs_path = file_content['files_path']['logs_path']
                 self.task_name = file_content['files_path']['task_name']
@@ -179,6 +190,15 @@ def config_train_file_read(config_file_path):
                 self.end_index_valid = file_content["index"]["end_index_valid"]
 
         arguments = Variable()
+
+        # create folder (tfrecord)
+        # level: root
+        tfrecords_path = arguments.tfrecords_path
+        folder_make(tfrecords_path)
+
+        # level: task
+        tfrecords_path_task = fullfile(tfrecords_path, arguments.task_name)
+        folder_make(tfrecords_path_task)
 
         # create folder (models and logs)
         # level: root
