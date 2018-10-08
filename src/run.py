@@ -145,6 +145,8 @@ def train(args):
             model_file_path = get_model_file_path(model_path)
             if model_file_path is not None:
                 saver.restore(sess, model_file_path)
+            else:
+                model_file_path = fullfile(model_path, task_name)
         else:
             model_file_path = fullfile(model_path, task_name)
 

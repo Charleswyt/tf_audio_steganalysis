@@ -14,21 +14,20 @@ from filters import *
 
 """
     function:
-        wasdn(Wang Audio Steganalysis Deep Network): The proposed network
+        wasdn(Wang Audio Steganalysis Deep Network)
+        tbafcn(QMDCT Coefficients Block-Aware and Distribution-based CNN for MP3 Steganalysis)
 """
 
 
-def wasdn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True,
-          is_trunc=False, threshold_left=-8, threshold_right=8, is_diff=False, is_diff_abs=False, is_abs_diff=False, order=0, direction=None):
+def wasdn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    The proposed network
+    CNN-based steganalysis of MP3 Steganography in the Entropy Code Domain
     """
-    print("network1: The proposed network")
-    print("Network Structure: ")
+    print("Network: WASDN")
+    print("Network structure: ")
 
     # preprocessing
-    data_trunc = truncation_layer(input_data, is_trunc, threshold_left, threshold_right, name="truncation")
-    data_diff = diff_layer(data_trunc, is_diff, is_diff_abs, is_abs_diff, order, direction, name="difference")
+    data_diff = diff_layer(input_data, is_diff=True, is_diff_abs=False, is_abs_diff=False, order=2, direction="inter", name="difference")
 
     # Group1
     conv1_1 = conv_layer(data_diff, 3, 3, 1, 1, 16, name="conv1_1", activation_method=activation_method, padding=padding)
@@ -76,13 +75,13 @@ def wasdn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding
     return logits
 
 
-def tpan(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    CNN with truncation and phase-aware for audio steganalysis
+    QMDCT Coefficients Block-Aware and Distribution-based CNN
     """
 
-    print("network: TPA-Net")
-    print("Network Structure: ")
+    print("Network: TBAFC-Net")
+    print("Network structure: ")
 
     # preprocessing
     data_trunc = truncation_layer(input_data, is_turnc=True, min_value=-8, max_value=8, name="truncation")
@@ -122,9 +121,9 @@ def tpan(input_data, class_num=2, is_bn=True, activation_method="tanh", padding=
 
     # fully conv layer
     fcn6 = fconv_layer(pool5_4, 4096, name="fcn6")
-    bn7 = batch_normalization(fcn6, name="BN7", activation_method="tanh", is_train=is_bn)
+    bn7 = batch_normalization(fcn6, name="BN7", activation_method="relu", is_train=is_bn)
     fcn8 = fconv_layer(bn7, 512, name="fcn8")
-    bn9 = batch_normalization(fcn8, name="BN9", activation_method="tanh", is_train=is_bn)
+    bn9 = batch_normalization(fcn8, name="BN9", activation_method="relu", is_train=is_bn)
 
     logits = fc_layer(bn9, class_num, name="fc10", activation_method=None)
 

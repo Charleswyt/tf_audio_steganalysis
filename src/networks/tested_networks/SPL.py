@@ -16,26 +16,23 @@ from filters import *
     function:
         all versions are modified on the basis of tpan
         
-        tpan1_1 : Remove the truncation module
-        tpan1_2 : Remove the phase-split module
-        tpan1_3 : Remove the left-crop module
-        tpan1_4 : Quit replacing fully connected layers with fully convolutional layer
+        tban1_1 : Remove the truncation module
+        tban1_2 : Remove the phase-split module
+        tban1_3 : Remove the left-crop module
+        tban1_4 : Quit replacing fully connected layers with fully convolutional layer
 """
 
 
-def tpan1_1(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn1_1(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
     Remove the truncation module
     """
 
-    print("TPA-Net1_1: Remove the truncation module")
+    print("TBAFC-Net1_1: Remove the truncation module")
     print("Network Structure: ")
 
-    # preprocessing
-    data_trunc = truncation_layer(input_data, is_turnc=True, min_value=-8, max_value=8, name="truncation")
-
     # down sampling
-    conv0 = phase_split(data_trunc, 2, 2, "phase_split")
+    conv0 = phase_split(input_data, 2, 2, "phase_split")
 
     # Group1
     conv1_1 = conv_layer(conv0, 3, 3, 1, 1, 32, name="conv1_1", activation_method=activation_method, padding=padding)
@@ -78,12 +75,12 @@ def tpan1_1(input_data, class_num=2, is_bn=True, activation_method="tanh", paddi
     return logits
 
 
-def tpan1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    Remove the phase-split module
+    Remove the block-split module
     """
 
-    print("TPA-Net1_2: Remove the phase-split module")
+    print("TBAFC-Net1_2: Remove the block-split module")
     print("Network Structure: ")
 
     # preprocessing
@@ -130,12 +127,12 @@ def tpan1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", paddi
     return logits
 
 
-def tpan1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    Remove the left-crop module
+    Remove the left-cropping module
     """
 
-    print("TPA-Net1_2: Remove the phase-split module")
+    print("TBAFC-Net1_3: Remove the left-cropping module")
     print("Network Structure: ")
 
     # preprocessing
@@ -185,11 +182,11 @@ def tpan1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", paddi
     return logits
 
 
-def tpan1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
     Quit replacing fully connected layers with fully convolutional layer
     """
-    print("TPA-Net1_4: Quit replacing fully connected layers with fully convolutional layer")
+    print("TBAFC-Net1_4: Quit replacing fully connected layers with fully convolutional layer")
     print("Network Structure: ")
 
     # preprocessing
