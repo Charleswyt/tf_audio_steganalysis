@@ -19,7 +19,7 @@ You can use command **pip install -r requirements.txt** to install all packages 
 1. install [**python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/) and add the path into the environment variable (recommand python3.5)
 2. **GPU** run environment [**configure**](https://blog.csdn.net/yhaolpz/article/details/71375762?locationNum=14&fps=1) if train the network (optional)
 3. install all dependent packages mentioned above (open **[setup](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/setup)/requirements.txt** and input "**pip install -r requirements**" into your cmd window)
-4. **run** the code as the [**example**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/config_file) as shows
+4. **run** the code as the [**example**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/config_file) as shows
 5. use [**tensorboard**](http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html) to visualize the train process such as the **accuracy** and **loss curve** of train and validation. The command is "**tensorboard --logdir=/path/to/log-directory**"
 
 ## File description
