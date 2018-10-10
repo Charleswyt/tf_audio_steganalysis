@@ -199,6 +199,7 @@ def config_train_file_read(config_file_path):
         # level: task
         tfrecords_path_task = fullfile(tfrecords_path, arguments.task_name)
         folder_make(tfrecords_path_task)
+        arguments.tfrecord_path = tfrecords_path_task
 
         # create folder (models and logs)
         # level: root

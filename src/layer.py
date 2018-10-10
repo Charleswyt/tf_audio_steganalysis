@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from math import floor
-import tensorflow as tf
 from filters import *
+import tensorflow as tf
+from math import floor, sqrt
+from itertools import product
 from tensorflow.contrib.layers.python.layers import batch_norm, layer_norm
 
 """
@@ -16,8 +17,6 @@ Modified on 2018.09.17
 
 """
 function:
-    build the classified network
-
     1.  pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=True, padding="SAME")
     2.  batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3, activation_method="relu", is_train=True)
     3.  dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True)
@@ -29,20 +28,21 @@ function:
     8.  static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAME")
     9.  truncation_layer(input_data, is_turnc, min_value, max_value, name)
     10. diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, padding="SAME")
-    11. down_sampling(input_data, x_stride, y_stride, name, with_original=True, padding="VALID")
-    12. loss_layer(logits, label)
-    13. accuracy_layer(logits, label)
-    14. optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
+    11. block_sampling_layer(input_data, block_size, name="block_sampling")
+    12. rich_hpf_layer(input_data, name)
+    13. loss_layer(logits, label)
+    14. accuracy_layer(logits, label)
+    15. optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
               epsilon=1e-8, initial_accumulator_value=0.1, momentum=0.9, decay=0.9)
-    15. learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
+    16. learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
                         end_learning_rate=0.0001, power=1.0, cycle=False)
-    16. size_tune(input_data)
-    17. inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
+    17. size_tune(input_data)
+    18. inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
                  is_max_pool=True, init_method="xavier", bias_term=True, is_pretrain=True)
-    18. res_conv_block(input_data, height, width, x_stride, y_stride, filter_num, name,
+    19. res_conv_block(input_data, height, width, x_stride, y_stride, filter_num, name,
                    activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
                    init_method="xavier", bias_term=True, is_pretrain=True)
-    19. res_conv_block_beta(input_data, height, width, x_stride, y_stride, filter_num, name,
+    20. res_conv_block_beta(input_data, height, width, x_stride, y_stride, filter_num, name,
                         activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
                         init_method="xavier", bias_term=True, is_pretrain=True)
 """
@@ -398,11 +398,10 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VAL
         return feature_map
 
 
-def truncation_layer(input_data, is_turnc, min_value, max_value, name):
+def truncation_layer(input_data, min_value, max_value, name):
     """
     the layer which is used for truncation
     :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param is_turnc: whether make truncation or not
     :param min_value: min value for truncation
     :param max_value: max value for truncation
     :param name: the name of the truncation layer
@@ -410,11 +409,8 @@ def truncation_layer(input_data, is_turnc, min_value, max_value, name):
     :return:
         feature_map: 4-D tensor [number, height, width, channel]
     """
-    if is_turnc is True:
-        output = tf.clip_by_value(input_data, min_value, max_value, name)
-    else:
-        output = input_data
 
+    output = tf.clip_by_value(input_data, min_value, max_value, name)
     print("name: truncation layer, threshold_left: %d, threshold_right: %d" % (min_value, max_value))
 
     return output
@@ -498,64 +494,112 @@ def diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, 
             return input_data
 
 
-def phase_split(input_data, x_stride, y_stride, name, with_original=True, padding="VALID"):
+def block_sampling_layer(input_data, block_size, name="block_sampling"):
     """
-    get m * m(m is 2 in general) phase_split layer
+    get m * m (2 or 4 in general) block_split layer
     :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param x_stride: stride in X axis
-    :param y_stride: stride in Y axis
+    :param block_size: size of block, 2 or 4
     :param name: the name of the layer
-    :param with_original: whether the output is with the crop of original
-    :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
     :return:
         feature_map: 4-D tensor [number, height, width, channel]
     """
 
-    conv1 = tf.nn.conv2d(input=input_data,
-                         filter=downsampling_kernel1,
-                         strides=[1, x_stride, y_stride, 1],
-                         padding=padding,
-                         name="conv1")
+    block_num = block_size * block_size
+    init_block = block_num * [0]
+    temp = init_block[:]
+    temp[0] = 1
+    downsampling_kernel = tf.constant(value=temp,
+                                      dtype=tf.float32,
+                                      shape=[block_size, block_size, 1, 1],
+                                      name="downsampling_kernel" + str(block_size) + "_0")
 
-    conv2 = tf.nn.conv2d(input=input_data,
-                         filter=downsampling_kernel1,
-                         strides=[1, x_stride, y_stride, 1],
-                         padding=padding,
-                         name="conv2")
+    output = tf.nn.conv2d(input=input_data,
+                          filter=downsampling_kernel,
+                          strides=[1, block_size, block_size, 1],
+                          padding="VALID",
+                          name="downsampling" + str(block_size) + "_0")
 
-    conv3 = tf.nn.conv2d(input=input_data,
-                         filter=downsampling_kernel1,
-                         strides=[1, x_stride, y_stride, 1],
-                         padding=padding,
-                         name="conv3")
+    for i in range(block_num - 1):
+        temp = init_block[:]
+        temp[i+1] = 1
+        downsampling_kernel = tf.constant(value=temp,
+                                          dtype=tf.float32,
+                                          shape=[block_size, block_size, 1, 1],
+                                          name="downsampling_kernel" + str(block_size) + "_" + str(i+1))
 
-    conv4 = tf.nn.conv2d(input=input_data,
-                         filter=downsampling_kernel1,
-                         strides=[1, x_stride, y_stride, 1],
-                         padding=padding,
-                         name="conv4")
+        result = tf.nn.conv2d(input=input_data,
+                              filter=downsampling_kernel,
+                              strides=[1, block_size, block_size, 1],
+                              padding="VALID",
+                              name="downsampling" + str(block_size) + "_" + str(i+1))
 
-    if with_original is True:
-        input_shape = input_data.get_shape()
-        batch_size, height, width, channel = input_shape[0].value, input_shape[1].value, input_shape[2].value, input_shape[3].value
+        output = tf.concat([output, result], 3, "downsampling_concat")
 
-        ori1 = tf.slice(input_=input_data,
-                        begin=[0, 0, 0, 0],
-                        size=[batch_size, int(height / x_stride), int(width / y_stride), channel])
-
-        ori2 = tf.slice(input_=input_data,
-                        begin=[0, int(height / x_stride), 0, 0],
-                        size=[batch_size, int(height / x_stride), int(width / y_stride), channel])
-
-        conv_concat = tf.concat([ori1, ori2, conv1, conv2, conv3, conv4], 3, name=name)
-    else:
-        conv_concat = tf.concat([conv1, conv2, conv3, conv4], 3, name=name)
-
-    shape = conv_concat.get_shape()
+    shape = output.get_shape()
     print("name: %s, shape: (%d, %d, %d)"
           % (name, shape[1], shape[2], shape[3]))
 
-    return conv_concat
+    return output
+
+
+def cropping_layer(input_data, block_number, name):
+    """
+    cropping from the input data
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param block_number: number of cropping blocks
+    :param name: the name of the layer
+    :return:
+        feature_map: 4-D tensor [number, height, width, channel]
+    """
+
+    input_shape = input_data.get_shape()
+    batch_size, height, width, channel = input_shape[0].value, input_shape[1].value, input_shape[2].value, input_shape[3].value
+
+    stride = int(sqrt(block_number))
+    sub_matrix_height, sub_matrix_width = int(height / stride), int(width / stride)
+
+    output = tf.slice(input_=input_data,
+                      begin=[0, 0, 0, 0],
+                      size=[batch_size, sub_matrix_height, sub_matrix_width, channel])
+
+    for h, w in product(range(stride), range(stride)):
+        result = tf.slice(input_=input_data,
+                          begin=[0, h * sub_matrix_height, w * sub_matrix_width, 0],
+                          size=[batch_size, sub_matrix_height, sub_matrix_width, channel])
+        output = tf.concat([output, result], 3, name="cropping")
+
+    output = output[:, :, :, 1:]
+    shape = output.get_shape()
+    print("name: %s, shape: (%d, %d, %d)"
+          % (name, shape[1], shape[2], shape[3]))
+
+    return output
+
+
+def rich_hpf_layer(input_data, name):
+    """
+    multiple HPF processing
+    diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, name, padding="SAME")
+
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param name: the name of the layer
+    :return:
+        feature_map: 4-D tensor [number, height, width, channel]
+    """
+
+    dif_inter_1 = diff_layer(input_data, True, False, False, 1, "inter", "dif_inter_1", padding="SAME")
+    dif_inter_2 = diff_layer(input_data, True, False, False, 2, "inter", "dif_inter_2", padding="SAME")
+    dif_intra_1 = diff_layer(input_data, True, False, False, 1, "intra", "dif_intra_1", padding="SAME")
+    dif_intra_2 = diff_layer(input_data, True, False, False, 2, "intra", "dif_intra_2", padding="SAME")
+
+    dif_abs_inter_1 = diff_layer(input_data, False, False, True, 1, "inter", "abs_dif_inter_1", padding="SAME")
+    dif_abs_inter_2 = diff_layer(input_data, False, False, True, 2, "inter", "abs_dif_inter_2", padding="SAME")
+    dif_abs_intra_1 = diff_layer(input_data, False, False, True, 1, "intra", "abs_dif_intra_1", padding="SAME")
+    dif_abs_intra_2 = diff_layer(input_data, False, False, True, 2, "intra", "abs_dif_intra_2", padding="SAME")
+
+    output = tf.concat([dif_inter_1, dif_inter_2, dif_intra_1, dif_intra_2, dif_abs_inter_1, dif_abs_inter_2, dif_abs_intra_1, dif_abs_intra_2], 3, name=name)
+
+    return output
 
 
 def loss_layer(logits, labels, is_regulation=False, coeff=1e-3, method="sparse_softmax_cross_entropy"):
