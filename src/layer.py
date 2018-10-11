@@ -29,20 +29,21 @@ function:
     9.  truncation_layer(input_data, is_turnc, min_value, max_value, name)
     10. diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, padding="SAME")
     11. block_sampling_layer(input_data, block_size, name="block_sampling")
-    12. rich_hpf_layer(input_data, name)
-    13. loss_layer(logits, label)
-    14. accuracy_layer(logits, label)
-    15. optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
+    12. cropping_layer(input_data, multiples, with_overlap=True, name="cropping")
+    13. rich_hpf_layer(input_data, name)
+    14. loss_layer(logits, label)
+    15. accuracy_layer(logits, label)
+    16. optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
               epsilon=1e-8, initial_accumulator_value=0.1, momentum=0.9, decay=0.9)
-    16. learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
+    17. learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
                         end_learning_rate=0.0001, power=1.0, cycle=False)
-    17. size_tune(input_data)
-    18. inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
+    18. size_tune(input_data)
+    19. inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
                  is_max_pool=True, init_method="xavier", bias_term=True, is_pretrain=True)
-    19. res_conv_block(input_data, height, width, x_stride, y_stride, filter_num, name,
+    20. res_conv_block(input_data, height, width, x_stride, y_stride, filter_num, name,
                    activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
                    init_method="xavier", bias_term=True, is_pretrain=True)
-    20. res_conv_block_beta(input_data, height, width, x_stride, y_stride, filter_num, name,
+    21. res_conv_block_beta(input_data, height, width, x_stride, y_stride, filter_num, name,
                         activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
                         init_method="xavier", bias_term=True, is_pretrain=True)
 """
@@ -542,11 +543,12 @@ def block_sampling_layer(input_data, block_size, name="block_sampling"):
     return output
 
 
-def cropping_layer(input_data, block_number, name):
+def cropping_layer(input_data, multiples, with_overlap=True, name="cropping"):
     """
     cropping from the input data
     :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param block_number: number of cropping blocks
+    :param multiples: number for cropping in the height or width dimension
+    :param with_overlap: whether the cropping module is with overlap or not, overlap_size=0.5
     :param name: the name of the layer
     :return:
         feature_map: 4-D tensor [number, height, width, channel]
@@ -555,18 +557,26 @@ def cropping_layer(input_data, block_number, name):
     input_shape = input_data.get_shape()
     batch_size, height, width, channel = input_shape[0].value, input_shape[1].value, input_shape[2].value, input_shape[3].value
 
-    stride = int(sqrt(block_number))
-    sub_matrix_height, sub_matrix_width = int(height / stride), int(width / stride)
-
+    sub_matrix_height, sub_matrix_width = int(height / multiples), int(width / multiples)
+    print(sub_matrix_height, sub_matrix_width)
     output = tf.slice(input_=input_data,
                       begin=[0, 0, 0, 0],
                       size=[batch_size, sub_matrix_height, sub_matrix_width, channel])
-
-    for h, w in product(range(stride), range(stride)):
-        result = tf.slice(input_=input_data,
-                          begin=[0, h * sub_matrix_height, w * sub_matrix_width, 0],
-                          size=[batch_size, sub_matrix_height, sub_matrix_width, channel])
-        output = tf.concat([output, result], 3, name="cropping")
+    if with_overlap is True:
+        for h, w in product(range(multiples + 1), range(multiples + 1)):
+            height_begin = int(h * 0.5 * sub_matrix_height)
+            width_begin = int(w * 0.5 * sub_matrix_width)
+            print(height_begin, width_begin)
+            result = tf.slice(input_=input_data,
+                              begin=[0, height_begin, width_begin, 0],
+                              size=[batch_size, sub_matrix_height, sub_matrix_width, channel])
+            output = tf.concat([output, result], 3, name="cropping")
+    else:
+        for h, w in product(range(multiples), range(multiples)):
+            result = tf.slice(input_=input_data,
+                              begin=[0, h * sub_matrix_height, w * sub_matrix_width, 0],
+                              size=[batch_size, sub_matrix_height, sub_matrix_width, channel])
+            output = tf.concat([output, result], 3, name="cropping")
 
     output = output[:, :, :, 1:]
     shape = output.get_shape()
