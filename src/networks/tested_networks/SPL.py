@@ -4,7 +4,7 @@
 """
 Created on 2018.09.25
 Finished on 2018.09.25
-Modified on
+Modified on 2018.10.10
 
 @author: Wang Yuntao
 """
@@ -16,14 +16,14 @@ from filters import *
     function:
         all versions are modified on the basis of tpan
         
-        tpan1_1 : Remove the truncation module
-        tpan1_2 : Remove the phase-split module
-        tpan1_3 : Remove the left-crop module
-        tpan1_4 : Quit replacing fully connected layers with fully convolutional layer
+        tbafcn1_1 : Remove the truncation module
+        tbafcn1_2 : Remove the phase-split module
+        tbafcn1_3 : Remove the left-crop module
+        tbafcn1_4 : Quit replacing fully connected layers with fully convolutional layer
 """
 
 
-def tpan1_1(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn1_1(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
     Remove the truncation module
     """
@@ -31,11 +31,10 @@ def tpan1_1(input_data, class_num=2, is_bn=True, activation_method="tanh", paddi
     print("TPA-Net1_1: Remove the truncation module")
     print("Network Structure: ")
 
-    # preprocessing
-    data_trunc = truncation_layer(input_data, is_turnc=True, min_value=-8, max_value=8, name="truncation")
-
-    # down sampling
-    conv0 = phase_split(data_trunc, 2, 2, "phase_split")
+    # block sampling and cropping
+    block_sampling = block_sampling_layer(input_data, block_size=2, name="block_sampling")
+    cropping = cropping_layer(input_data, multiples=2, with_overlap=True, name="cropping")
+    conv0 = tf.concat([cropping, block_sampling], 3, name="conv0")
 
     # Group1
     conv1_1 = conv_layer(conv0, 3, 3, 1, 1, 32, name="conv1_1", activation_method=activation_method, padding=padding)
@@ -78,16 +77,16 @@ def tpan1_1(input_data, class_num=2, is_bn=True, activation_method="tanh", paddi
     return logits
 
 
-def tpan1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    Remove the phase-split module
+    Remove the block sampling module and cropping module
     """
 
     print("TPA-Net1_2: Remove the phase-split module")
     print("Network Structure: ")
 
-    # preprocessing
-    data_trunc = truncation_layer(input_data, is_turnc=True, min_value=-8, max_value=8, name="truncation")
+    # truncation
+    data_trunc = truncation_layer(input_data, min_value=-10, max_value=10, name="truncation")
 
     # Group1
     conv1_1 = conv_layer(data_trunc, 3, 3, 1, 1, 32, name="conv1_1", activation_method=activation_method, padding=padding)
@@ -130,22 +129,22 @@ def tpan1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", paddi
     return logits
 
 
-def tpan1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
-    Remove the left-crop module
+    Remove the cropping module
     """
 
     print("TPA-Net1_2: Remove the phase-split module")
     print("Network Structure: ")
 
-    # preprocessing
-    data_trunc = truncation_layer(input_data, is_turnc=True, min_value=-8, max_value=8, name="truncation")
+    # truncation
+    data_trunc = truncation_layer(input_data, min_value=-10, max_value=10, name="truncation")
 
-    # down sampling
-    conv0 = phase_split(data_trunc, 2, 2, "phase_split", with_original=False)
+    # block sampling
+    block_sampling = block_sampling_layer(data_trunc, block_size=2, name="block_sampling")
 
     # Group1
-    conv1_1 = conv_layer(conv0, 3, 3, 1, 1, 32, name="conv1_1", activation_method=activation_method, padding=padding)
+    conv1_1 = conv_layer(block_sampling, 3, 3, 1, 1, 32, name="conv1_1", activation_method=activation_method, padding=padding)
     conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 64, name="conv1_2", activation_method=None, padding=padding)
     bn1_3 = batch_normalization(conv1_2, name="BN1_3", activation_method=activation_method, is_train=False)
     pool1_4 = pool_layer(bn1_3, 2, 2, 2, 2, name="pool1_4", is_max_pool=is_max_pool)
@@ -185,21 +184,24 @@ def tpan1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", paddi
     return logits
 
 
-def tpan1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
     Quit replacing fully connected layers with fully convolutional layer
     """
     print("TPA-Net1_4: Quit replacing fully connected layers with fully convolutional layer")
     print("Network Structure: ")
 
-    # preprocessing
-    data_trunc = truncation_layer(input_data, is_turnc=True, min_value=-8, max_value=8, name="truncation")
+    # truncation
+    data_trunc = truncation_layer(input_data, min_value=-10, max_value=10, name="truncation")
 
-    # down sampling
-    conv0 = phase_split(data_trunc, 2, 2, "phase_split")
+    # cropping and block sampling
+    cropping = cropping_layer(data_trunc, multiples=2, with_overlap=True, name="cropping")
+    block_sampling = block_sampling_layer(data_trunc, block_size=2, name="block_sampling")
+
+    conv0 = tf.concat([cropping, block_sampling], 3, name="conv0")
 
     # Group1
-    conv1_1 = conv_layer(conv0, 3, 3, 1, 1, 16, name="conv1_1", activation_method=activation_method, padding=padding)
+    conv1_1 = conv_layer(conv0, 3, 3, 1, 1, 32, name="conv1_1", activation_method=activation_method, padding=padding)
     conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 32, name="conv1_2", activation_method=None, padding=padding)
     bn1_3 = batch_normalization(conv1_2, name="BN1_3", activation_method=activation_method, is_train=is_bn)
     pool1_4 = pool_layer(bn1_3, 2, 2, 2, 2, name="pool1_4", is_max_pool=is_max_pool)

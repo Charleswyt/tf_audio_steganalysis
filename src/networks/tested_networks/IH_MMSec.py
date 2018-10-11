@@ -28,7 +28,6 @@ from filters import *
         wasdn2_1: Remove the first BN layer in the first group
         wasdn2_2: Remove the first BN layers in the first two groups
         wasdn2_3: Remove the first BN layers in the first four groups
-        wasdn2_4: Add BN layers at the top of 3x3 conv layer
 """
 
 
@@ -36,7 +35,7 @@ def wasdn1_1(input_data, class_num=2, is_bn=False, activation_method="tanh", pad
     """
     remove the batch normalization
     """
-    print("wasdn1: Remove the BN layer")
+    print("WASDN1_1: Remove the BN layer")
     print("Network Structure: ")
 
     # preprocessing
@@ -92,7 +91,7 @@ def wasdn1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     """
     Average pooling layer is used for subsampling
     """
-    print("wasdn2: replace the max pooling layer with the average pooling layer")
+    print("WASDN1_2: replace the max pooling layer with the average pooling layer")
     print("Network Structure: ")
 
     # preprocessing
@@ -148,7 +147,7 @@ def wasdn1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     """
     Convolutional layer with stride 2 is used for subsampling
     """
-    print("wasdn3: replace the max pooling layer with the convolutional pooling layer")
+    print("WASDN1_3: replace the max pooling layer with the convolutional pooling layer")
     print("Network Structure: ")
 
     # preprocessing
@@ -204,7 +203,7 @@ def wasdn1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     """
     Replace the convolutional kernel with 5x5 kernel
     """
-    print("wasdn4: replace the 3 x 3 kernel with the 5 x 5 kernel")
+    print("WASDN1_4: replace the 3 x 3 kernel with the 5 x 5 kernel")
     print("Network Structure: ")
 
     # preprocessing
@@ -260,7 +259,7 @@ def wasdn1_5(input_data, class_num=2, is_bn=True, activation_method="relu", padd
     """
     ReLu is used as the activation function
     """
-    print("wasdn5: use relu as the activation function")
+    print("WASDN1_5: use relu as the activation function")
     print("Network Structure: ")
 
     # preprocessing
@@ -316,7 +315,7 @@ def wasdn1_6(input_data, class_num=2, is_bn=True, activation_method="leakrelu", 
     """
     Leaky-ReLu is used as the activation function
     """
-    print("wasdn6: use leakrelu as the activation function")
+    print("WASDN1_6: use leakrelu as the activation function")
     print("Network Structure: ")
 
     # preprocessing
@@ -372,7 +371,7 @@ def wasdn1_7(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     """
     Deepen the network to block convolutional layers
     """
-    print("wasdn7: Deepen the network to 7 groups.")
+    print("WASDN1_7: Deepen the network to 7 groups.")
     print("Network Structure: ")
 
     # preprocessing
@@ -434,7 +433,7 @@ def network1_8(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
     """
     Remove the 1x1 convolutional layers
     """
-    print("network8: Remove the 1x1 conv layers.")
+    print("WASDN1_8: Remove the 1x1 conv layers.")
     print("Network Structure: ")
 
     # preprocessing
@@ -484,7 +483,7 @@ def wasdn1_9(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     """
     Remove the HPF layer
     """
-    print("wasdn9 replace the max pooling layer with the average pooling layer")
+    print("WASDN1_9: Replace the max pooling layer with the average pooling layer")
     print("Network Structure: ")
 
     # Group1
@@ -537,7 +536,7 @@ def wasdn2_1(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     """
     Remove the BN layer in the first group
     """
-    print("wasdn2_1: Remove the BN layer in the first group.")
+    print("WASDN2_1: Remove the BN layer in the first group")
     print("Network Structure: ")
 
     # preprocessing
@@ -593,7 +592,7 @@ def wasdn2_2(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     """
     Remove the BN layer in the first two groups
     """
-    print("wasdn2_2: Remove the BN layers in the first  groups.")
+    print("WASDN2_2: Remove the BN layers in the first  groups")
     print("Network Structure: ")
 
     # preprocessing
@@ -649,7 +648,7 @@ def wasdn2_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     """
     Remove the BN layer in the first four groups
     """
-    print("wasdn2_3: Remove the BN layers in the first four groups")
+    print("WASDN2_3: Remove the BN layers in the first four groups")
     print("Network Structure: ")
 
     # preprocessing
@@ -693,68 +692,6 @@ def wasdn2_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
 
     # Fully connected layer
     fc7 = fc_layer(pool6_4, 4096, name="fc7", activation_method=None)
-    bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
-    fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
-    bn10 = batch_normalization(fc9, name="BN10", activation_method="tanh", is_train=is_bn)
-    logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
-
-    return logits
-
-
-def wasdn2_4(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
-    """
-    Add BN layers at the top of 3x3 conv layer
-    """
-    print("network1: The proposed network")
-    print("Network Structure: ")
-
-    # preprocessing
-    data_diff = diff_layer(input_data, is_diff=True, is_diff_abs=False, is_abs_diff=False, order=2, direction="inter", name="difference")
-
-    # Group1
-    conv1_1 = conv_layer(data_diff, 3, 3, 1, 1, 16, name="conv1_1", activation_method=activation_method, padding=padding)
-    bn1_2 = batch_normalization(conv1_1, name="BN1_2", activation_method=activation_method, is_train=False)
-    conv1_3 = conv_layer(bn1_2, 1, 1, 1, 1, 32, name="conv1_3", activation_method=None, padding=padding)
-    bn1_4 = batch_normalization(conv1_3, name="BN1_4", activation_method=activation_method, is_train=False)
-    pool1_5 = pool_layer(bn1_4, 2, 2, 2, 2, name="pool1_5", is_max_pool=is_max_pool)
-
-    # Group2
-    conv2_1 = conv_layer(pool1_5, 3, 3, 1, 1, 32, name="conv2_1", activation_method=None, padding=padding)
-    bn2_2 = batch_normalization(conv2_1, name="BN2_2", activation_method=activation_method, is_train=False)
-    conv2_3 = conv_layer(bn2_2, 1, 1, 1, 1, 64, name="conv2_3", activation_method=None, padding=padding)
-    bn2_4 = batch_normalization(conv2_3, name="BN2_4", activation_method=activation_method, is_train=False)
-    pool2_5 = pool_layer(bn2_4, 2, 2, 2, 2, name="pool2_5", is_max_pool=is_max_pool)
-
-    # Group3
-    conv3_1 = conv_layer(pool2_5, 3, 3, 1, 1, 64, name="conv3_1", activation_method=None, padding=padding)
-    bn3_2 = batch_normalization(conv3_1, name="BN3_2", activation_method=activation_method, is_train=False)
-    conv3_3 = conv_layer(bn3_2, 1, 1, 1, 1, 128, name="conv3_3", activation_method=None, padding=padding)
-    bn3_4 = batch_normalization(conv3_3, name="BN3_4", activation_method=activation_method, is_train=False)
-    pool3_5 = pool_layer(bn3_4, 2, 2, 2, 2, name="pool3_5", is_max_pool=is_max_pool)
-
-    # Group4
-    conv4_1 = conv_layer(pool3_5, 3, 3, 1, 1, 128, name="conv4_1", activation_method=None, padding=padding)
-    bn4_2 = batch_normalization(conv4_1, name="BN4_2", activation_method=activation_method, is_train=is_bn)
-    conv4_3 = conv_layer(bn4_2, 1, 1, 1, 1, 256, name="conv4_3", activation_method=None, padding=padding)
-    bn4_4 = batch_normalization(conv4_3, name="BN4_4", activation_method=activation_method, is_train=is_bn)
-    pool4_5 = pool_layer(bn4_4, 2, 2, 2, 2, name="pool4_5", is_max_pool=is_max_pool)
-
-    # Group5
-    conv5_1 = conv_layer(pool4_5, 3, 3, 1, 1, 256, name="conv5_1", activation_method=None, padding=padding)
-    bn5_2 = batch_normalization(conv5_1, name="BN5_2", activation_method=activation_method, is_train=is_bn)
-    conv5_3 = conv_layer(bn5_2, 1, 1, 1, 1, 512, name="conv5_3", activation_method=None, padding=padding)
-    bn5_4 = batch_normalization(conv5_3, name="BN5_4", activation_method=activation_method, is_train=is_bn)
-    pool5_5 = pool_layer(bn5_4, 2, 2, 2, 2, name="pool5_5", is_max_pool=is_max_pool)
-
-    # Group6
-    conv6_1 = conv_layer(pool5_5, 3, 3, 1, 1, 512, name="conv6_1", activation_method=None, padding=padding)
-    bn6_2 = batch_normalization(conv6_1, name="BN6_2", activation_method=activation_method, is_train=is_bn)
-    conv6_3 = conv_layer(bn6_2, 1, 1, 1, 1, 1024, name="conv6_3", activation_method=None, padding=padding)
-    bn6_4 = batch_normalization(conv6_3, name="BN6_4", activation_method=activation_method, is_train=is_bn)
-    pool6_5 = pool_layer(bn6_4, 2, 2, 2, 2, name="pool6_5", is_max_pool=is_max_pool)
-
-    # Fully connected layer
-    fc7 = fc_layer(pool6_5, 4096, name="fc7", activation_method=None)
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method="tanh", is_train=is_bn)

@@ -10,4 +10,5 @@ Modified on
 """
 
 from networks.tested_networks.IH_MMSec import *
+from networks.tested_networks.ICASSP import *
 from networks.tested_networks.SPL import *
