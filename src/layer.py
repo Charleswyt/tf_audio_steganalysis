@@ -136,7 +136,7 @@ def dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True):
 def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=None, init_method="xavier", is_train=True):
     """
     fully-connected layer
-    :param input_data: the input data
+    :param input_data: the input data tensor [batch_size, height, width, channels]
     :param output_dim: the dimension of the output data
     :param name: name of the layer
     :param activation_method: the type of activation function
@@ -195,7 +195,7 @@ def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=None,
 def fconv_layer(input_data, filter_num, name, is_train=True, padding="VALID", init_method="xavier", bias_term=True, is_pretrain=True):
     """
     fully conv layer
-    :param input_data: the input data
+    :param input_data: the input data tensor [batch_size, height, width, channels]
     :param filter_num: the number of the convolutional kernel
     :param name: name of the layer
     :param is_train: if False, skip this layer, default is True
@@ -256,7 +256,7 @@ def fconv_layer(input_data, filter_num, name, is_train=True, padding="VALID", in
 def activation_layer(input_data, activation_method="None", alpha=0.2):
     """
     activation function layer
-    :param input_data: the input data
+    :param input_data: the input data tensor [batch_size, height, width, channels]
     :param activation_method: the type of activation function
     :param alpha: for leaky relu
         "relu": max(features, 0)

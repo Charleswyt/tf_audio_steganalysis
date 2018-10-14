@@ -14,21 +14,20 @@ from filters import *
 
 """
     function:
-        wasdn(Wang Audio Steganalysis Deep Network): The proposed network
+        wasdn:  Wang Audio Steganalysis Deep Network
+        tbafcn: Truncation Block-Aware Fully Convolutional network
 """
 
 
-def wasdn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True,
-          is_trunc=False, threshold_left=-8, threshold_right=8, is_diff=False, is_diff_abs=False, is_abs_diff=False, order=0, direction=None):
+def wasdn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
     The proposed network
     """
-    print("network1: The proposed network")
+    print("WASDN: Wang Audio Steganalysis Deep Network")
     print("Network Structure: ")
 
     # preprocessing
-    data_trunc = truncation_layer(input_data, is_trunc, threshold_left, threshold_right, name="truncation")
-    data_diff = diff_layer(data_trunc, is_diff, is_diff_abs, is_abs_diff, order, direction, name="difference")
+    data_diff = diff_layer(input_data, True, False, False, 2, "inter", name="difference")
 
     # Group1
     conv1_1 = conv_layer(data_diff, 3, 3, 1, 1, 16, name="conv1_1", activation_method=activation_method, padding=padding)
@@ -76,30 +75,32 @@ def wasdn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding
     return logits
 
 
-def tpan(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
+def tbafcn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding="SAME", is_max_pool=True):
     """
     CNN with truncation and phase-aware for audio steganalysis
     """
 
-    print("network: TPA-Net")
+    print("TBAFC-Net: Truncation and Block-Aware Fully Convolutional Network")
     print("Network Structure: ")
 
     # preprocessing
-    data_trunc = truncation_layer(input_data, is_turnc=True, min_value=-8, max_value=8, name="truncation")
+    data_trunc = truncation_layer(input_data, min_value=-8, max_value=8, name="truncation")
 
-    # down sampling
-    conv0 = phase_split(data_trunc, 2, 2, "phase_split")
+    # downsampling
+    block_sampling = block_sampling_layer(data_trunc, block_size=2, name="block_sampling")
 
     # Group1
-    conv1_1 = conv_layer(conv0, 3, 3, 1, 1, 32, name="conv1_1", activation_method=activation_method, padding=padding)
+    conv1_1 = conv_layer(data_trunc, 3, 3, 1, 1, 32, name="conv1_1", activation_method=activation_method, padding=padding)
     conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 64, name="conv1_2", activation_method=None, padding=padding)
-    bn1_3 = batch_normalization(conv1_2, name="BN1_3", activation_method=activation_method, is_train=False)
+    bn1_3 = batch_normalization(conv1_2, name="BN1_3", activation_method=activation_method, is_train=is_bn)
     pool1_4 = pool_layer(bn1_3, 2, 2, 2, 2, name="pool1_4", is_max_pool=is_max_pool)
 
+    conv1_block_sampling = tf.concat([pool1_4, block_sampling], 3, "block_sampling")
+
     # Group2
-    conv2_1 = conv_layer(pool1_4, 3, 3, 1, 1, 64, name="conv2_1", activation_method=activation_method, padding=padding)
+    conv2_1 = conv_layer(conv1_block_sampling, 3, 3, 1, 1, 64, name="conv2_1", activation_method=activation_method, padding=padding)
     conv2_2 = conv_layer(conv2_1, 1, 1, 1, 1, 128, name="conv2_2", activation_method=None, padding=padding)
-    bn2_3 = batch_normalization(conv2_2, name="BN2_3", activation_method=activation_method, is_train=False)
+    bn2_3 = batch_normalization(conv2_2, name="BN2_3", activation_method=activation_method, is_train=is_bn)
     pool2_4 = pool_layer(bn2_3, 2, 2, 2, 2, name="pool2_4", is_max_pool=is_max_pool)
 
     # Group3
@@ -122,10 +123,10 @@ def tpan(input_data, class_num=2, is_bn=True, activation_method="tanh", padding=
 
     # fully conv layer
     fcn6 = fconv_layer(pool5_4, 4096, name="fcn6")
-    bn7 = batch_normalization(fcn6, name="BN7", activation_method="tanh", is_train=is_bn)
+    bn7 = batch_normalization(fcn6, name="BN7", activation_method="relu", is_train=is_bn)
     fcn8 = fconv_layer(bn7, 512, name="fcn8")
-    bn9 = batch_normalization(fcn8, name="BN9", activation_method="tanh", is_train=is_bn)
+    bn9 = batch_normalization(fcn8, name="BN9", activation_method="relu", is_train=is_bn)
 
-    logits = fc_layer(bn9, class_num, name="fc10", activation_method=None)
+    logits = fc_layer(bn9, class_num, name="fc11")
 
     return logits
