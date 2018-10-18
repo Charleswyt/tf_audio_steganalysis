@@ -322,7 +322,7 @@ def steganalysis_one(args):
         return False
 
     # network
-    command = args.network + "(data," + classes_num + ",is_bn)"
+    command = args.network + "(data, classes_num, is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
@@ -374,7 +374,7 @@ def steganalysis_batch(args):
         return False
 
     # network
-    command = args.network + "(data," + classes_num + ",is_bn)"
+    command = args.network + "(data, classes_num, is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 

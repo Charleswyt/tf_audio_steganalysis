@@ -82,6 +82,7 @@ def wasdn1_1(input_data, class_num=2, is_bn=False, activation_method="tanh", pad
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method=activation_method, is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
@@ -138,6 +139,7 @@ def wasdn1_2(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method=activation_method, is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
@@ -194,6 +196,7 @@ def wasdn1_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method="tanh", is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
@@ -250,6 +253,7 @@ def wasdn1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc11", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN12", activation_method=activation_method, is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc13", activation_method=None)
 
     return logits
@@ -306,6 +310,7 @@ def wasdn1_5(input_data, class_num=2, is_bn=True, activation_method="relu", padd
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method=activation_method, is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
@@ -362,6 +367,7 @@ def wasdn1_6(input_data, class_num=2, is_bn=True, activation_method="leakrelu", 
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method=activation_method, is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
@@ -424,6 +430,7 @@ def wasdn1_7(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     bn9 = batch_normalization(fc8, name="BN9", activation_method=activation_method, is_train=is_bn)
     fc10 = fc_layer(bn9, 512, name="fc10", activation_method=None)
     bn11 = batch_normalization(fc10, name="BN11", activation_method=activation_method, is_train=is_bn)
+
     logits = fc_layer(bn11, class_num, name="fc12", activation_method=None)
 
     return logits
@@ -474,6 +481,7 @@ def network1_8(input_data, class_num=2, is_bn=True, activation_method="tanh", pa
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method="tanh", is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
@@ -527,6 +535,7 @@ def wasdn1_9(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     bn8 = batch_normalization(fc7, name="BN8", activation_method=activation_method, is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method=activation_method, is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
@@ -583,6 +592,7 @@ def wasdn2_1(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method="tanh", is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
@@ -639,6 +649,7 @@ def wasdn2_2(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method="tanh", is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
@@ -695,6 +706,7 @@ def wasdn2_3(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     bn8 = batch_normalization(fc7, name="BN8", activation_method="tanh", is_train=is_bn)
     fc9 = fc_layer(bn8, 512, name="fc9", activation_method=None)
     bn10 = batch_normalization(fc9, name="BN10", activation_method="tanh", is_train=is_bn)
+
     logits = fc_layer(bn10, class_num, name="fc11", activation_method=None)
 
     return logits
