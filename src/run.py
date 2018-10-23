@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Created on 2017.11.27
+Finished on 2017.11.30
+Modified on 2018.09.18
+
+@author: Wang Yuntao
+"""
+
 import time
 import datetime
 from utils import *
@@ -10,14 +18,6 @@ from networks.audio_steganalysis import *
 from networks.image_steganalysis import *
 from networks.tested_steganalysis import *
 from networks.image_classification import *
-
-"""
-Created on 2017.11.27
-Finished on 2017.11.30
-Modified on 2018.09.18
-
-@author: Wang Yuntao
-"""
 
 """
     function: 
@@ -189,7 +189,7 @@ def train(args):
                 print("[network: %s, task: %s, global_step: %d] elapsed: %s, epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f"
                       % (args.network, args.task_name, step_train, et, epoch + 1, train_iterations, err, ac))
 
-            print("=====================================================================================================================================")
+            print("=" * 100)
 
             # validation
             valid_iterations, valid_loss, valid_accuracy = 0, 0, 0

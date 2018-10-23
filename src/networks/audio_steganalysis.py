@@ -102,39 +102,36 @@ def tbafcn(input_data, class_num=2, is_bn=True, activation_method="tanh", paddin
     print("name: %s, shape: (%d, %d, %d)" % ("block_sampling", concat_shape[1], concat_shape[2], concat_shape[3]))
 
     # Group2
-    conv2_1 = conv_layer(conv1_block_sampling, 3, 3, 1, 1, 32, name="conv2_1", activation_method=activation_method, padding=padding)
-    conv2_2 = conv_layer(conv2_1, 1, 1, 1, 1, 64, name="conv2_2", activation_method=None, padding=padding)
+    conv2_1 = conv_layer(conv1_block_sampling, 3, 3, 1, 1, 64, name="conv2_1", activation_method=activation_method, padding=padding)
+    conv2_2 = conv_layer(conv2_1, 1, 1, 1, 1, 128, name="conv2_2", activation_method=None, padding=padding)
     bn2_3 = batch_normalization(conv2_2, name="BN2_3", activation_method=activation_method, is_train=is_bn)
     pool2_4 = pool_layer(bn2_3, 2, 2, 2, 2, name="pool2_4", is_max_pool=is_max_pool)
 
     # Group3
-    conv3_1 = conv_layer(pool2_4, 3, 3, 1, 1, 64, name="conv3_1", activation_method=activation_method, padding=padding)
-    conv3_2 = conv_layer(conv3_1, 1, 1, 1, 1, 128, name="conv3_2", activation_method=None, padding=padding)
+    conv3_1 = conv_layer(pool2_4, 3, 3, 1, 1, 128, name="conv3_1", activation_method=activation_method, padding=padding)
+    conv3_2 = conv_layer(conv3_1, 1, 1, 1, 1, 256, name="conv3_2", activation_method=None, padding=padding)
     bn3_3 = batch_normalization(conv3_2, name="BN3_3", activation_method=activation_method, is_train=is_bn)
     pool3_4 = pool_layer(bn3_3, 2, 2, 2, 2, name="pool3_4", is_max_pool=is_max_pool)
 
     # Group4
-    conv4_1 = conv_layer(pool3_4, 3, 3, 1, 1, 128, name="conv4_1", activation_method=activation_method, padding=padding)
-    conv4_2 = conv_layer(conv4_1, 1, 1, 1, 1, 256, name="conv4_2", activation_method=None, padding=padding)
+    conv4_1 = conv_layer(pool3_4, 3, 3, 1, 1, 256, name="conv4_1", activation_method=activation_method, padding=padding)
+    conv4_2 = conv_layer(conv4_1, 1, 1, 1, 1, 512, name="conv4_2", activation_method=None, padding=padding)
     bn4_3 = batch_normalization(conv4_2, name="BN4_3", activation_method=activation_method, is_train=is_bn)
     pool4_4 = pool_layer(bn4_3, 2, 2, 2, 2, name="pool4_4", is_max_pool=is_max_pool)
 
     # Group5
-    conv5_1 = conv_layer(pool4_4, 3, 3, 1, 1, 256, name="conv5_1", activation_method=activation_method, padding=padding)
-    conv5_2 = conv_layer(conv5_1, 1, 1, 1, 1, 512, name="conv5_2", activation_method=None, padding=padding)
+    conv5_1 = conv_layer(pool4_4, 3, 3, 1, 1, 512, name="conv5_1", activation_method=activation_method, padding=padding)
+    conv5_2 = conv_layer(conv5_1, 1, 1, 1, 1, 1024, name="conv5_2", activation_method=None, padding=padding)
     bn5_3 = batch_normalization(conv5_2, name="BN5_3", activation_method=activation_method, is_train=is_bn)
     pool5_4 = pool_layer(bn5_3, 2, 2, 2, 2, name="pool5_4", is_max_pool=is_max_pool)
 
     # fully conv layer
-    fcn6 = fconv_layer(pool5_4, 4096, name="fc6")
+    fcn6 = fconv_layer(pool5_4, 4096, name="fcn6")
     bn7 = batch_normalization(fcn6, name="BN7", activation_method=activation_method, is_train=is_bn)
-    fcn8 = fconv_layer(bn7, 512, name="fc8")
+    fcn8 = fconv_layer(bn7, 512, name="fcn8")
     bn9 = batch_normalization(fcn8, name="BN9", activation_method=activation_method, is_train=is_bn)
-    fcn10 = fconv_layer(bn9, class_num, name="fcn11")
+    fcn10 = fconv_layer(bn9, class_num, name="fcn10")
 
-    shape = fcn10.get_shape()
-    dim = shape[1].value * shape[2].value * shape[3].value
-
-    logits = tf.reshape(fcn10, [-1, dim])
+    logits = tf.reshape(fcn10, [-1, class_num])
 
     return logits
