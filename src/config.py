@@ -140,15 +140,35 @@ def config_train_file_read(config_file_path):
 
         class Variable:
             def __init__(self):
+                self.path_mode = file_content["path_mode"]
+                self.task_name = file_content["task_name"]
+                
+
+                # full_samples_path
+                if self.path_mode == "full":
+                    self.cover_train_path = file_content['full_samples_path']['cover_train_path']
+                    self.cover_valid_path = file_content['full_samples_path']['cover_valid_path']
+                    self.stego_train_path = file_content['full_samples_path']['stego_train_path']
+                    self.stego_valid_path = file_content['full_samples_path']['stego_valid_path']
+                
+                # simple_samples_path
+                elif self.path_mode == "simple":
+                    self.cover_files_root = file_content['simple_samples_path']['cover_files_root']
+                    self.stego_files_root = file_content['simple_samples_path']['stego_files_root']
+                    stego_method = (self.task_name).split("_")[0]
+                    samples_bitrate = (self.task_name).split("_")[2]
+
+                    self.cover_train_path = fullfile(fullfile(self.cover_files_root, samples_bitrate), "train")
+                    self.cover_valid_path = fullfile(fullfile(self.cover_files_root, samples_bitrate), "validation")
+                    self.stego_train_path = fullfile(fullfile(fullfile(self.stego_files_root, stego_method), self.task_name), "train")
+                    self.stego_valid_path = fullfile(fullfile(fullfile(self.stego_files_root, stego_method), self.task_name), "validation")
+                else:
+                    self.train = False
+
                 # files_path
-                self.cover_train_path = file_content['files_path']['cover_train_path']
-                self.cover_valid_path = file_content['files_path']['cover_valid_path']
-                self.stego_train_path = file_content['files_path']['stego_train_path']
-                self.stego_valid_path = file_content['files_path']['stego_valid_path']
                 self.tfrecords_path = file_content['files_path']['tfrecords_path']
                 self.models_path = file_content['files_path']['models_path']
                 self.logs_path = file_content['files_path']['logs_path']
-                self.task_name = file_content['files_path']['task_name']
 
                 # mode_config
                 self.gpu_selection = file_content['mode_config']['gpu_selection']
@@ -188,6 +208,8 @@ def config_train_file_read(config_file_path):
                 self.end_index_train = file_content["index"]["end_index_train"]
                 self.start_index_valid = file_content["index"]["start_index_valid"]
                 self.end_index_valid = file_content["index"]["end_index_valid"]
+
+                self.train = True
 
         arguments = Variable()
 

@@ -49,12 +49,12 @@ def rhmban(input_data, class_num=2, is_bn=True, activation_method="tanh", paddin
     pool2_3 = pool_layer(bn2_2, 2, 2, 2, 2, name="pool2_3", is_max_pool=is_max_pool)
 
     # conv block and block-aware split concat
-    pool2_3_block_2_merge = tf.concat([pool2_3, block_sampling_4], 3, name="conv2_block_downsampling_merge")
-    concat_shape = pool2_3_block_2_merge.get_shape()
+    pool2_3_block_4_merge = tf.concat([pool2_3, block_sampling_4], 3, name="conv2_block_downsampling_merge")
+    concat_shape = pool2_3_block_4_merge.get_shape()
     print("name: %s, shape: (%d, %d, %d)" % ("block_sampling", concat_shape[1], concat_shape[2], concat_shape[3]))
 
     # Group3
-    conv3_1 = conv_layer(pool2_3_block_2_merge, 3, 3, 1, 1, 128, name="conv3_1", activation_method=None, padding=padding)
+    conv3_1 = conv_layer(pool2_3_block_4_merge, 3, 3, 1, 1, 128, name="conv3_1", activation_method=None, padding=padding)
     bn3_2 = batch_normalization(conv3_1, name="BN3_2", activation_method=activation_method, is_train=is_bn)
     pool3_3 = pool_layer(bn3_2, 2, 2, 2, 2, name="pool3_3", is_max_pool=is_max_pool)
 

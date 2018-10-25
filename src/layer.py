@@ -543,49 +543,6 @@ def block_sampling_layer(input_data, block_size, name="block_sampling"):
     return output
 
 
-def cropping_layer(input_data, multiples, with_overlap=True, name="cropping"):
-    """
-    cropping from the input data
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param multiples: number for cropping in the height or width dimension
-    :param with_overlap: whether the cropping module is with overlap or not, overlap_size=0.5
-    :param name: the name of the layer
-    :return:
-        feature_map: 4-D tensor [number, height, width, channel]
-    """
-
-    input_shape = input_data.get_shape()
-    batch_size, height, width, channel = input_shape[0].value, input_shape[1].value, input_shape[2].value, input_shape[3].value
-
-    sub_matrix_height, sub_matrix_width = int(height / multiples), int(width / multiples)
-    print(sub_matrix_height, sub_matrix_width)
-    output = tf.slice(input_=input_data,
-                      begin=[0, 0, 0, 0],
-                      size=[batch_size, sub_matrix_height, sub_matrix_width, channel])
-    if with_overlap is True:
-        for h, w in product(range(multiples + 1), range(multiples + 1)):
-            height_begin = int(h * 0.5 * sub_matrix_height)
-            width_begin = int(w * 0.5 * sub_matrix_width)
-            print(height_begin, width_begin)
-            result = tf.slice(input_=input_data,
-                              begin=[0, height_begin, width_begin, 0],
-                              size=[batch_size, sub_matrix_height, sub_matrix_width, channel])
-            output = tf.concat([output, result], 3, name="cropping")
-    else:
-        for h, w in product(range(multiples), range(multiples)):
-            result = tf.slice(input_=input_data,
-                              begin=[0, h * sub_matrix_height, w * sub_matrix_width, 0],
-                              size=[batch_size, sub_matrix_height, sub_matrix_width, channel])
-            output = tf.concat([output, result], 3, name="cropping")
-
-    output = output[:, :, :, 1:]
-    shape = output.get_shape()
-    print("name: %s, shape: (%d, %d, %d)"
-          % (name, shape[1], shape[2], shape[3]))
-
-    return output
-
-
 def rich_hpf_layer(input_data, name):
     """
     multiple HPF processing
