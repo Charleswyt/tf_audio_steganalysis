@@ -13,6 +13,12 @@ samples_make.py
 
 /src/config_file
 .ipynb_checkpoints
+/data_processing/test
+
+data_processing/secret_message/temp.txt
+data_processing/secret_message/temp1.txt
+data_processing/secret_message/null.txt
+command_line.txt
 
 !lame_qmdct.exe
 !decode_MP3Stego.exe
@@ -22,3 +28,4 @@ samples_make.py
 !stego_info_full.txt
 jupyter/data/
 !data_processing
+

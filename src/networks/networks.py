@@ -12,5 +12,5 @@ Modified on
 
 networks = ["wasdn", "wasdn1_1", "wasdn1_2", "wasdn1_3", "wasdn1_4", "wasdn1_5", "wasdn1_6", "wasdn1_7", "wasdn1_8", "wasdn1_9", "wasdn2_1", "wasdn2_2", "wasdn2_3",
             "tbafcn", "tbafcn1_1", "tbafcn1_2", "tbafcn1_3",
-            "rhmban", "rhmban1_1", "rhmban1_2", "rhmban1_3",
+            "rhmban", "rhmban1_1", "rhmban1_2", "rhmban1_3", "rhmban1_4",
             "le_net", "vgg16", "vgg19", "stegshi"]
