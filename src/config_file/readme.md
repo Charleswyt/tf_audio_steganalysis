@@ -94,10 +94,12 @@ Param                       | Function                          | option
  **mode**                   | mode of running                   | train(default), test and steganalysis
  **carrier**                | carrier for steganalysis          | qmdct(default), audio and image
  **network**                | name of designed network          | -
+ **task_name**              | name of task                      | -
+ **path_mode**              | mode of path                      | simple(default) and full
  **batch_size**             | batch size for training           | 128(default)
-  **learing_rate**          | initialized learing rate          | 1e-3(default)
+ **learning_rate**          | initialized learing rate          | 1e-3(default)
  **epoch**                  | epoch of training                 | 500(default)
- seed                       | seed of random generation         | 1(defalut)
+ seed                       | seed of random generation         | 1(default)
  **is_regulation**          | whether add regulation or not     | True(default), False
  coeff_regulation           | coefficient of regulation         | 1e-3(default)
  loss_method                | method of loss funcion            | sigmoid_cross_entropy, softmax_cross_entropy, sparse_softmax_cross_entropy(default)

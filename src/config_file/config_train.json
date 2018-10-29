@@ -1,30 +1,38 @@
 {
-	"files_path": {
+    "path_mode": "simple",
+    "task_name": "EECS_B_320_W_6_H_7_ER_10",
+	"full_samples_path": {
         "cover_train_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/train",
         "cover_valid_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/validation",
-        "stego_train_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_128_W_7_H_7_ER_10/train",
-        "stego_valid_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_128_W_7_H_7_ER_10/validation",
+        "stego_train_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_128_W_4_H_7_ER_10/train",
+        "stego_valid_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_128_W_4_H_7_ER_10/validation"
+    },
+    "simple_samples_path":{
+        "cover_files_root": "/home1/wyt/data/10.QMDCT/cover/cover_10s",
+        "stego_files_root": "/home1/wyt/data/10.QMDCT/stego"
+    },
+    "files_path":{
+        "tfrecords_path": "/home1/wyt/code/tf_audio_steganalysis/tfrecords",
         "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis",
-        "logs_path": "/home1/wyt/code/tf_audio_steganalysis/logs/steganalysis",
-        "task_name": "EECS_B_128_W_7_H_7_ER_10"
+        "logs_path": "/home1/wyt/code/tf_audio_steganalysis/logs/steganalysis"
     },
     "index": {
         "start_index_train": null,
-        "end_index_train": null,
+        "end_index_train": 8000,
         "start_index_valid": null,
-        "end_index_valid": null
+        "end_index_valid": 2000
     },
 	"mode_config": {
 		"gpu_selection": "manu",
         "gpu": "3",
         "mode": "train",
-        "checkpoint": true,
+        "checkpoint": false,
         "carrier": "qmdct",
-        "network": "tpan"
+        "network": "rhfcn"
     },
     "hyper_parameters": {
-        "batch_size": 128,
-        "learning_rate": 0.000975,
+        "batch_size": 16,
+        "learning_rate": 0.001,
         "epoch": 100,
         "seed": 1,
         "is_regulation": true,
@@ -34,7 +42,7 @@
     },
     "shape": {
         "height": 200,
-        "width": 500,
+        "width": 450,
         "channel": 1
     },
     "learning_rate_method":{

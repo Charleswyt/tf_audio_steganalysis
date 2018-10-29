@@ -1,8 +1,8 @@
 {
     "files_path": {
-        "cover_test_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/test",
-        "stego_test_path": "/home/user/data/audio/QMDCT/stego/EECS/EECS_B_320_W_3_H_7_ER_10/test",
-        "models_path": "/home/user/code/CatKing/steganalysis_CNN/models/steganalysis"
+        "cover_test_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/validation",
+        "stego_test_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_128_W_4_H_7_ER_10/validation",
+        "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis/rhfcn/EECS_B_128_W_4_H_7_ER_10/1540486970"
     },
     "index": {
         "start_index_test": null,
@@ -13,15 +13,15 @@
         "gpu": "0",
         "mode": "test",
         "carrier": "qmdct",
-        "network": "downsampling_network1"
+        "network": "rhfcn"
     },
     "hyper_parameters": {
-        "batch_size": 128,
+        "batch_size": 64,
         "class_num": 2
     },
     "shape": {
         "height": 200,
-        "width": 500,
+        "width": 450,
         "channel": 1
     }
 }
