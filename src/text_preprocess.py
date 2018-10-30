@@ -32,24 +32,27 @@ def text_read(text_file_path, height=200, width=576, channel=1, separator=","):
     :return
         content: QMDCT matrix  ndarray, shape: [height, width, 1]
     """
-    file = open(text_file_path)
     content = []
+    try:
+        file = open(text_file_path)
 
-    # read data line by line
-    lines = file.readlines()
-    for line in lines:
-        numbers = [int(character) for character in line.split(separator)[:-1]]
-        content.append(numbers)
+        # read data line by line
+        lines = file.readlines()
+        for line in lines:
+            numbers = [int(character) for character in line.split(separator)[:-1]]
+            content.append(numbers)
 
-    content = np.array(content, dtype=np.int32)
+        content = np.array(content, dtype=np.int32)
 
-    # reshape
-    [h, w] = np.shape(content)
-    content = np.reshape(content, [h, w, channel])
+        # reshape
+        [h, w] = np.shape(content)
+        content = np.reshape(content, [h, w, channel])
 
-    height_new = None if h < height else height
-    width_new = None if w < width else width
-    content = content[:height_new, :width_new, :]
+        height_new = None if h < height else height
+        width_new = None if w < width else width
+        content = content[:height_new, :width_new, :]
+    except ValueError:
+        print(text_file_path)
 
     return content
 

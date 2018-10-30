@@ -399,24 +399,6 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VAL
         return feature_map
 
 
-def truncation_layer(input_data, min_value, max_value, name):
-    """
-    the layer which is used for truncation
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param min_value: min value for truncation
-    :param max_value: max value for truncation
-    :param name: the name of the truncation layer
-
-    :return:
-        feature_map: 4-D tensor [number, height, width, channel]
-    """
-
-    output = tf.clip_by_value(input_data, min_value, max_value, name)
-    print("name: truncation layer, threshold_left: %d, threshold_right: %d" % (min_value, max_value))
-
-    return output
-
-
 def diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, name, padding="SAME"):
     """
     the layer which is used for difference
@@ -678,24 +660,6 @@ def learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate
         decayed_learning_rate = init_learning_rate
 
     return decayed_learning_rate
-
-
-def size_tune(input_data):
-    """
-    this function is used to solve the variant size, calculate the mean, variance, max, min and other statistical characteristics of each feature map
-    if the shape of input data is [batch_size, height, width, channel], the shape of output is [batch_size, 1, dim, channel].
-        Herein, the dim rests with the number of statistics.
-    :param input_data: input data, a 4-D tensor [batch_size, height, width, channel]
-    :return:
-        a 4-D tensor [batch_size, 1, dim, channel]
-    """
-    data_max = tf.reduce_max(input_tensor=input_data, axis=[1, 2], keep_dims=True, name="max")          # calculate the maximum of the feature map
-    data_min = tf.reduce_min(input_tensor=input_data, axis=[1, 2], keep_dims=True, name="min")          # calculate the minimum of the feature map
-    data_mean, data_variance = tf.nn.moments(x=input_data, axes=[1, 2], keep_dims=True)                 # calculate the mean and variance of the feature map
-
-    output = tf.concat([data_mean, data_max, data_min, data_variance], 2)
-
-    return output
 
 
 def inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,

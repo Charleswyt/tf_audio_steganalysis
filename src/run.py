@@ -392,6 +392,7 @@ def steganalysis_batch(args):
 
             file_list = get_files_list(steganalysis_files_path)
             print("files path: %s" % steganalysis_files_path)
+            count_cover, count_stego = 0, 0
 
             for file_path in file_list:
                 steganalysis_data = get_data_batch([file_path], width=width, height=height, channel=channel, carrier=carrier)
@@ -403,6 +404,11 @@ def steganalysis_batch(args):
 
                 if result[0] == 0:
                     print("file name: %s, result: cover, prob of prediction: %.2f%%" % (file_name, prob))
+                    count_cover += 1
 
                 if result[0] == 1:
                     print("file name: %s, result: stego, prob of prediction: %.2f%%" % (file_name, prob))
+                    count_stego += 1
+
+            print("Number of cover samples: %d" % count_cover)
+            print("Number of stego samples: %d" % count_stego)

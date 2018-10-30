@@ -87,7 +87,7 @@ Param                       | Function                          | option
  **cover_valid_path**       | path of cover validation files    | -
  **stego_train_path**       | path of stego train files         | -
  **stego_valid_path**       | path of stego validation files    | -
- **tfrecords_path**         | path of tfreocrds                 | -
+ **tfrecords_path**         | path of tfrecords                 | -
  **models_path**            | path of models including checkpoint, data, index and meta files   | -
  **logs_path**              | path of log files including train and validation                  | -
  gpu_selection              | mode of gpu selection             | auto(default), manu
@@ -97,7 +97,7 @@ Param                       | Function                          | option
  **task_name**              | name of task                      | -
  **path_mode**              | mode of path                      | simple(default) and full
  **batch_size**             | batch size for training           | 128(default)
- **learning_rate**          | initialized learing rate          | 1e-3(default)
+ **learning_rate**          | initialized learning rate         | 1e-3(default)
  **epoch**                  | epoch of training                 | 500(default)
  seed                       | seed of random generation         | 1(default)
  **is_regulation**          | whether add regulation or not     | True(default), False
@@ -109,9 +109,9 @@ Param                       | Function                          | option
  **channel**                | channel of input data matrix      | 1(default), 3
  decay_method               | method of learning rate decay     | fixed, step, exponential(defaut), inverse_time, natural_exp, polynomial
  decay_step                 | step for learning rate decay      | 5000(default)
- decay_rate                 | rate of learing rate decay        | 0.9(default)
+ decay_rate                 | rate of learning rate decay       | 0.9(default)
  staircase                  | whether the decay the learning rate at discrete intervals or not | True and False(default)
- max_to_keep                | number of models to be saved      | 3(defalut)
+ max_to_keep                | number of models to be saved      | 3(default)
 
 ### test
 
