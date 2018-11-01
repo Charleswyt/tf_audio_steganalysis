@@ -6,7 +6,7 @@ Created on 2017.11.27
 Finished on 2017.11.30
 Modified on 2018.09.18
 
-@author: Wang Yuntao
+@author: Yuntao Wang
 """
 
 import time
@@ -87,7 +87,8 @@ def train(args):
 
     # placeholder
     with tf.variable_scope("placeholder"):
-        data = tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width, channel), name="data")
+        data = tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width), name="data") if channel == 0 else \
+            tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width, channel), name="data")
         labels = tf.placeholder(dtype=tf.int32, shape=(batch_size, ), name="label")
         is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
@@ -149,7 +150,7 @@ def train(args):
             model_file_path = fullfile(model_path, task_name)
 
         print("Start training...")
-        print("Input data: (%d, %d, %d)" % (height, width, channel))
+        print("Input data: (%d, %d)" % (height, width)) if channel == 0 else print("Input data: (%d, %d, %d)" % (height, width, channel))
 
         start_time_all = time.time()
         for epoch in range(n_epoch):

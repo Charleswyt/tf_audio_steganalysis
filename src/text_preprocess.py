@@ -9,7 +9,7 @@ Created on 2017.11.27
 Finished on 2017.11.27
 Modified on 2018.08.23
 
-@author: Wang Yuntao
+@author: Yuntao Wang
 """
 
 """
@@ -46,11 +46,16 @@ def text_read(text_file_path, height=200, width=576, channel=1, separator=","):
 
         # reshape
         [h, w] = np.shape(content)
-        content = np.reshape(content, [h, w, channel])
 
         height_new = None if h < height else height
         width_new = None if w < width else width
-        content = content[:height_new, :width_new, :]
+
+        if channel == 0:
+            content = content[:height_new, :width_new]
+        else:
+            content = np.reshape(content, [h, w, channel])
+            content = content[:height_new, :width_new, :channel]
+
     except ValueError:
         print(text_file_path)
 
@@ -72,7 +77,7 @@ def text_read_batch(text_files_list, height=200, width=576, channel=1, separator
     """
 
     files_num = len(text_files_list)
-    data = np.zeros([files_num, height, width, 1], dtype=np.float32)
+    data = np.zeros([files_num, height, width], dtype=np.float32) if channel == 0 else np.zeros([files_num, height, width, channel], dtype=np.float32)
 
     i = 0
     for text_file_path in text_files_list:
