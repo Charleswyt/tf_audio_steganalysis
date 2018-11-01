@@ -1,5 +1,5 @@
 # Audio Steganalysis with CNN
-@ Author: **Wang Yuntao (Charles_wyt)** <br>
+@ Author: **Yuntao Wang (Charles_wyt)** <br>
 @ Email: wangyuntao2@iie.ac.cn <br>
 Hope we can have a happy communication.
 

@@ -6,7 +6,7 @@ Created on 2018.02.07
 Finished on 2018.03.08
 Modified on 2018.08.24
 
-@author: Wang Yuntao
+@author: Yuntao Wang
 """
 
 import os

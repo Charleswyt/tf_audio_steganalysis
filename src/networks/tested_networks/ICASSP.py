@@ -6,7 +6,7 @@ Created on 2018.10.08
 Finished on 2018.10.08
 Modified on 2018.10.22
 
-@author: Wang Yuntao
+@author: Yuntao Wang
 """
 
 from layer import *

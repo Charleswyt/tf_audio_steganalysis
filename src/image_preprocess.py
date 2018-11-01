@@ -6,7 +6,7 @@ Created on 2018.04.20
 Finished on 2018.04.20
 Modified on 2018.08.27
 
-@author: Wang Yuntao
+@author: Yuntao Wang
 """
 
 import numpy as np

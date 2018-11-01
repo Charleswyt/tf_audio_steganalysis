@@ -10,7 +10,7 @@ Created on 2018.01.15
 Finished on 2018.01.15
 Modified on 2018.08.29
 
-@author: Wang Yuntao
+@author: Yuntao Wang
 """
 
 """

@@ -5,7 +5,7 @@ Created on 2018.01.05
 Finished on 2018.01.05
 Modified on 2018.08.23
 
-@author: Wang Yuntao
+@author: Yuntao Wang
 """
 
 import os
@@ -142,7 +142,6 @@ def config_train_file_read(config_file_path):
             def __init__(self):
                 self.path_mode = file_content["path_mode"]
                 self.task_name = file_content["task_name"]
-                
 
                 # full_samples_path
                 if self.path_mode == "full":
@@ -155,8 +154,8 @@ def config_train_file_read(config_file_path):
                 elif self.path_mode == "simple":
                     self.cover_files_root = file_content['simple_samples_path']['cover_files_root']
                     self.stego_files_root = file_content['simple_samples_path']['stego_files_root']
-                    stego_method = (self.task_name).split("_")[0]
-                    samples_bitrate = (self.task_name).split("_")[2]
+                    stego_method = self.task_name.split("_")[0]
+                    samples_bitrate = self.task_name.split("_")[2]
 
                     self.cover_train_path = fullfile(fullfile(self.cover_files_root, samples_bitrate), "train")
                     self.cover_valid_path = fullfile(fullfile(self.cover_files_root, samples_bitrate), "validation")

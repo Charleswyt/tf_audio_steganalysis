@@ -6,7 +6,7 @@ Created on 2018.03.28
 Finished on 2018.03.28
 Modified on 2018.08.27
 
-@author: Wang Yuntao
+@author: Yuntao Wang
 """
 
 import tensorflow as tf

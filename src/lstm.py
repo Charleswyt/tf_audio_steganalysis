@@ -4,7 +4,7 @@
 """
 Created on
 Finished on
-@author: Wang Yuntao
+@author: Yuntao Wang
 """
 
 import tensorflow as tf
