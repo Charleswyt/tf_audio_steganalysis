@@ -187,7 +187,7 @@ def train(args):
 
                 et = time.time() - start_time_all
                 et = str(datetime.timedelta(seconds=et))[:-7]
-                print("[network: %s, task: %s, global_step: %d] elapsed: %s, epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f"
+                print("[network: %s, task: %s, global_step: %000005d] elapsed: %s, epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f"
                       % (args.network, args.task_name, step_train, et, epoch + 1, train_iterations, err, ac))
 
             print("=" * 100)

@@ -544,11 +544,39 @@ def accuracy_layer(logits, labels):
     :return: accuracy
     """
     with tf.variable_scope("accuracy"):
+        logits = tf.nn.softmax(logits)
         results = tf.cast(tf.argmax(logits, 1), tf.int32)
         correct_prediction = tf.equal(results, labels)
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
         return accuracy
+
+
+def error_layer(logits, labels):
+    """
+    calculate the error
+    :param logits: logits
+    :param labels: label
+    :return: error rate
+    """
+    with tf.variable_scope("accuracy"):
+        logits = tf.nn.softmax(logits)
+        results = tf.cast(tf.argmax(logits, 1), tf.int32)
+        wrong_prediction = tf.not_equal(results, labels)
+        accuracy = tf.reduce_mean(tf.cast(wrong_prediction, tf.float32))
+
+        return accuracy
+
+
+def siamese_loss(prediction1, prediction2, y, Q=5):
+    Q = tf.constant(Q, name="Q", dtype=tf.float32)
+    E_w = tf.sqrt(tf.reduce_sum(tf.square(prediction1-prediction2), 1))
+    pos = tf.multiply(tf.multiply(y, 2/Q), tf.square(E_w))
+    neg = tf.multiply(tf.multiply(1-y, 2*Q), tf.exp(-2.77/Q*E_w))
+    loss = pos + neg
+    loss = tf.reduce_mean(loss)
+    
+    return loss
 
 
 def optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,

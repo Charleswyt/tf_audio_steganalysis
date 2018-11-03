@@ -12,10 +12,11 @@ import sys
 
 sys.path.append("tools")
 
-def QMDCT_extract(files_path, file_num=None, file_type="mp3"):
+def QMDCT_extract(files_path, frame_number=50, file_num=None, file_type="mp3"):
     """
     :param files_path: path of MP3 files for QMDCT extraction
-    :param file_num: number of MP3 files for QMDCT extraction, default is None which means all files in the current path are extracted
+    :param frame_number: number of frames for extraction, default is 50
+    :param file_num: number of MP3 files for QMDCT extraction, default is None which means all files in the current path are extracted, default is None
     :param file_type: file type, default is "mp3"
     :return: Null
     """
@@ -44,7 +45,7 @@ def QMDCT_extract(files_path, file_num=None, file_type="mp3"):
                     pass
                 else:
                     command = "lame_qmdct.exe " + mp3_file + \
-                        " -framenum 50 -startind 0 -coeffnum 576 --decode"
+                        " -framenum " + frame_number + " -startind 0 -coeffnum 576 --decode"
                     os.system(command)
                     os.remove(wav_file_path)
             else:
@@ -58,7 +59,12 @@ if __name__ == "__main__":
         QMDCT_extract(files_path)
     elif params_num == 3:
         files_path = sys.argv[1]
-        file_num = int(sys.argv[2])
-        QMDCT_extract(files_path, file_num)
+        frame_number = sys.argv[2]
+        QMDCT_extract(files_path, frame_number)
+    elif params_num == 4:
+        files_path = sys.argv[1]
+        frame_number = sys.argv[2]
+        file_num = int(sys.argv[3])
+        QMDCT_extract(files_path, frame_number, file_num)
     else:
         print("Please input the command as the format of {python QMDCT_extractor.py \"files_path\" \"file_num (defalut is None)\"} ")
