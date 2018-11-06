@@ -290,11 +290,6 @@ def rhfcn1_4(input_data, class_num=2, is_bn=True, activation_method="tanh", padd
     conv10 = conv_layer(bn9, 1, 1, 1, 1, 2, name="conv10", activation_method=None, padding="VALID")
     bn11 = batch_normalization(conv10, name="BN11", activation_method="tanh", is_train=is_bn)
 
-    # global average pooling
-    bn11_shape = bn11.get_shape()
-    height, width = bn11_shape[1], bn11_shape[2]
-    pool12 = pool_layer(bn11, height, width, 1, 1, name="global_max")
-
-    logits = tf.reshape(pool12, [-1, class_num])
+    logits = tf.reshape(bn11, [-1, class_num])
 
     return logits

@@ -28,7 +28,7 @@
     --cover_valid_path xxx \
     --stego_train_path xxx \
     --stego_valid_path xxx \
-    --tfreocrds_path xxx \
+    --tfrecords_path xxx \
     --models_path xxx \
     --logs_path xxx \
     --task_name xxx \
@@ -83,6 +83,8 @@ All parameters match the mode of **argparse**, and commonly used parameters are 
 
 Param                       | Function                          | option
 :-                          | :-                                | :-
+ **path_mode**              | mode of path                      | simple(default) and full
+ **task_name**              | name of task                      | task name is the same with the steg folder name if you select simple path mode
  **cover_train_path**       | path of cover train files         | -
  **cover_valid_path**       | path of cover validation files    | -
  **stego_train_path**       | path of stego train files         | -
@@ -94,15 +96,13 @@ Param                       | Function                          | option
  **mode**                   | mode of running                   | train(default), test and steganalysis
  **carrier**                | carrier for steganalysis          | qmdct(default), audio and image
  **network**                | name of designed network          | -
- **task_name**              | name of task                      | -
- **path_mode**              | mode of path                      | simple(default) and full
- **batch_size**             | batch size for training           | 128(default)
+ **batch_size**             | batch size for training           | 16(default)
  **learning_rate**          | initialized learning rate         | 1e-3(default)
  **epoch**                  | epoch of training                 | 500(default)
  seed                       | seed of random generation         | 1(default)
  **is_regulation**          | whether add regulation or not     | True(default), False
  coeff_regulation           | coefficient of regulation         | 1e-3(default)
- loss_method                | method of loss funcion            | sigmoid_cross_entropy, softmax_cross_entropy, sparse_softmax_cross_entropy(default)
+ loss_method                | method of loss function           | sigmoid_cross_entropy, softmax_cross_entropy, sparse_softmax_cross_entropy(default)
  class_num                  | number of classifier              | 2(default)
  **height**                 | height of input data matrix       | -
  **width**                  | width of input data matrix        | -

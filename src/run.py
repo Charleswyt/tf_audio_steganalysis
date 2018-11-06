@@ -97,7 +97,10 @@ def train(args):
         print("Network miss-match, please try again")
         return False
 
-    command = args.network + "(data, classes_num, is_bn)"
+    try:
+        command = args.network + "(data, classes_num, is_bn)"
+    except TypeError:
+        command = args.network + "(data, classes_num)"
     logits = eval(command)
 
     # evaluation
@@ -258,7 +261,6 @@ def test(args):
 
     command = args.network + "(data, classes_num, is_bn)"
     logits = eval(command)
-    logits = tf.nn.softmax(logits)
 
     accuracy = accuracy_layer(logits=logits, labels=labels)
 
@@ -308,7 +310,6 @@ def steganalysis_one(args):
     # hyper parameters
     height, width, channel = args.height, args.width, args.channel      # height and width of input matrix
     carrier = args.carrier                                              # carrier (qmdct | audio | image)
-    classes_num = args.classes_num                                      # classes for classification
 
     # path
     steganalysis_file_path = args.steganalysis_file_path
@@ -323,7 +324,7 @@ def steganalysis_one(args):
         return False
 
     # network
-    command = args.network + "(data, classes_num, is_bn)"
+    command = args.network + "(data, args.class_num, is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
@@ -360,13 +361,12 @@ def steganalysis_batch(args):
     # hyper parameters
     height, width, channel = args.height, args.width, args.channel      # height and width of input matrix
     carrier = args.carrier                                              # carrier (qmdct | audio | image)
-    classes_num = args.class_num                                        # classes number
 
     # path
     steganalysis_files_path = args.steganalysis_files_path
 
     # placeholder
-    data = tf.placeholder(dtype=tf.float32, shape=(1, height, width, channel), name="data")
+    data = tf.placeholder(dtype=tf.float32, shape=(None, height, width, channel), name="data")
     is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
 
     # initialize the network
@@ -375,7 +375,7 @@ def steganalysis_batch(args):
         return False
 
     # network
-    command = args.network + "(data, classes_num, is_bn)"
+    command = args.network + "(data, args.class_num, is_bn)"
     logits = eval(command)
     logits = tf.nn.softmax(logits)
 
