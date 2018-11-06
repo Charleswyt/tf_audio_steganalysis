@@ -34,6 +34,8 @@ def command_parse():
     print(parser.description)
 
     # mode
+    parser.add_argument("--path_mode", type=str, default="full", help="mode of file path")
+    parser.add_argument("--task_name", type=str, help="the name of the current task")
     parser.add_argument("--gpu_selection", type=str, default="auto",
                         help="GPU selection mode, if \"auto\", no serial number is needed, otherwise appoint the serial number "
                              "(default: auto, another choice is manu)")
@@ -57,10 +59,11 @@ def command_parse():
     parser.add_argument("--end_index_valid", type=int, default=None, help="the end index of file in valid folders (default: None)")
 
     # path of steganalysis file(s)
+    parser.add_argument("--cover_files_root", type=str, help="the directory of root containing cover files")
+    parser.add_argument("--stego_files_root", type=str, help="the directory of root containing stego files")
+
     parser.add_argument("--steganalysis_file_path", type=str, help="the file path used for steganalysis")
     parser.add_argument("--steganalysis_files_path", type=str, help="the files folder path used for steganalysis")
-
-    # path of files
     parser.add_argument("--cover_train_path", type=str, help="the path of directory containing cover files for train")
     parser.add_argument("--cover_valid_path", type=str, help="the path of directory containing cover files for validation")
     parser.add_argument("--cover_test_path", type=str, help="the path of directory containing cover files for test")
@@ -70,7 +73,6 @@ def command_parse():
     parser.add_argument("--tfrecords_path", type=str, help="the path of directory containing all tfrecord files")
     parser.add_argument("--models_path", type=str, help="the path of directory containing models")
     parser.add_argument("--logs_path", type=str, help="the path of directory containing logs")
-    parser.add_argument("--task_name", type=str, help="the name of task")
 
     # hyper parameters
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
@@ -94,6 +96,22 @@ def command_parse():
     parser.add_argument("--keep_checkpoint_every_n_hours", type=float, default=0.5, help="how often to keep checkpoints (default: 0.5)")
 
     arguments = parser.parse_args()
+
+    # full_samples_path
+    if arguments.path_mode == "full":
+        pass
+
+    # simple_samples_path
+    elif self.path_mode == "simple":
+        stego_method = arguments.task_name.split("_")[0]
+        samples_bitrate = arguments.task_name.split("_")[2]
+
+        arguments.cover_train_path = fullfile(fullfile(arguments.cover_files_root, samples_bitrate), "train")
+        arguments.cover_valid_path = fullfile(fullfile(arguments.cover_files_root, samples_bitrate), "validation")
+        arguments.stego_train_path = fullfile(fullfile(fullfile(arguments.stego_files_root, stego_method), arguments.task_name), "train")
+        arguments.stego_valid_path = fullfile(fullfile(fullfile(arguments.stego_files_root, stego_method), arguments.task_name), "validation")
+    else:
+        arguments.train = False
 
     # create folder (tfrecord)
     # level: root

@@ -1,20 +1,23 @@
 ## Usage
-### json mode
+If you use json mode, it's OK to open the json file and modify the corresponding parameters. And, if you use command line mode, modify the corresponding parameters and copy/paste it.
+
+### Json mode
     Example(train):
-    sudo python main.py (train)
+    (sudo) python main.py (train)
  
  ---
     Example(test):
-    sudo python main.py test
+    (sudo) python main.py test
 
 ---
     Example(steganalysis):
-    sudo python main.py steganalysis
+    (sudo) python main.py steganalysis
 
-### command line mode
+### Command line mode
 
-    Example(train):
+    Example(train and validation):
     sudo python main.py \
+    --task_name xxx\
     --mode train \
     --network wasdn \
     --carrier qmdct \
@@ -48,7 +51,7 @@
     --stego_test_path xxx \
     --models_path xxx \
 ---
-    Example(steganalysis for one): 
+    Example(steganalysis for **one**):
     sudo python main.py \
     --mode steganalysis \
     --submode one \
@@ -62,7 +65,7 @@
     --steganalysis_file_path xxx \
     --models_path xxx \
 ---
-    Example(steganalysis for batch): 
+    Example(steganalysis for **batch**):
     sudo python main.py \
     --mode steganalysis \
     --submode batch \
@@ -81,7 +84,7 @@ All parameters match the mode of **argparse**, and commonly used parameters are 
 
 ### training and validation
 
-Param                       | Function                          | option
+Parameters                  | Function                          | Option
 :-                          | :-                                | :-
  **path_mode**              | mode of path                      | simple(default) and full
  **task_name**              | name of task                      | task name is the same with the steg folder name if you select simple path mode
@@ -115,7 +118,7 @@ Param                       | Function                          | option
 
 ### test
 
-Param                       | Function                          | option
+Parameters                  | Function                          | Option
 :-                          | :-                                | :-
  **cover_test_path**        | path of cover train files         | -
  **stego_test_path**        | path of stego test files          | -
@@ -131,7 +134,7 @@ Param                       | Function                          | option
 
 ### steganalysis
 
-Param                       | Function                          | option
+Parameters                  | Function                          | Option
 :-                          | :-                                | :-
  **steganalysis_file_path** | path of file for steganalysis     | -
  **steganalysis_files_path**| path of files for steganalysis    | -

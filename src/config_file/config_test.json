@@ -16,7 +16,7 @@
         "network": "rhfcn"
     },
     "hyper_parameters": {
-        "batch_size": 64,
+        "batch_size": 16,
         "class_num": 2
     },
     "shape": {
