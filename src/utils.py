@@ -178,6 +178,14 @@ def minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_lab
         labels = cover_labels[excerpt]
         labels.extend(stego_labels[excerpt])
 
+        temp = np.array([datas, labels])
+        temp_t = temp.transpose()
+
+        np.random.shuffle(temp_t)
+
+        datas = list(temp_t[:, 0])
+        labels = list(temp_t[:, 1])
+
         yield datas, labels
 
 

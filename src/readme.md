@@ -14,6 +14,5 @@ ID      |   File                    |   Function
 11      |   utils.py                |   some useful tools such as **minibatch**, **get_data_batch**, 
 12      |   run.py                  |   the **train** and **test** of the network **get_weights**, **get_biases** and so on
 13      |   dataset.py              |   some functions of tfrecord read and write
-14      |   lstm.py                 |   lstm network which uesd for steganalysis
-15      |   networks                |   all designed networks are contained in this folder, audio and image steganalysis, classification
-16      |   config_file             |   three files, config_train, config_test and config_steganalysis, in this folder are uesd to send the paramters into the network, like the usage in Caffe
+14      |   networks                |   all designed networks are contained in this folder, audio and image steganalysis, classification
+15      |   config_file             |   three files, config_train, config_test and config_steganalysis, in this folder are uesd to send the paramters into the network, like the usage in Caffe

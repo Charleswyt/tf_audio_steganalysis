@@ -194,6 +194,7 @@ def config_train_file_read(config_file_path):
                 self.checkpoint = file_content['mode_config']['checkpoint']
                 self.carrier = file_content['mode_config']['carrier']
                 self.network = file_content['mode_config']['network']
+                self.siamese = file_content['mode_config']['siamese']
 
                 # hyper_parameters
                 self.batch_size = file_content['hyper_parameters']['batch_size']

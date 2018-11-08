@@ -503,37 +503,36 @@ def rich_hpf_layer(input_data, name):
     return output
 
 
-def loss_layer(logits, labels, is_regulation=False, coeff=1e-3, method="sparse_softmax_cross_entropy"):
+def loss_layer(logits, labels, logits_siamese=None, is_regulation=False, coeff=1e-3, method="sparse_softmax_cross_entropy"):
     """
     calculate the loss
     :param logits: logits [batch_size, class_num]
     :param labels: labels [batch_size, class_num]
+    :param logits_siamese: logits of siamese network [batch_size, class_num]
     :param is_regulation: whether regulation or not
     :param coeff: the coefficients of the regulation
     :param method: loss method
     :return:
-        loss: loss with regularization
+        loss_total: loss with regularization
     """
     with tf.variable_scope("loss"):
-        if method == "sigmoid_cross_entropy":
-            cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(logits=logits, labels=labels)
-        elif method == "softmax_cross_entropy":
-            cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels)
-        elif method == "sparse_softmax_cross_entropy":
-            cross_entropy = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=labels)
+        if method == "sparse_softmax_cross_entropy":
+            loss = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=labels)
+        elif method == "siamese_loss":
+            loss = siamese_loss(logits1=logits, logits2=logits_siamese, labels=labels)
         else:
-            cross_entropy = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=labels)
+            loss = tf.losses.sparse_softmax_cross_entropy(logits=logits, labels=labels)
 
-        loss_cross_entropy = tf.reduce_sum(cross_entropy)
+        loss = tf.reduce_mean(loss)
 
         if is_regulation is True:
             tv = tf.trainable_variables()
             regularization_cost = coeff * tf.reduce_sum([tf.nn.l2_loss(v) for v in tv])
-            loss = loss_cross_entropy + regularization_cost
+            loss_total = loss + regularization_cost
         else:
-            loss = loss_cross_entropy + 0
+            loss_total = loss
 
-        return loss
+        return loss_total
 
 
 def accuracy_layer(logits, labels):
@@ -568,11 +567,12 @@ def error_layer(logits, labels):
         return accuracy
 
 
-def siamese_loss(prediction1, prediction2, y, Q=5):
+def siamese_loss(logits1, logits2, labels):
+    Q = 5
     Q = tf.constant(Q, name="Q", dtype=tf.float32)
-    E_w = tf.sqrt(tf.reduce_sum(tf.square(prediction1-prediction2), 1))
-    pos = tf.multiply(tf.multiply(y, 2/Q), tf.square(E_w))
-    neg = tf.multiply(tf.multiply(1-y, 2*Q), tf.exp(-2.77/Q*E_w))
+    E_w = tf.sqrt(tf.reduce_sum(tf.square(logits1 - logits2), 1))
+    pos = tf.multiply(tf.multiply(labels, 2/Q), tf.square(E_w))
+    neg = tf.multiply(tf.multiply(1-labels, 2*Q), tf.exp(-2.77/Q*E_w))
     loss = pos + neg
     loss = tf.reduce_mean(loss)
     
