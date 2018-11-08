@@ -72,42 +72,6 @@ def train(args):
     step_train, step_valid = 0, 0                                                           # train step and valid step
     max_accuracy, max_accuracy_epoch = 0, 0                                                 # max valid accuracy and corresponding epoch
 
-    with tf.device("/cpu:0"):
-        global_step = tf.Variable(initial_value=0,
-                                  trainable=False,
-                                  name="global_step",
-                                  dtype=tf.int32)                                           # global step (Variable 变量不能直接分配GPU资源)
-
-    # learning rate decay
-    learning_rate = learning_rate_decay(init_learning_rate=init_learning_rate,
-                                        decay_method=decay_method,
-                                        global_step=global_step,
-                                        decay_steps=decay_steps,
-                                        decay_rate=decay_rate)                              # learning rate
-
-    # placeholder
-    with tf.variable_scope("placeholder"):
-        data = tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width), name="data") if channel == 0 else \
-            tf.placeholder(dtype=tf.float32, shape=(batch_size, height, width, channel), name="data")
-        labels = tf.placeholder(dtype=tf.int32, shape=(batch_size, ), name="label")
-        is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
-
-    # initialize the network
-    if args.network not in networks:
-        print("Network miss-match, please try again")
-        return False
-
-    try:
-        command = args.network + "(data, classes_num, is_bn)"
-    except TypeError:
-        command = args.network + "(data, classes_num)"
-    logits = eval(command)
-
-    # evaluation
-    loss = loss_layer(logits=logits, labels=labels, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
-    train_optimizer = optimizer(losses=loss, learning_rate=learning_rate, global_step=global_step)
-    accuracy = accuracy_layer(logits=logits, labels=labels)
-
     # file path
     cover_train_path = args.cover_train_path
     stego_train_path = args.stego_train_path
@@ -129,8 +93,69 @@ def train(args):
     print("start load network...")
 
     with tf.device("/cpu:0"):
-        tf.summary.scalar("loss_train", loss)
-        tf.summary.scalar("accuracy_train", accuracy)
+        global_step = tf.Variable(initial_value=0,
+                                  trainable=False,
+                                  name="global_step",
+                                  dtype=tf.int32)                                           # global step (Variable 变量不能直接分配GPU资源)
+
+    # learning rate decay
+    learning_rate = learning_rate_decay(init_learning_rate=init_learning_rate,
+                                        decay_method=decay_method,
+                                        global_step=global_step,
+                                        decay_steps=decay_steps,
+                                        decay_rate=decay_rate)                              # learning rate
+
+    # placeholder
+    with tf.variable_scope("placeholder"):
+        data = tf.placeholder(dtype=tf.float32, shape=(None, height, width), name="data") if channel == 0 else \
+            tf.placeholder(dtype=tf.float32, shape=(None, height, width, channel), name="data")
+        labels = tf.placeholder(dtype=tf.int32, shape=(None, ), name="labels")
+        data_siamese = tf.placeholder(dtype=tf.float32, shape=(None, height, width), name="data_siamese") if channel == 0 else \
+            tf.placeholder(dtype=tf.float32, shape=(None, height, width, channel), name="data_siamese")
+        labels_siamese = tf.placeholder(dtype=tf.int32, shape=(None,), name="labels_siamese")
+        new_labels = tf.placeholder(dtype=tf.float32, shape=(None, ), name="new_labels")
+        is_bn = tf.placeholder(dtype=tf.bool, name="is_bn")
+
+    # initialize the network
+    if args.network not in networks:
+        print("Network miss-match, please try again")
+        return False
+
+    if args.siamese is not True:
+        command = args.network + "(data, classes_num, is_bn)"
+        logits = eval(command)
+
+        # evaluation
+        loss_train = loss_layer(logits=logits, labels=labels, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
+        accuracy_train = accuracy_layer(logits=logits, labels=labels)
+        train_optimizer = optimizer(losses=loss_train, learning_rate=learning_rate, global_step=global_step)
+
+        loss_validation = loss_layer(logits=logits, labels=labels, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
+        accuracy_validation = accuracy_layer(logits=logits, labels=labels)
+
+    else:
+        with tf.variable_scope('siamese') as scope:
+            command1 = args.network + "(data, classes_num, is_bn)"
+            command2 = args.network + "(data_siamese, classes_num, is_bn)"
+            logits = eval(command1)
+            scope.reuse_variables()
+            logits_siamese = eval(command2)
+
+        # evaluation
+        loss_train = loss_layer(logits=logits, logits_siamese=logits_siamese, labels=new_labels, is_regulation=is_regulation, coeff=coeff_regulation, method="siamese_loss")
+        accuracy1 = accuracy_layer(logits=logits, labels=labels)
+        accuracy2 = accuracy_layer(logits=logits_siamese, labels=labels_siamese)
+        accuracy_train = tf.multiply(tf.add(accuracy1, accuracy2), 0.5)
+        train_optimizer = optimizer(losses=loss_train, learning_rate=learning_rate, global_step=global_step)
+
+        loss_validation = loss_layer(logits=logits, labels=labels, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)
+        accuracy_validation = accuracy_layer(logits=logits, labels=labels)
+
+    with tf.device("/cpu:0"):
+        tf.summary.scalar("loss_train", loss_train)
+        tf.summary.scalar("loss_validation", loss_validation)
+        tf.summary.scalar("accuracy_train", accuracy_train)
+        tf.summary.scalar("accuracy_validation", accuracy_validation)
         summary_op = tf.summary.merge_all()
         saver = tf.train.Saver(max_to_keep=max_to_keep,
                                keep_checkpoint_every_n_hours=keep_checkpoint_every_n_hours)
@@ -158,16 +183,13 @@ def train(args):
         start_time_all = time.time()
         for epoch in range(n_epoch):
             # read files list (train)
-            cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list = read_data(cover_train_path,
-                                                                                                                     stego_train_path,
-                                                                                                                     start_index_train,
-                                                                                                                     end_index_train)
+            cover_train_data_list, cover_train_label_list, \
+                stego_train_data_list, stego_train_label_list = read_data(cover_train_path, stego_train_path, start_index_train, end_index_train)
 
             # read files list (validation)
-            cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_path,
-                                                                                                                     stego_valid_path,
-                                                                                                                     start_index_valid,
-                                                                                                                     end_index_valid)
+            cover_valid_data_list, cover_valid_label_list, \
+                stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_path, stego_valid_path, start_index_valid, end_index_valid)
+
             # update the learning rate
             lr = sess.run(learning_rate)
 
@@ -178,9 +200,22 @@ def train(args):
                 # data read and process
                 x_train_data = get_data_batch(x_train_batch, height=height, width=width, channel=channel, carrier=carrier)
 
-                # get the accuracy and loss
-                _, err, ac, summary_str_train = sess.run([train_optimizer, loss, accuracy, summary_op],
-                                                         feed_dict={data: x_train_data, labels: y_train_batch, is_bn: True})
+                if args.siamese is not True:
+                    # get the accuracy and loss
+                    _, err, ac, summary_str_train = sess.run([train_optimizer, loss_train, accuracy_train, summary_op],
+                                                             feed_dict={data: x_train_data, labels: y_train_batch, is_bn: True})
+                else:
+                    x_train_data1 = x_train_data[:int(batch_size / 2)]
+                    x_train_data2 = x_train_data[int(batch_size / 2):]
+                    y_train_batch1 = y_train_batch[:int(batch_size / 2)]
+                    y_train_batch2 = y_train_batch[int(batch_size / 2):]
+
+                    new_label = list(np.array(np.array(np.array(y_train_batch1) == np.array(y_train_batch2), dtype=np.float32), dtype=np.str))
+
+                    _, err, ac, summary_str_train = sess.run([train_optimizer, loss_train, accuracy_train, summary_op],
+                                                             feed_dict={data: x_train_data1, data_siamese: x_train_data2,
+                                                                        labels: y_train_batch1, labels_siamese: y_train_batch2,
+                                                                        new_labels: new_label, is_bn: True})
 
                 train_loss += err
                 train_accuracy += ac
@@ -193,7 +228,7 @@ def train(args):
                 print("[network: %s, task: %s, global_step: %000005d] elapsed: %s, epoch: %003d, train iterations: %003d: train loss: %f, train accuracy: %f"
                       % (args.network, args.task_name, step_train, et, epoch + 1, train_iterations, err, ac))
 
-            print("=" * 100)
+            print("=" * 150)
 
             # validation
             valid_iterations, valid_loss, valid_accuracy = 0, 0, 0
@@ -203,8 +238,11 @@ def train(args):
                 x_valid_data = get_data_batch(x_valid_batch, height=height, width=width, channel=channel, carrier=carrier)
 
                 # get the accuracy and loss
-                err, ac, summary_str_valid = sess.run([loss, accuracy, summary_op],
-                                                      feed_dict={data: x_valid_data, labels: y_valid_batch, is_bn: True})
+                new_label = np.zeros(batch_size, dtype=np.float32)
+                err, ac, summary_str_valid = sess.run([loss_validation, accuracy_validation, summary_op],
+                                                      feed_dict={data: x_valid_data, data_siamese: x_valid_data,
+                                                                 labels: y_valid_batch, labels_siamese: y_valid_batch,
+                                                                 new_labels: new_label, is_bn: True})
                 valid_loss += err
                 valid_accuracy += ac
                 valid_iterations += 1
@@ -282,10 +320,9 @@ def test(args):
             model.restore(sess, model_file_path)
             print("The model is loaded successfully, model file: %s" % model_file_path)
             # read files list (train)
-            cover_test_data_list, cover_test_label_list, stego_test_data_list, stego_test_label_list = read_data(cover_test_files_path,
-                                                                                                                 stego_test_files_path,
-                                                                                                                 start_index_test,
-                                                                                                                 end_index_test)
+            cover_test_data_list, cover_test_label_list, \
+                stego_test_data_list, stego_test_label_list = read_data(cover_test_files_path, stego_test_files_path, start_index_test, end_index_test)
+
             if len(cover_test_data_list) < batch_size:
                 batch_size = len(cover_test_data_list)
 

@@ -1,3 +1,3 @@
-## TBAFC-Net: QMDCT Coefficients Phase-Aware and Distribution-based CNN for MP3 Steganalysis
+## RHFCN: Fully CNN-based Steganalysis of MP3 with Rich High-Pass Filtering
 
 Building
