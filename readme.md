@@ -1,7 +1,14 @@
 # Audio (and Image) Steganalysis with Deep Learning
+
 @ Author: **Yuntao Wang (Charles_wyt)** <br>
 @ Email: wangyuntao2@iie.ac.cn <br>
 Hope we can have a happy communication.
+
+| **`Linux CPU`** | **`Linux GPU`** | **`Windows CPU`** | **`Windows GPU`** | 
+|-----------------|-----------------|-------------------|-------------------|
+| ![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg) | ![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg) | ![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg) | ![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg) |
+
+---
 
 This project is a **tensorflow** implementation of recent work, you can also design your own network via this platform.
 + [CNN-based Steganalysis of MP3 Steganography in the Entropy

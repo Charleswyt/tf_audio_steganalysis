@@ -568,12 +568,19 @@ def error_layer(logits, labels):
 
 
 def siamese_loss(logits1, logits2, labels):
-    Q = 5
-    Q = tf.constant(Q, name="Q", dtype=tf.float32)
-    E_w = tf.sqrt(tf.reduce_sum(tf.square(logits1 - logits2), 1))
-    pos = tf.multiply(tf.multiply(labels, 2/Q), tf.square(E_w))
-    neg = tf.multiply(tf.multiply(1-labels, 2*Q), tf.exp(-2.77/Q*E_w))
-    loss = pos + neg
+    """
+    loss calculation for siamese network
+    :param logits1: logits1 of network
+    :param logits2: logits2 of network
+    :param labels: new label indicating whether logit1 and logit2 belong to one class, different - 0, same - 1
+    :return:
+    """
+    constant = 5
+    constant = tf.constant(constant, name="constant", dtype=tf.float32)
+    distance = tf.sqrt(tf.reduce_sum(tf.square(logits1 - logits2), 1))
+    pos = tf.multiply(tf.multiply(labels, 2 / constant), tf.square(distance))
+    neg = tf.multiply(tf.multiply(1 - labels, 2 * constant), tf.exp(-2.77 / constant * distance))
+    loss = tf.add(pos, neg)
     loss = tf.reduce_mean(loss)
     
     return loss
