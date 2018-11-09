@@ -1,14 +1,14 @@
 {
 	"files_path": {
         "steganalysis_file_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/validation/wav10s_32002.txt",
-        "steganalysis_files_path": "/home1/wyt/data/10.QMDCT/stego/HCM/HCM_B_128_ER_05/validation",
-        "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis/rhfcn/EECS_B_128_W_4_H_7_ER_10/"
+        "steganalysis_files_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/test",
+        "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis/rhfcn/EECS_B_128_W_4_H_7_ER_10/1540801003"
 	},
 	"mode_config": {
 		"gpu_selection": "manu",
-        "gpu": "0",
+        "gpu": "3",
         "mode": "steganalysis",
-        "submode": "one",
+        "submode": "batch",
         "carrier": "qmdct",
         "network": "rhfcn"
     },
@@ -17,7 +17,7 @@
     },
     "shape": {
         "height": 200,
-        "width": 576,
+        "width": 450,
         "channel": 1
     }
 }
