@@ -34,30 +34,32 @@ def text_read(text_file_path, height=200, width=576, channel=1, separator=","):
     """
     content = []
     try:
-        file = open(text_file_path)
+        with open(text_file_path) as file:
+            # read data line by line
+            lines = file.readlines()
+            for line in lines:
+                try:
+                    numbers = [int(character) for character in line.split(separator)[:-1]]
+                except ValueError:
+                    numbers = [float(character) for character in line.split(separator)[:-1]]
+                content.append(numbers)
 
-        # read data line by line
-        lines = file.readlines()
-        for line in lines:
-            numbers = [int(character) for character in line.split(separator)[:-1]]
-            content.append(numbers)
+            content = np.array(content)
 
-        content = np.array(content, dtype=np.int32)
+            # reshape
+            [h, w] = np.shape(content)
 
-        # reshape
-        [h, w] = np.shape(content)
+            height_new = None if h < height else height
+            width_new = None if w < width else width
 
-        height_new = None if h < height else height
-        width_new = None if w < width else width
-
-        if channel == 0:
-            content = content[:height_new, :width_new]
-        else:
-            content = np.reshape(content, [h, w, channel])
-            content = content[:height_new, :width_new, :channel]
+            if channel == 0:
+                content = content[:height_new, :width_new]
+            else:
+                content = np.reshape(content, [h, w, channel])
+                content = content[:height_new, :width_new, :channel]
 
     except ValueError:
-        print(text_file_path)
+        print("Error read: %s" % text_file_path)
 
     return content
 
