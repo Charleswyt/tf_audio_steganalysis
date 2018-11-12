@@ -122,8 +122,12 @@ def train(args):
         return False
 
     if args.siamese is not True:
-        command = args.network + "(data, classes_num, is_bn)"
-        logits = eval(command)
+        try:
+            command = args.network + "(data, classes_num, is_bn)"
+            logits = eval(command)
+        except TypeError:
+            command = args.network + "(data, classes_num)"
+            logits = eval(command)
 
         # evaluation
         loss_train = loss_layer(logits=logits, labels=labels, is_regulation=is_regulation, coeff=coeff_regulation, method=loss_method)

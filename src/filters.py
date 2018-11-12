@@ -11,6 +11,7 @@ Modified on 2018.08.27
 
 import numpy as np
 import tensorflow as tf
+from text_preprocess import text_read
 
 
 # kv_kernel
@@ -26,3 +27,28 @@ srm_kernels = tf.constant(value=srm_kernels_np,
                           dtype=tf.float32,
                           shape=[height, width, channel, filter_num],
                           name="srm_kernels")
+
+
+def dct_kernel_generator(kernel_size):
+    """
+    DCT kernel for image steganalysis
+    :param kernel_size: size of DCT kernel, e.g. 2, 3, 4, 5, 6, 7, 8
+    :return:
+        a DCT kernel tensor
+    """
+    kernel_sizes = [2, 3, 4, 5, 6, 7, 8]
+    if kernel_size not in kernel_sizes:
+        print("Wrong kernel size")
+        dct_kernel_np = np.ones(kernel_size * kernel_size)
+        dct_kernel = tf.constant(value=dct_kernel_np,
+                                 dtype=tf.float32,
+                                 shape=[kernel_size, kernel_size, 1, 1],
+                                 name="all_one_kernel")
+    else:
+        dct_kernel_file_path = "./dct_kernels/DCT" + str(kernel_size) + ".txt"
+        dct_kernel_np = text_read(dct_kernel_file_path, channel=0, separator=" ")
+        dct_kernel = tf.constant(value=dct_kernel_np,
+                                 dtype=tf.float32,
+                                 shape=[kernel_size * kernel_size, kernel_size * kernel_size, 1, 1],
+                                 name="dct_kernel")
+    return dct_kernel
