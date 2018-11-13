@@ -14,22 +14,38 @@ import tensorflow as tf
 from text_preprocess import text_read
 
 
-# kv_kernel
-kv_kernel = tf.constant(value=[-1, 2, -2, 2, -1, 2, -6, 8, -6, 2, -2, 8, -12, 8, -2, 2, -6, 8, -6, 2, -1, 2, -2, 2, -1],
-                        dtype=tf.float32,
-                        shape=[5, 5, 1, 1],
-                        name="kv_kernel")
+def kv_kernel_generator():
+    """
+    kv kernel for image steganalysis
+    :return:
+        kv kernel tensor
+    """
+    kv_kernel_matrix = tf.constant(value=[-1, 2, -2, 2, -1, 2, -6, 8, -6, 2, -2, 8, -12, 8, -2, 2, -6, 8, -6, 2, -1, 2, -2, 2, -1],
+                                   dtype=tf.float32,
+                                   shape=[5, 5, 1, 1],
+                                   name="kv_kernel_matrix")
+    kv_kernel = tf.multiply(1 / 12, kv_kernel_matrix, name="kv_kernel")
 
-# srm_kernels
-srm_kernels_np = np.load("SRM_Kernels.npy")
-[height, width, channel, filter_num] = np.shape(srm_kernels_np)
-srm_kernels = tf.constant(value=srm_kernels_np,
-                          dtype=tf.float32,
-                          shape=[height, width, channel, filter_num],
-                          name="srm_kernels")
+    return kv_kernel
 
 
-def dct_kernel_generator(kernel_size):
+def srm_kernels_generator():
+    """
+    SRM kernels for image steganalysis
+    :return:
+        SRM kernels tensor
+    """
+    srm_kernels_np = np.load("SRM_Kernels.npy")
+    [height, width, channel, filter_num] = np.shape(srm_kernels_np)
+    srm_kernels = tf.constant(value=srm_kernels_np,
+                              dtype=tf.float32,
+                              shape=[height, width, channel, filter_num],
+                              name="srm_kernels")
+
+    return srm_kernels
+
+
+def dct_kernel_generator(kernel_size=4):
     """
     DCT kernel for image steganalysis
     :param kernel_size: size of DCT kernel, e.g. 2, 3, 4, 5, 6, 7, 8
