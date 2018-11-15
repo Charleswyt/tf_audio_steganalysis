@@ -15,39 +15,6 @@ Modified on 2018.09.17
 @author: Yuntao Wang
 """
 
-"""
-function:
-    1.  pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=True, padding="SAME")
-    2.  batch_normalization(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3, activation_method="relu", is_train=True)
-    3.  dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True)
-    4.  fc_layer(input_data, output_dim, name, activation_method="relu", alpha=0.1, is_train=True)
-    5.  fconv_layer(input_data, filter_num, name, is_train=True, padding="VALID", init_method="xavier", bias_term=True, is_pretrain=True)
-    6.  activation_layer(input_data, activation_method="None", alpha=0.2)
-    7.  conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name, activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
-               init_method="xavier", bias_term=False, is_pretrain=True)
-    8.  static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="SAME")
-    9.  truncation_layer(input_data, is_turnc, min_value, max_value, name)
-    10. diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, padding="SAME")
-    11. block_sampling_layer(input_data, block_size, name="block_sampling")
-    12. cropping_layer(input_data, multiples, with_overlap=True, name="cropping")
-    13. rich_hpf_layer(input_data, name)
-    14. loss_layer(logits, label)
-    15. accuracy_layer(logits, label)
-    16. optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0.9, beta2=0.999,
-              epsilon=1e-8, initial_accumulator_value=0.1, momentum=0.9, decay=0.9)
-    17. learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate, decay_method="exponential", staircase=False,
-                        end_learning_rate=0.0001, power=1.0, cycle=False)
-    18. size_tune(input_data)
-    19. inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
-                 is_max_pool=True, init_method="xavier", bias_term=True, is_pretrain=True)
-    20. res_conv_block(input_data, height, width, x_stride, y_stride, filter_num, name,
-                   activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
-                   init_method="xavier", bias_term=True, is_pretrain=True)
-    21. res_conv_block_beta(input_data, height, width, x_stride, y_stride, filter_num, name,
-                        activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
-                        init_method="xavier", bias_term=True, is_pretrain=True)
-"""
-
 
 def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=True, padding="VALID"):
     """
@@ -399,6 +366,88 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VAL
         return feature_map
 
 
+# def dconv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
+#                 output_shape=None, scale=2, activation_method="relu", alpha=0.2, padding="VALID",
+#                 atrous=1, init_method="xavier", bias_term=True, is_pretrain=True):
+#     """
+#     dconvolutional layer
+#     :param input_data: the input data tensor [batch_size, height, width, channels]
+#     :param height: the height of the convolutional kernel
+#     :param width: the width of the convolutional kernel
+#     :param x_stride: stride in X axis
+#     :param y_stride: stride in Y axis
+#     :param filter_num: the number of the convolutional kernel
+#     :param name: the name of the layer
+#     :param activation_method: the type of activation function (default: relu)
+#     :param alpha: leaky relu alpha (default: 0.2)
+#     :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
+#     :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
+#     :param init_method: the method of weights initialization (default: xavier)
+#     :param bias_term: whether the bias term exists or not (default: False)
+#     :param is_pretrain: whether the parameters are trainable (default: True)
+#
+#     :return:
+#         output: a 4-D tensor [number, height, width, channel]
+#     """
+#     channel = input_data.get_shape()[-1]
+#
+#     # the method of weights initialization
+#     if init_method == "xavier":
+#         initializer = tf.contrib.layers.xavier_initializer()
+#     elif init_method == "gaussian":
+#         initializer = tf.random_normal_initializer(stddev=0.01)
+#     else:
+#         initializer = tf.truncated_normal_initializer(stddev=0.01)
+#
+#     # the initialization of the weights and biases
+#     with tf.variable_scope(name):
+#         weights = tf.get_variable(name="weights",
+#                                   shape=[height, width, channel, filter_num],
+#                                   dtype=tf.float32,
+#                                   initializer=initializer,
+#                                   trainable=is_pretrain)
+#         biases = tf.get_variable(name="biases",
+#                                  shape=[filter_num],
+#                                  dtype=tf.float32,
+#                                  initializer=tf.constant_initializer(0.0),
+#                                  trainable=is_pretrain)
+#
+#         # get output shape
+#         if output_shape is None:
+#             output_shape =
+#         # the method of transpose convolution
+#         if atrous == 1:
+#             feature_map = tf.nn.conv2d_transpose(value=input_data,
+#                                                  filter=weights,
+#                                                  output_shape=
+#                                                  strides=[1, x_stride, y_stride, 1],
+#                                                  padding=padding,
+#                                                  name="dconv")
+#         else:
+#             feature_map = tf.nn.atrous_conv2d_transpose(value=input_data,
+#                                                         filters=weights,
+#                                                         rate=atrous,
+#                                                         padding=padding,
+#                                                         name="atrous_dconv")
+#         # biases term
+#         if bias_term is True:
+#             output = tf.nn.bias_add(value=feature_map,
+#                                     bias=biases,
+#                                     name="biases_add")
+#         else:
+#             output = feature_map
+#
+#         # info show
+#         shape = output.get_shape()
+#         print("name: %s, shape: (%d, %d, %d), activation: %s"
+#               % (name, shape[1], shape[2], shape[3], activation_method))
+#
+#         # activation
+#         output = activation_layer(output, activation_method, alpha)
+#
+#         return output
+
+
 def diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, name, padding="SAME"):
     """
     the layer which is used for difference
@@ -543,7 +592,6 @@ def accuracy_layer(logits, labels):
     :return: accuracy
     """
     with tf.variable_scope("accuracy"):
-        logits = tf.nn.softmax(logits)
         results = tf.cast(tf.argmax(logits, 1), tf.int32)
         correct_prediction = tf.equal(results, labels)
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -807,3 +855,46 @@ def res_conv_block_beta(input_data, height, width, x_stride, y_stride, filter_nu
                               alpha=alpha)
 
     return output
+
+
+def moments_extraction(input_data):
+    """
+    this function is used for dimension unification in Jessica's paper for steganalysis of arbitrary size
+    calculate the moments of feature maps -- mean, variance, maximum and minimum
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :return:
+        moments: a 4-D tensor [number, 1, 4, channel]
+    """
+    
+    data_max = tf.reduce_max(input_data, axis=[1, 2], keep_dims=True, name="moments_max")
+    data_min = tf.reduce_max(input_data, axis=[1, 2], keep_dims=True, name="moments_min")
+    data_mean, data_variance = tf.nn.moments(input_data, axes=[1, 2], keep_dims=True, name="moments_mean_var")
+
+    moments = tf.concat([data_max, data_min, data_mean, data_variance], axis=2, name="moments")
+
+    return moments
+
+
+def moments_extraction_enhancement(input_data):
+    """
+    this function is the enhancement version of moments extraction
+    calculate the moments of feature maps -- mean, variance, maximum and minimum, kurtosis, skewness
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :return:
+        moments: a 4-D tensor [number, 1, 6, channel]
+    """
+
+    data_max = tf.reduce_max(input_data, axis=[1, 2], keep_dims=True, name="moments_max")
+    data_min = tf.reduce_min(input_data, axis=[1, 2], keep_dims=True, name="moments_min")
+    data_mean, data_variance = tf.nn.moments(input_data, axes=[1, 2], keep_dims=True, name="moments_mean_var")
+
+    input_data_sub_mean = tf.subtract(input_data, data_mean, name="input_data_sub_mean")
+    data_variance_inverse = tf.divide(1.0, data_variance, name="data_variance_inverse")
+    data_kurtosis = tf.multiply(tf.reduce_mean(tf.pow(input_data_sub_mean, 4)), tf.pow(data_variance_inverse, 4), name="kurtosis")
+    data_skewness = tf.multiply(tf.reduce_mean(tf.pow(input_data_sub_mean, 3)), tf.pow(data_variance_inverse, 3), name="skewness")
+
+    moments = tf.concat([data_max, data_min, data_mean, data_variance, data_kurtosis, data_skewness], axis=2, name="moments")
+
+    return moments
+
+
