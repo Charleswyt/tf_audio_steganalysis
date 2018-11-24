@@ -592,9 +592,9 @@ def accuracy_layer(logits, labels):
     :return: accuracy
     """
     with tf.variable_scope("accuracy"):
-        results = tf.cast(tf.argmax(logits, 1), tf.int32)
-        correct_prediction = tf.equal(results, labels)
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+        results = tf.nn.in_top_k(logits, labels, 1, name="results")
+        results = tf.cast(results, tf.float16)
+        accuracy = tf.reduce_mean(results)
 
         return accuracy
 
@@ -896,5 +896,3 @@ def moments_extraction_enhancement(input_data):
     moments = tf.concat([data_max, data_min, data_mean, data_variance, data_kurtosis, data_skewness], axis=2, name="moments")
 
     return moments
-
-

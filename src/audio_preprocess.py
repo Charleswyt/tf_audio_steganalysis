@@ -64,3 +64,39 @@ def audio_read_batch(audio_files_list, sampling_rate=44100, mono=False, offset=0
         i = i + 1
 
     return data
+
+
+def get_mfcc_statistics(audio_data, sampling_rate=44100, n_mfcc=40):
+    """
+    calculate the statistics of mfcc coefficients
+    :param audio_data: audio data, ndarray [length, channel]
+    :param sampling_rate: sampling rate of audio data, default: 44100
+    :param n_mfcc: number of mfcc, default: 40
+    :return:
+    """
+    mfcc_coefficients = librosa.feature.mfcc(y=audio_data, sr=sampling_rate, n_mfcc=n_mfcc)
+
+    mfcc_feature = []
+
+    mfcc_max = np.max(mfcc_coefficients.T, axis=0)
+    mfcc_feature.append(mfcc_max)
+
+    mfcc_min = np.min(mfcc_coefficients.T, axis=0)
+    mfcc_feature.append(mfcc_min)
+
+    mfcc_mean = np.mean(mfcc_coefficients.T, axis=0)
+    mfcc_feature.append(mfcc_mean)
+
+    mfcc_var = np.var(mfcc_coefficients.T, axis=0)
+    mfcc_feature.append(mfcc_var)
+
+    mfcc_var_inverse = np.divide(1.0, mfcc_var)
+    mfcc_kurtosis = np.multiply(np.power(mfcc_mean, 4), np.power(mfcc_var_inverse, 4))
+    mfcc_feature.append(mfcc_kurtosis)
+
+    mfcc_skewness = np.multiply(np.power(mfcc_mean, 3), np.power(mfcc_var_inverse, 3))
+    mfcc_feature.append(mfcc_skewness)
+
+    mfcc_feature = np.array(mfcc_feature)
+
+    return mfcc_feature
