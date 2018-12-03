@@ -289,11 +289,11 @@ def train(args):
                     print("The model is saved successfully.")
 
                 print("[network: %s, task: %s] epoch: %003d, learning rate: %f, train loss: %f, train accuracy: %f, valid loss: %f, valid accuracy: %f, "
-                      "max valid accuracy: %f, max valid acc epoch: %d" % (args.network, args.task_name, epoch + 1, lr, train_loss_average, train_accuracy_average, valid_loss_average,
-                                                                           valid_accuracy_average, max_accuracy, max_accuracy_epoch))
+                      "max valid accuracy: %f, max valid acc epoch: %d" % (args.network, args.task_name, epoch + 1, lr, train_loss_average, train_accuracy_average,
+                                                                           valid_loss_average, valid_accuracy_average, max_accuracy, max_accuracy_epoch))
             train_writer_train.close()
             train_writer_valid.close()
-    except Exception as e:
+    except Exception:
         print("An error occurred, please try again.")
         os.system("rm -rf " + model_path)
         os.system("rm -rf " + log_path)
