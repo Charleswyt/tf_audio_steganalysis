@@ -31,9 +31,9 @@ You can use command **pip install -r requirements.txt** to install all packages 
 3. install all dependent packages mentioned above (open **[setup](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/setup)/requirements.txt** and input "**pip install -r requirements**" into your cmd window)
 4. **run** the code as the [**example**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/config_file) as shows
 5. use [**tensorboard**](http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html) to visualize the train process such as the **accuracy** and **loss curve** of train and validation. The command is "**tensorboard --logdir=/path/to/log-directory**"
-6. If you want to design your own network based on this project, there is an [**instruction**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/networks/network_design.md) for you.
+-6. If you want to design your own network based on this project, there is an [**instruction**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/networks/network_design.md) for you.
 7. Our sourcecode is coded with [Pycharm](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/setup/pycharm.md), the hard wrap is setted as **180**.
-   
+
 ## File description
 ID      |   File                    |   Function
 :-      |   :-                      |    :-
