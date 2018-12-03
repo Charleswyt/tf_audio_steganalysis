@@ -12,7 +12,52 @@ import sys
 
 sys.path.append("tools")
 
-def QMDCT_extract(files_path, frame_number=50, file_num=None, file_type="mp3"):
+
+def fullfile(file_dir, file_name):
+    """
+    fullfile as matlab
+    :param file_dir: file dir
+    :param file_name: file name
+    :return: a full file path
+    """
+    full_file_path = os.path.join(file_dir, file_name)
+    full_file_path = full_file_path.replace("\\", "/")
+
+    return full_file_path
+    
+
+def get_file_type(file_path, sep="."):
+    """
+    get the type of file
+    :param file_path: file path
+    :param sep: separator
+    :return: file type
+    """
+    if os.path.exists(file_path):
+        file_type = file_path.split(sep=sep)[-1]
+    else:
+        file_type = None
+
+    return file_type
+
+
+def get_files_list(files_path, file_type=None):
+    """
+    :param files_path: path of MP3 files for move
+    :param file_type: file type, default is None
+    :return: Null
+    """
+    filename = os.listdir(files_path)
+    files_list = []
+    for file in filename:
+        file_path = fullfile(files_path, file)
+        if get_file_type(file_path) == file_type or file_type is None:
+            files_list.append(file_path)
+
+    return files_list
+
+
+def qmdct_extract(files_path, frame_number=50, file_num=None, file_type="mp3"):
     """
     :param files_path: path of MP3 files for QMDCT extraction
     :param frame_number: number of frames for extraction, default is 50
@@ -20,14 +65,15 @@ def QMDCT_extract(files_path, frame_number=50, file_num=None, file_type="mp3"):
     :param file_type: file type, default is "mp3"
     :return: Null
     """
-    list = os.listdir(files_path)
-    total_num = len(list)
+
+    files_list = get_files_list(files_path, file_type=file_type)
+    total_num = len(files_list)
 
     if file_num is None or file_num > total_num:
         file_num = total_num
 
     for i in range(0, file_num):
-        mp3_file = os.path.join(files_path, list[i])
+        mp3_file = os.path.join(files_path, files_list[i])
 
         if os.path.isfile(mp3_file):
 
@@ -45,7 +91,7 @@ def QMDCT_extract(files_path, frame_number=50, file_num=None, file_type="mp3"):
                     pass
                 else:
                     command = "lame_qmdct.exe " + mp3_file + \
-                        " -framenum " + frame_number + " -startind 0 -coeffnum 576 --decode"
+                        " -framenum " + str(frame_number) + " -startind 0 -coeffnum 576 --decode"
                     os.system(command)
                     os.remove(wav_file_path)
             else:
@@ -55,16 +101,16 @@ def QMDCT_extract(files_path, frame_number=50, file_num=None, file_type="mp3"):
 if __name__ == "__main__":
     params_num = len(sys.argv)
     if params_num == 2:
-        files_path = sys.argv[1]
-        QMDCT_extract(files_path)
+        args_files_path = sys.argv[1]
+        qmdct_extract(args_files_path)
     elif params_num == 3:
-        files_path = sys.argv[1]
-        frame_number = sys.argv[2]
-        QMDCT_extract(files_path, frame_number)
+        args_files_path = sys.argv[1]
+        args_frame_number = sys.argv[2]
+        qmdct_extract(args_files_path, args_frame_number)
     elif params_num == 4:
-        files_path = sys.argv[1]
-        frame_number = sys.argv[2]
-        file_num = int(sys.argv[3])
-        QMDCT_extract(files_path, frame_number, file_num)
+        args_files_path = sys.argv[1]
+        args_frame_number = sys.argv[2]
+        args_file_num = int(sys.argv[3])
+        qmdct_extract(args_files_path, args_frame_number, args_file_num)
     else:
-        print("Please input the command as the format of {python QMDCT_extractor.py \"files_path\" \"file_num (defalut is None)\"} ")
+        print("Please input the command as the format of {python QMDCT_extractor.py \"files_path\" \"file_num (default is None)\"} ")

@@ -113,13 +113,13 @@ def files_move(root_old, root_new, file_type="txt"):
 if __name__ == "__main__":
     params_num = len(sys.argv)
     if params_num == 3:
-        root_old = sys.argv[1]
-        root_new = sys.argv[2]
-        files_copy(root_old, root_new)
+        args_root_old = sys.argv[1]
+        args_root_new = sys.argv[2]
+        files_copy(args_root_old, args_root_new)
     elif params_num == 4:
-        root_old = sys.argv[1]
-        root_new = sys.argv[2]
-        file_type = sys.argv[3]
-        files_copy(root_old, root_new, file_type)
+        args_root_old = sys.argv[1]
+        args_root_new = sys.argv[2]
+        args_file_type = sys.argv[3]
+        files_copy(args_root_old, args_root_new, args_file_type)
     else:
         print("Please input the command as the format of {python files_move.py \"root_old\" \"root_new\" \"file_type (defalut is \"txt\")\"} ")

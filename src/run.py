@@ -80,9 +80,6 @@ def train(args):
 
     cover_files_path = args.cover_files_path
     stego_files_path = args.stego_files_path
-    train_validation_percent = args.train_validation_percent
-    start_index = args.start_index
-    end_index = args.end_index
 
     model_path = args.model_path
     log_path = args.log_path
@@ -96,7 +93,6 @@ def train(args):
     else:
         print("cover files path: %s" % cover_files_path)
         print("stego files path: %s" % stego_files_path)
-        print("percent of cover and validation split: %s" % train_validation_percent)
 
     print("model files path: %s" % model_path)
     print("log files path: %s" % log_path)
@@ -210,14 +206,10 @@ def train(args):
                     cover_valid_data_list, cover_valid_label_list, \
                         stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_path, stego_valid_path, start_index_valid, end_index_valid)
                 else:
-                    cover_data_list, cover_label_list, stego_data_list, stego_label_list = read_data(cover_files_path, stego_files_path, start_index, end_index)
-                    total_files_num = len(cover_data_list)
-                    train_files_num = int(total_files_num * train_validation_percent)
-                    print(train_files_num)
-                    cover_train_data_list, cover_train_label_list = cover_data_list[:train_files_num], cover_label_list[:train_files_num]
-                    cover_valid_data_list, cover_valid_label_list = cover_data_list[train_files_num:], cover_label_list[train_files_num:]
-                    stego_train_data_list, stego_train_label_list = stego_data_list[:train_files_num], stego_label_list[:train_files_num]
-                    stego_valid_data_list, stego_valid_label_list = stego_data_list[train_files_num:], stego_label_list[train_files_num:]
+                    cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list \
+                        = read_data(cover_files_path, stego_files_path, start_idx=start_index_train, end_idx=end_index_train)
+                    cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list \
+                        = read_data(cover_files_path, stego_files_path, start_idx=start_index_valid, end_idx=end_index_valid)
 
                 # update the learning rate
                 lr = sess.run(learning_rate)
@@ -302,7 +294,6 @@ def train(args):
             train_writer_train.close()
             train_writer_valid.close()
     except Exception as e:
-        print(e)
         print("An error occurred, please try again.")
         os.system("rm -rf " + model_path)
         os.system("rm -rf " + log_path)
