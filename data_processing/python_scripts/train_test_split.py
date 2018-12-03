@@ -104,15 +104,12 @@ def make_folder(files_path):
 
 def train_test_split(files_path, percent_train=0.7, percent_validation=0.3):
     """
-        split the dataset into train, validation and test
-        :param files_path: path of files to be spilted
-        :param start_idx: start index of audio files
-        :param end_idx: end index of audio files
-        :param percent_train: percent of train data
-        :param percent_validation: percent of validation data
-        :param percent_test: percent of test data
-        :return:
-            NULL
+    split the dataset into train, validation and test
+    :param files_path: path of files to be split
+    :param percent_train: percent of train data
+    :param percent_validation: percent of validation data
+    :return:
+        NULL
     """
     if not percent_train + percent_validation == 1:
         print("The sum of percent of all split data is not 100%, please try again.")
@@ -123,19 +120,19 @@ def train_test_split(files_path, percent_train=0.7, percent_validation=0.3):
         train_validation_num = files_num - data_num_test
         
         data_num_train = int(train_validation_num * percent_train)
-        data_num_valiadation = int(train_validation_num * percent_validation)
+        data_num_validation = int(train_validation_num * percent_validation)
         
         # split the dataset
         files_list_train = files_list[:data_num_train]
         del files_list[:data_num_train]
 
-        files_list_validation = files_list[:data_num_valiadation]
-        del files_list[:data_num_valiadation]
+        files_list_validation = files_list[:data_num_validation]
+        del files_list[:data_num_validation]
 
         files_list_test = files_list[:data_num_test]
         del files_list[:data_num_test]
 
-        # mkdir
+        # make dir
         files_path_train = fullfile(files_path, "train")
         files_path_validation = fullfile(files_path, "validation")
         files_path_test = fullfile(files_path, "test")
@@ -154,17 +151,17 @@ def train_test_split(files_path, percent_train=0.7, percent_validation=0.3):
 if __name__ == "__main__":
     params_num = len(sys.argv)
     if params_num == 2:
-        files_path = sys.argv[1]
-        train_test_split(files_path)
+        args_files_path = sys.argv[1]
+        args_train_test_split(args_files_path)
     elif params_num == 3:
-        files_path = sys.argv[1]
-        percent_train = float(sys.argv[2])
-        percent_validation = 1 - float(percent_train)
-        train_test_split(files_path, percent_train, percent_validation)
+        args_files_path = sys.argv[1]
+        args_percent_train = float(sys.argv[2])
+        args_percent_validation = 1 - float(percent_train)
+        train_test_split(args_files_path, args_percent_train, args_percent_validation)
     elif params_num == 4:
-        files_path = sys.argv[1]
-        percent_train = float(sys.argv[2])
-        percent_validation = float(sys.argv[3])
-        train_test_split(files_path, percent_train, percent_validation)
+        args_files_path = sys.argv[1]
+        args_percent_train = float(sys.argv[2])
+        args_percent_validation = float(sys.argv[3])
+        train_test_split(args_files_path, args_percent_train, args_percent_validation)
     else:
         print("Please input the command as the format of {python train_test_split.py \"files_path\" \"percent_train\" \"percent_validation\"}")

@@ -1,8 +1,7 @@
 ## Audio Steganalysis
-## audio_steganalysis
 This script contains all networks which are used for [audio steganalysis](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/src/networks/audio_steganalysis.py).
 
-  #### WAV Audio
+#### WAV Audio
   
 * [x] **Chen-Net** [Audio Steganalysis with Convolutional Neural Network, IH&MMSec, 2017](https://dl.acm.org/citation.cfm?id=3083234)
 
@@ -11,7 +10,6 @@ This script contains all networks which are used for [audio steganalysis](https:
 * [x] **WASDN** [CNN-based Steganalysis of MP3 Steganography in the Entropy Code Domain, IH&MMSec, 2018](https://dl.acm.org/citation.cfm?id=3206011)
 
 ## Image Steganalysis
-## image_steganalysis
 This script contains all networks which are used for [image steganalysis](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/src/networks/image_steganalysis.py).
 
 #### Spatial Image
@@ -31,13 +29,10 @@ This script contains all networks which are used for [image steganalysis](https:
 * [ ] **J-Xu-Net** [Deep Convolutional Neural Network to Detect J-UNIWARD, IH&MMSec, 2017](https://dl.acm.org/citation.cfm?id=3083236)
 
 ## Image Classification
-## image_classification
 This script contains all networks which are used for [image classification](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/src/networks/image_classification.py).
 
 ## Tested Steganalysis
-## tested_steganalysis
 This script contains all [tested networks](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/src/networks/tested_steganalysis.py) which are used for steganalysis.
 
 ## Networks
-## networks
 All designed [networks](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/src/networks/networks.py) all contained in this script which is used to avoid wrong network name.

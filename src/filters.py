@@ -63,8 +63,54 @@ def dct_kernel_generator(kernel_size=4):
     else:
         dct_kernel_file_path = "./dct_kernels/DCT" + str(kernel_size) + ".txt"
         dct_kernel_np = text_read(dct_kernel_file_path, channel=0, separator=" ")
+
         dct_kernel = tf.constant(value=dct_kernel_np,
                                  dtype=tf.float32,
-                                 shape=[kernel_size * kernel_size, kernel_size * kernel_size, 1, 1],
+                                 shape=[kernel_size, kernel_size, 1, kernel_size * kernel_size],
                                  name="dct_kernel")
     return dct_kernel
+
+
+def point_high_pass_kernel_generator():
+    """
+    point high-pass kernel for image steganalysis
+    :return:
+        point high-pass kernel tensor
+    """
+    point_high_pass_kernel = tf.constant(value=[-0, 0, 0.0199, 0, 0, 0, 0.0897, 0.1395, 0.0897, 0, -0.0199, 0.1395, -1, 0.1395, 0.0199,
+                                                0, 0.0897, 0.1395, 0.0897, 0, 0, 0, 0.0199, 0, 0],
+                                         dtype=tf.float32,
+                                         shape=[5, 5, 1, 1],
+                                         name="point_high_pass_kernel")
+
+    return point_high_pass_kernel
+
+
+def gabor_2d_horizontal_kernel_generator():
+    """
+    horizontal 2D Gabor Filter for image steganalysis
+    :return:
+        horizontal 2D Gabor Filter
+    """
+    gabor_2d_horizontal_kernel = tf.constant(value=[0.0562, -0.1354, 0, 0.1354, -0.0562, 0.0818, -0.1970, 0, 0.1970, -0.0818, 0.0926, -0.2233, 0, 0.2233, -0.0926,
+                                                    0.0818, -0.1970, 0, 0.1970, -0.818, 0.0562, -0.1354, 0, 0.1354, -0.0562],
+                                             dtype=tf.float32,
+                                             shape=[5, 5, 1, 1],
+                                             name="gabor_2d_horizontal_kernel")
+
+    return gabor_2d_horizontal_kernel
+
+
+def gabor_2d_vertical_kernel_generator():
+    """
+    vertical 2D Gabor Filter for image steganalysis
+    :return:
+        vertical 2D Gabor Filter
+    """
+    gabor_2d_vertical_kernel = tf.constant(value=[-0.0562, -0.0818, -0.0926, -0.0818, -0.0562, 0.1354, 0.1970, 0.2233, 0.1970, 0.1354, 0, 0, 0, 0, 0,
+                                                  -0.1354, -0.1970, -0.2233, -0.1970, -0.1354, 0.0562, 0.0818, 0.0926, 0.0818, 0.0562],
+                                           dtype=tf.float32,
+                                           shape=[5, 5, 1, 1],
+                                           name="gabor_2d_vertical_kernel")
+
+    return gabor_2d_vertical_kernel

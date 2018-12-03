@@ -115,13 +115,14 @@ def get_unix_stamp(time_string="1970-01-01 08:01:51", time_format="%Y-%m-%d %H:%
     return int(unix_time_stamp)
 
 
-def read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, is_shuffle=True):
+def read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, file_type="txt", is_shuffle=True):
     """
     read file names from the storage
     :param cover_files_path: the folder name of cover files
     :param stego_files_path: the folder name of stego files
-    :param start_idx: the start index
-    :param end_idx: the end index
+    :param file_type: file type, default is "txt"
+    :param start_idx: the start index, default is None
+    :param end_idx: the end index, default is None
     :param is_shuffle: whether shuffle or not (default is True)
     :return:
         cover_data_list: list of cover data
@@ -129,16 +130,18 @@ def read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, 
         stego_data_list: list of stego data
         stego_label_list: list of stego label
     """
-    cover_files_list = get_files_list(cover_files_path)         # data list of cover files
-    stego_files_list = get_files_list(stego_files_path)         # data list of stego files
-    sample_num_cover = len(cover_files_list)                    # total pairs of samples (cover)
-    sample_num_stego = len(stego_files_list)                    # total pairs of samples (stego)
-    sample_num = min(sample_num_cover, sample_num_stego)        # deal with the quantity inequality of cover and stego
+    cover_files_list = get_files_list(file_dir=cover_files_path, file_type=file_type,
+                                      start_idx=start_idx, end_idx=end_idx)         # data list of cover files
+    stego_files_list = get_files_list(file_dir=stego_files_path, file_type=file_type,
+                                      start_idx=start_idx, end_idx=end_idx)         # data list of stego files
+    sample_num_cover = len(cover_files_list)                                        # total pairs of samples (cover)
+    sample_num_stego = len(stego_files_list)                                        # total pairs of samples (stego)
+    sample_num = min(sample_num_cover, sample_num_stego)                            # deal with the quantity inequality of cover and stego
 
-    cover_files_list = cover_files_list[:sample_num]            # data list of cover files
-    stego_files_list = stego_files_list[:sample_num]            # data list of stego files
-    cover_label_list = np.zeros(sample_num, np.int32)           # label list of cover files
-    stego_label_list = np.ones(sample_num, np.int32)            # label list of stego files
+    cover_files_list = cover_files_list[:sample_num]                                # data list of cover files
+    stego_files_list = stego_files_list[:sample_num]                                # data list of stego files
+    cover_label_list = np.zeros(sample_num, np.int32)                               # label list of cover files
+    stego_label_list = np.ones(sample_num, np.int32)                                # label list of stego files
 
     temp = np.array([cover_files_list, cover_label_list, stego_files_list, stego_label_list])
     temp_t = temp.transpose()
@@ -146,16 +149,11 @@ def read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, 
     if is_shuffle is True:
         np.random.shuffle(temp_t)
 
-    if start_idx is not None and start_idx > sample_num:
-        start_idx = 0
-    if end_idx is not None and end_idx > sample_num:
-        end_idx = sample_num
+    cover_data_list = list(temp_t[:, 0])
+    cover_label_list = list(temp_t[:, 1])
 
-    cover_data_list = list(temp_t[start_idx:end_idx, 0])
-    cover_label_list = list(temp_t[start_idx:end_idx, 1])
-
-    stego_data_list = list(temp_t[start_idx:end_idx, 2])
-    stego_label_list = list(temp_t[start_idx:end_idx, 3])
+    stego_data_list = list(temp_t[:, 2])
+    stego_label_list = list(temp_t[:, 3])
 
     return cover_data_list, cover_label_list, stego_data_list, stego_label_list
 

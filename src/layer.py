@@ -448,6 +448,54 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VAL
 #         return output
 
 
+def phase_split(input_data, block_size=8, name=None):
+    """
+    get m * m (2 or 4 in general) block_split layer
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param block_size: size of block, 2 or 4
+    :param name: the name of the layer
+    :return:
+        feature_map: 4-D tensor [number, height, width, channel]
+    """
+
+    block_num = block_size * block_size
+    init_block = block_num * [0]
+    temp = init_block[:]
+    temp[0] = 1
+    phase_split_kernel = tf.constant(value=temp,
+                                     dtype=tf.float32,
+                                     shape=[block_size, block_size, 1, 1],
+                                     name="phase_aware_" + str(block_size) + "x" + str(block_size) + "_0")
+
+    output = tf.nn.conv2d(input=input_data,
+                          filter=phase_split_kernel,
+                          strides=[1, block_size, block_size, 1],
+                          padding="VALID",
+                          name="phase_split_" + str(block_size) + "x" + str(block_size) + "_0")
+
+    for i in range(block_num - 1):
+        temp = init_block[:]
+        temp[i + 1] = 1
+        phase_split_kernel = tf.constant(value=temp,
+                                         dtype=tf.float32,
+                                         shape=[block_size, block_size, 1, 1],
+                                         name="phase_aware_" + str(block_size) + "x" + str(block_size) + "_" + str(i + 1))
+
+        result = tf.nn.conv2d(input=input_data,
+                              filter=phase_split_kernel,
+                              strides=[1, block_size, block_size, 1],
+                              padding="VALID",
+                              name="phase_split_" + str(block_size) + "x" + str(block_size) + "_" + str(i + 1))
+
+        output = tf.concat([output, result], 3, "phase_split_concat")
+
+    shape = output.get_shape()
+    print("name: %s, shape: (%d, %d, %d)"
+          % (name, shape[1], shape[2], shape[3]))
+
+    return output
+
+
 def diff_layer(input_data, is_diff, is_diff_abs, is_abs_diff, order, direction, name, padding="SAME"):
     """
     the layer which is used for difference

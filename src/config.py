@@ -74,6 +74,12 @@ def command_parse():
     parser.add_argument("--models_path", type=str, help="the path of directory containing models")
     parser.add_argument("--logs_path", type=str, help="the path of directory containing logs")
 
+    parser.add_argument("--cover_files_path", type=str, default=None, help="the directory of root containing cover files")
+    parser.add_argument("--stego_files_root", type=str, default=None, help="the directory of root containing stego files")
+    parser.add_argument("--train_validation_percent", type=str, default=None, help="percent of train and validation split")
+    parser.add_argument("--start_index", type=str, default=None, help="the start index of files (default: None)")
+    parser.add_argument("--end_index", type=str, default=None, help="the start index of files (default: None)")
+
     # hyper parameters
     parser.add_argument("--batch_size", type=int, default=128, help="batch size (default: 128 (64 cover|stego pairs))")
     parser.add_argument("--learning_rate", type=float, default=1e-3, help="the value of initialized learning rate (default: 1e-3 (0.001))")
@@ -167,7 +173,17 @@ def config_train_file_read(config_file_path):
                     self.cover_valid_path = file_content['full_samples_path']['cover_valid_path']
                     self.stego_train_path = file_content['full_samples_path']['stego_train_path']
                     self.stego_valid_path = file_content['full_samples_path']['stego_valid_path']
-                
+
+                # semi_sample_path
+                elif self.path_mode == "semi":
+                    self.cover_files_path = file_content['semi_samples_path']['cover_files_path']
+                    self.stego_files_path = file_content['semi_samples_path']['stego_files_path']
+                    self.train_validation_percent = file_content['semi_samples_path']['train_validation_percent']
+                    self.start_index = file_content['semi_samples_path']['start_index']
+                    self.end_index = file_content['semi_samples_path']['end_index']
+
+                    self.cover_train_path, self.cover_valid_path, self.stego_train_path, self.stego_valid_path = None, None, None, None
+
                 # simple_samples_path
                 elif self.path_mode == "simple":
                     self.cover_files_root = file_content['simple_samples_path']['cover_files_root']
@@ -179,6 +195,7 @@ def config_train_file_read(config_file_path):
                     self.cover_valid_path = fullfile(fullfile(self.cover_files_root, samples_bitrate), "validation")
                     self.stego_train_path = fullfile(fullfile(fullfile(self.stego_files_root, stego_method), self.task_name), "train")
                     self.stego_valid_path = fullfile(fullfile(fullfile(self.stego_files_root, stego_method), self.task_name), "validation")
+
                 else:
                     self.train = False
 
