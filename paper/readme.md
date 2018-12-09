@@ -1,6 +1,15 @@
 ## Dataset
-The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1rYCzJRksHkgbOOYI9MqQjA) <br>
+The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1rYCzJRksHkgbOOYI9MqQjA)
+
 The *extraction password* is "**z28d**".
+
+We divide our database into vocal songs and light music, and we mainly steganalyze **vocal songs**.
+
+Besides, 16,000 [**BBC Sound Effects**](http://bbcsfx.acropolis.org.uk/) are made available by the **BBC** in **WAV** format to download for use under the terms of the RemArc Licence.
+
+There are other [**audio databases**](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/paper/audio_database.md) we can use.
+
+According to our experiments, **10000** cover-stego pairs (8000 for train and 2000 for validation) can achieve a good effect. Thus, for a quick experiments, you do not need to many audio samples in the design of the network.
 
 ## Steganographic Algorithm
 **HCM**<sup>[1,2]</sup> (Huffman Code Mapping) and **EECS**<sup>[3]</sup> (Equal Length Entropy Codes Substitution, an adaptive MP3 steganographic algorithm with [**STC**](http://dde.binghamton.edu/download/syndrome/) and **distortion function** based on **psychological acoustics model** (**PAM**)).

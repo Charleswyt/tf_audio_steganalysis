@@ -584,7 +584,6 @@ def rich_hpf_layer(input_data, name):
     :return:
         feature_map: 4-D tensor [number, height, width, channel]
     """
-
     dif_inter_1 = diff_layer(input_data, True, False, False, 1, "inter", "dif_inter_1", padding="SAME")
     dif_inter_2 = diff_layer(input_data, True, False, False, 2, "inter", "dif_inter_2", padding="SAME")
     dif_intra_1 = diff_layer(input_data, True, False, False, 1, "intra", "dif_intra_1", padding="SAME")
