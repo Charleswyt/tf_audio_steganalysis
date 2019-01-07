@@ -74,6 +74,32 @@ def batch_normalization(input_data, name, activation_method="relu", is_train=Tru
     return output
 
 
+def batch_normalization_origin(input_data, name, offset=0.0, scale=1.0, variance_epsilon=1e-3):
+    """
+    batch normalization layer in IH & MMSec
+    :param input_data: the input data
+    :param name: name of the layer
+    :param offset: beta
+    :param scale: gamma
+    :param variance_epsilon: avoid zero divide error
+    :param variance_epsilon: variance_epsilon
+    :return:
+        output: a 4-D tensor [batch_size, height, width. channel]
+    """
+
+    batch_mean, batch_var = tf.nn.moments(input_data, [0])
+    output_data = tf.nn.batch_normalization(x=input_data,
+                                            mean=batch_mean,
+                                            variance=batch_var,
+                                            offset=offset,
+                                            scale=scale,
+                                            variance_epsilon=variance_epsilon,
+                                            name=name)
+    print("name: %s" % name)
+
+    return output_data
+
+
 def dropout(input_data, keep_pro=0.5, name="dropout", seed=None, is_train=True):
     """
     dropout layer
