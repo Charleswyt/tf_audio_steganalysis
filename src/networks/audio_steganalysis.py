@@ -72,11 +72,16 @@ def wasdn(input_data, class_num=2, is_bn=True):
     print("Network Structure: ")
 
     # preprocessing
-    data_diff = diff_layer(input_data=input_data, is_diff=True, is_diff_abs=False, is_abs_diff=False,
-                           order=2, direction="inter", name="difference", padding="VALID")
+    conv0 = diff_layer(input_data=input_data, is_diff=True, is_diff_abs=False, is_abs_diff=False,
+                       order=2, direction="inter", name="difference", padding="SAME")
+
+    # HPF and input data concat
+    conv0_input_merge = tf.concat([conv0, input_data], 3, name="conv0_input_merge")
+    concat_shape = conv0_input_merge.get_shape()
+    print("name: %s, shape: (%d, %d, %d)" % ("conv0_input_merge", concat_shape[1], concat_shape[2], concat_shape[3]))
 
     # Group1
-    conv1_1 = conv_layer(data_diff, 3, 3, 1, 1, 16, name="conv1_1", activation_method="tanh", padding="SAME")
+    conv1_1 = conv_layer(conv0_input_merge, 3, 3, 1, 1, 16, name="conv1_1", activation_method="tanh", padding="SAME")
     conv1_2 = conv_layer(conv1_1, 1, 1, 1, 1, 32, name="conv1_2", activation_method="tanh", padding="SAME")
     pool1_3 = pool_layer(conv1_2, 2, 2, 2, 2, name="pool1_3", is_max_pool=True)
 
