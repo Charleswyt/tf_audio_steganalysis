@@ -16,12 +16,8 @@ Note: All **built-in** MP3 algorithms embeds secret messages in the process of M
 
 All steganographic algorithms are coded by **Kun Yang** (E-Mail: yangkun9076@iie.ac.cn)
 
-<audio src="http://www.xiami.com/widget/0_3515679/singlePlayer.swf" controls="controls">
-Your browser does not support the audio tag.
-</audio>
-
 ## Steganalytic Algorithms based on Traditional Feature Sets
-All steganalysis algorithms are available via another repository -- [audio_steganalysis_ml](https://github.com/Charleswyt/audio_steganalysis_ml).
+All steganalysis algorithms are available in our another repository -- [audio_steganalysis_ml](https://github.com/Charleswyt/audio_steganalysis_ml).
 * D2MA<sup>[4]</sup>
 * MDI2<sup>[5]</sup>
 * ADOTP<sup>[6]</sup>

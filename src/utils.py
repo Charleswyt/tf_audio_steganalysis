@@ -14,26 +14,11 @@ import time
 import numpy as np
 from glob import glob
 import tensorflow as tf
+from text_preprocess import *
+from image_preprocess import *
+from audio_preprocess import *
 from file_preprocess import get_path_type
-from text_preprocess import text_read, text_read_batch
-from image_preprocess import image_read, image_read_batch
-from audio_preprocess import audio_read, audio_read_batch
-
-"""
-    function:
-        fullfile(file_dir, file_name)                                                                           concatenate the file path (实现路径连接，功能类似于matlab中的fullfile)
-        get_files_list(file_dir, start_idx=None, end_idx=None)                                                  get files list
-        get_time(_unix_time_stamp=None)                                                                         get calender time via unix time stamp (根据Unix时间戳获取日历时间)
-        get_unix_stamp(_time_string="1970-01-01 08:01:51", _format="%Y-%m-%d %H:%M:%S")                         get unix time stamp via calender time (根据日历时间获取Unix时间戳)
-        read_data(cover_files_path, stego_files_path, start_idx=None, end_idx=None, is_shuffle=True)              get file list and  corresponding label list (获取文件列表与标签列表)
-        minibatches(cover_datas=None, cover_labels=None, stego_datas=None, stego_labels=None, batchsize=None)   get minibatch for training (批次读取数据, 此处的数据仍为文件列表)
-        get_data_batch(files_list, height, width, carrier="audio", is_abs=False, is_diff=False, is_diff_abs=False, order=2, direction=0,
-                       is_trunc=False, threshold=15, threshold_left=0, threshold_right=255)                     read a batch of data (批次读取数据)
-        
-        tfrecord_write(files_path_list, file_type, tfrecord_file_name)                                          write the data info into tfrecord (制备tfrecord文件)
-        tfrecord_read(tfrecord_file_name)                                                                       read the data info from tfrecord (读取tfrecord文件)
-        qmdct_extractor(mp3_file_path, height=200, width=576, frame_num=50, coeff_num=576)                      qmdct coefficients extraction (提取音频的QMDCT)
-"""
+from tensorflow.python import pywrap_tensorflow
 
 
 def folder_make(path):
@@ -195,12 +180,13 @@ def get_data(file_path, height, width, channel, carrier="qmdct"):
     :param width: the width of the data matrix
     :param channel: the channel of the data matrix
     :param carrier: the type of carrier (qmdct | audio | image)
-
     :return:
     """
 
     if carrier == "audio":
         data = audio_read(audio_file_path=file_path)
+    elif carrier == "mfcc":
+        data = get_mfcc(audio_file_path=file_path)
     elif carrier == "image":
         data = image_read(image_file_path=file_path, height=height, width=width, channel=channel)
     else:
@@ -217,11 +203,12 @@ def get_data_batch(files_list, height, width, channel, carrier="qmdct"):
     :param width: the width of the data matrix
     :param channel: the channel of the data matrix
     :param carrier: the type of carrier (qmdct | audio | image)
-
     :return:
     """
     if carrier == "audio":
         data = audio_read_batch(audio_files_list=files_list)
+    elif carrier == "mfcc":
+        data = get_mfcc_batch(audio_files_list=files_list)
     elif carrier == "image":
         data = image_read_batch(image_files_list=files_list, height=height, width=width, channel=channel)
     else:

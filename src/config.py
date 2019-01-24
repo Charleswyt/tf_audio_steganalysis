@@ -41,6 +41,7 @@ def command_parse():
                              "(default: auto, another choice is manu)")
     parser.add_argument("--gpu", type=str, default="0", help="the index of GPU")
     parser.add_argument("--mode", type=str, default="train", help="run mode -- train | test (default: train)")
+    parser.add_argument("--siamese", type=bool, default=False, help="whether to use siamese mode (default: False)")
     parser.add_argument("--checkpoint", type=bool, default=True, help="whether there is checkpoint or not (default: True)")
     parser.add_argument("--submode", type=str, default="one", help="one | batch (default one)")
     parser.add_argument("--carrier", type=str, default="qmdct", help="qmdct | image | audio (default qmdct)")
@@ -63,7 +64,7 @@ def command_parse():
     parser.add_argument("--stego_files_root", type=str, help="the directory of root containing stego files")
 
     parser.add_argument("--cover_files_path", type=str, default=None, help="the directory of root containing cover files")
-    parser.add_argument("--stego_files_root", type=str, default=None, help="the directory of root containing stego files")
+    parser.add_argument("--stego_files_path", type=str, default=None, help="the directory of root containing stego files")
 
     parser.add_argument("--steganalysis_file_path", type=str, help="the file path used for steganalysis")
     parser.add_argument("--steganalysis_files_path", type=str, help="the files folder path used for steganalysis")
@@ -113,6 +114,8 @@ def command_parse():
         arguments.cover_valid_path = fullfile(fullfile(arguments.cover_files_root, samples_bitrate), "validation")
         arguments.stego_train_path = fullfile(fullfile(fullfile(arguments.stego_files_root, stego_method), arguments.task_name), "train")
         arguments.stego_valid_path = fullfile(fullfile(fullfile(arguments.stego_files_root, stego_method), arguments.task_name), "validation")
+
+        arguments.cover_files_path, arguments.stego_files_path = None, None
 
     else:
         arguments.train = False
@@ -190,6 +193,7 @@ def config_train_file_read(config_file_path):
                     self.cover_valid_path = fullfile(fullfile(self.cover_files_root, samples_bitrate), "validation")
                     self.stego_train_path = fullfile(fullfile(fullfile(self.stego_files_root, stego_method), self.task_name), "train")
                     self.stego_valid_path = fullfile(fullfile(fullfile(self.stego_files_root, stego_method), self.task_name), "validation")
+                    self.cover_files_path, self.stego_files_path = None, None
 
                 else:
                     self.train = False
@@ -207,6 +211,13 @@ def config_train_file_read(config_file_path):
                 self.carrier = file_content['mode_config']['carrier']
                 self.network = file_content['mode_config']['network']
                 self.siamese = file_content['mode_config']['siamese']
+
+                if self.carrier == "mfcc" or self.carrier == "audio":
+                    self.file_type = "mp3"
+                elif self.carrier == "qmdct":
+                    self.file_type = "txt"
+                else:
+                    self.file_type = self.carrier
 
                 # hyper_parameters
                 self.batch_size = file_content['hyper_parameters']['batch_size']

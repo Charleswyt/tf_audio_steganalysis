@@ -969,3 +969,62 @@ def moments_extraction_enhancement(input_data):
     moments = tf.concat([data_max, data_min, data_mean, data_variance, data_kurtosis, data_skewness], axis=2, name="moments")
 
     return moments
+
+
+def basic_block(input_data, filter_nums, name):
+    """
+    basic convolutional block in dense net block
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param filter_nums: the number of convolutional kernels
+    :param name: the name of the basic block
+    :return:
+        output: a 4-D tensor [number, height, width, channel]
+    """
+    output = batch_normalization(input_data, name=name + "_BN1_1", activation_method="tanh", is_train=True)
+    output = conv_layer(output, 1, 1, 1, 1, 4*filter_nums, name=name + "_conv1_2", activation_method="None", padding="SAME")
+    output = batch_normalization(output, name=name + "_BN1_3", activation_method="tanh", is_train=True)
+    output = conv_layer(output, 3, 3, 1, 1, filter_nums, name=name + "_conv1_4", activation_method="None", padding="SAME")
+
+    return output
+
+
+def dense_block(input_data, filter_nums, layers, name):
+    """
+    basic block of dense net
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param filter_nums: the number of convolutional kernels
+    :param layers: the number of convolutional layers in a dense block
+    :param name: the name of the dense block
+    :return:
+        output: a 4-D tensor [number, height, width, channel]
+    """
+    layers_concat = list()
+    layers_concat.append(input_data)
+
+    output = basic_block(input_data, filter_nums=filter_nums, name=name+"_basic_block1")
+    layers_concat.append(output)
+
+    for layer in range(layers-1):
+        output = tf.concat(layers_concat, axis=3)
+        output = basic_block(output, filter_nums=filter_nums, name=name+"_basic_block"+str(layer+2))
+        layers_concat.append(output)
+
+    output = tf.concat(layers_concat, axis=3)
+
+    return output
+
+
+def transition_layer(input_data, filter_nums, name):
+    """
+    transition layer between two dense blocks
+    :param input_data: the input data tensor [batch_size, height, width, channels]
+    :param filter_nums: the number of convolutional kernels
+    :param name: the name of the layer
+    :return:
+        output: a 4-D tensor [number, height, width, channel]
+    """
+    output = batch_normalization(input_data, name=name + "_BN1_1", activation_method="tanh", is_train=True)
+    output = conv_layer(output, 1, 1, 1, 1, filter_nums, name=name + "_conv1_2", activation_method="None", padding="SAME")
+    output = pool_layer(output, 2, 2, 2, 2, name="pool1_1", is_max_pool=True)
+
+    return output

@@ -171,14 +171,14 @@ def rhfcn(input_data, class_num=2, is_bn=True, activation_method="tanh", padding
     pool5_4 = pool_layer(bn5_3, 2, 2, 2, 2, name="pool5_4", is_max_pool=is_max_pool)
 
     # fully conv layer
-    conv6 = conv_layer(pool5_4, 6, 14, 1, 1, 4096, name="conv6", activation_method=None, padding="VALID")
-    bn7 = batch_normalization(conv6, name="BN7", activation_method=activation_method, is_train=is_bn)
+    fconv6 = conv_layer(pool5_4, 6, 14, 1, 1, 4096, name="fconv6", activation_method=None, padding="VALID")
+    bn7 = batch_normalization(fconv6, name="BN7", activation_method=activation_method, is_train=is_bn)
 
-    conv8 = conv_layer(bn7, 1, 1, 1, 1, 512, name="conv8", activation_method=None, padding="VALID")
-    bn9 = batch_normalization(conv8, name="BN9", activation_method=activation_method, is_train=is_bn)
+    fconv8 = conv_layer(bn7, 1, 1, 1, 1, 512, name="fconv8", activation_method=None, padding="VALID")
+    bn9 = batch_normalization(fconv8, name="BN9", activation_method=activation_method, is_train=is_bn)
 
-    conv10 = conv_layer(bn9, 1, 1, 1, 1, 2, name="conv10", activation_method=None, padding="VALID")
-    bn11 = batch_normalization(conv10, name="BN11", activation_method="tanh", is_train=is_bn)
+    fconv10 = conv_layer(bn9, 1, 1, 1, 1, 2, name="fconv10", activation_method=None, padding="VALID")
+    bn11 = batch_normalization(fconv10, name="BN11", activation_method="tanh", is_train=is_bn)
 
     # Global average pooling
     bn11_shape = bn11.get_shape()

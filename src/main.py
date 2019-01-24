@@ -10,6 +10,7 @@ Modified on 2018.08.24
 
 import os
 import sys
+import platform
 from run import *
 from config import *
 from manager import *
@@ -34,8 +35,11 @@ def main():
 
     # mode of gpu selection: auto, manu and others
     if arguments.gpu_selection == "auto":
-        gm = GPUManager()
-        allocated_gpu = gm.auto_choice()
+        if platform.system() == "Linux":
+            gm = GPUManager()
+            allocated_gpu = gm.auto_choice()
+        else:
+            allocated_gpu = "0"
     elif arguments.gpu_selection == "manu":
         allocated_gpu = arguments.gpu
     else:

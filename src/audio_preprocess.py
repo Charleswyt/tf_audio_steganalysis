@@ -12,39 +12,39 @@ Modified on 2018.09.12
 @author: Yuntao Wang
 """
 
-"""
-function:
-    audio_read(audio_file_path, sampling_rate=44100, to_mono=False)             read audio file from disk
-    audio_read_batch(audio_file_path, sampling_rate=44100, to_mono=False)       read audio files in batch
-"""
 
-
-def audio_read(audio_file_path, sampling_rate=44100, mono=False, offset=0, duration=None):
+def audio_read(audio_file_path, sampling_rate=44100, channel="left", offset=0, duration=None):
     """
     read audio data
     :param audio_file_path: audio file path
     :param sampling_rate: sampling rate
-    :param mono: whether convert signal to mono, default is False
+    :param channel: "left", "right", "both"
     :param offset: start reading after this time (in seconds), default is 0
     :param duration: only load up to this much audio (in seconds), default is None
+    :param samples: the number of sample dots, default is None
     :return:
         2-D Variable, audio data in np.float32 format
     """
-    audio_tuple = librosa.load(audio_file_path, sr=sampling_rate, mono=mono, offset=offset, duration=duration)
-    audio_samples = len(audio_tuple[0])
-    audio = np.zeros(shape=[2, audio_samples], dtype=np.float32)
-    audio[0] = audio_tuple[0]
-    audio[1] = audio_tuple[1]
+
+    audio_tuple = librosa.load(audio_file_path, sr=sampling_rate, mono=False, offset=offset, duration=duration)
+    if channel == "both":
+        audio = audio_tuple[0]
+    elif channel == "left":
+        audio = audio_tuple[0][0]
+    elif channel == "right":
+        audio = audio_tuple[0][1]
+    else:
+        audio = None
 
     return audio
 
 
-def audio_read_batch(audio_files_list, sampling_rate=44100, mono=False, offset=0, duration=None):
+def audio_read_batch(audio_files_list, sampling_rate=44100, channel="both", offset=0, duration=None):
     """
     read audio data in batch
     :param audio_files_list: audio files list
     :param sampling_rate: sampling rate
-    :param mono: whether convert signal to mono, default is False
+    :param channel: "left", "right", "both"
     :param offset: start reading after this time (in seconds), default is 0
     :param duration: only load up to this much audio (in seconds), default is None
     :return:
@@ -52,14 +52,14 @@ def audio_read_batch(audio_files_list, sampling_rate=44100, mono=False, offset=0
     """
     files_num = len(audio_files_list)
 
-    audio = audio_read(audio_files_list[0], sampling_rate=sampling_rate, mono=mono, offset=offset, duration=duration)
-    channel, samples = np.shape(audio)[0], np.shape(audio)[1]
+    audio = audio_read(audio_files_list[0], sampling_rate=sampling_rate, channel=channel, offset=offset, duration=duration)
+    channels, samples = np.shape(audio)[0], np.shape(audio)[1]
 
-    data = np.zeros([files_num, channel, samples], dtype=np.float32)
+    data = np.zeros([files_num, channels, samples], dtype=np.float32)
 
     i = 0
     for audio_file in audio_files_list:
-        content = audio_read(audio_file, sampling_rate=sampling_rate, mono=mono, offset=offset, duration=duration)
+        content = audio_read(audio_file, sampling_rate=sampling_rate, channel=channel, offset=offset, duration=duration)
         data[i] = content
         i = i + 1
 
@@ -70,8 +70,8 @@ def get_mfcc_statistics(audio_data, sampling_rate=44100, n_mfcc=40):
     """
     calculate the statistics of mfcc coefficients
     :param audio_data: audio data, ndarray [length, channel]
-    :param sampling_rate: sampling rate of audio data, default: 44100
-    :param n_mfcc: number of mfcc, default: 40
+    :param sampling_rate: sampling rate of audio data, default is 44100
+    :param n_mfcc: number of mfcc, default is 40
     :return:
     """
     mfcc_coefficients = librosa.feature.mfcc(y=audio_data, sr=sampling_rate, n_mfcc=n_mfcc)
@@ -100,3 +100,53 @@ def get_mfcc_statistics(audio_data, sampling_rate=44100, n_mfcc=40):
     mfcc_feature = np.array(mfcc_feature)
 
     return mfcc_feature
+
+
+def get_mfcc(audio_file_path, sampling_rate=44100, offset=0, duration=1.3, n_mfcc=24):
+    """
+    extract mel frequency ceptral coefficients of audio
+    :param audio_file_path: audio file path
+    :param sampling_rate: sampling rate
+    :param offset: start reading after this time (in seconds), default is 0
+    :param duration: only load up to this much audio (in seconds), default is 1.3
+    :param n_mfcc: number of mfcc, default is 24
+    :return:
+        MFCC vector: [frames, n_mfcc * channel_number]
+    """
+
+    audio_data = librosa.load(audio_file_path, sr=sampling_rate, mono=False, offset=offset, duration=duration)
+    mfcc_left = librosa.feature.mfcc(y=audio_data[0][0], sr=sampling_rate, n_mfcc=n_mfcc)
+    mfcc_right = librosa.feature.mfcc(y=audio_data[0][1], sr=sampling_rate, n_mfcc=n_mfcc)
+
+    frames = np.shape(mfcc_left)[1]
+    mfcc = np.zeros([frames, n_mfcc * 2, 1])
+    mfcc[:, :n_mfcc, 0], mfcc[:, n_mfcc:, 0] = np.transpose(mfcc_left), np.transpose(mfcc_right)
+
+    return mfcc
+
+
+def get_mfcc_batch(audio_files_list, sampling_rate=44100, offset=0, duration=1.3, n_mfcc=24):
+    """
+    get mfcc vector of audio in batch
+    :param audio_files_list: audio files list
+    :param sampling_rate: sampling rate
+    :param offset: start reading after this time (in seconds), default is 0
+    :param duration: only load up to this much audio (in seconds), default is None
+    :param n_mfcc: number of mfcc, default: 24
+    :return:
+        data, a 3-D ndarray, [batch_size, height, width]
+    """
+    files_num = len(audio_files_list)
+
+    mfcc = get_mfcc(audio_files_list[0], sampling_rate=sampling_rate, offset=offset, duration=duration, n_mfcc=n_mfcc)
+    height, width = np.shape(mfcc)[0], np.shape(mfcc)[1]
+
+    data = np.zeros([files_num, height, width, 1], dtype=np.float32)
+
+    i = 0
+    for audio_file in audio_files_list:
+        content = get_mfcc(audio_file, sampling_rate=sampling_rate, offset=offset, duration=duration, n_mfcc=n_mfcc)
+        data[i] = content
+        i = i + 1
+
+    return data

@@ -70,6 +70,7 @@ def train(args):
     start_index_train, end_index_train = args.start_index_train, args.end_index_train       # the scale of the dataset (train)
     start_index_valid, end_index_valid = args.start_index_valid, args.end_index_valid       # the scale of the dataset (valid)
     step_train, step_valid = 0, 0                                                           # train step and valid step
+    file_type = args.file_type                                                              # file type
     max_accuracy, max_accuracy_epoch = 0, 0                                                 # max valid accuracy and corresponding epoch
 
     # file path
@@ -199,15 +200,15 @@ def train(args):
                 # read data
                 if cover_train_path is not None:
                     # read files list (train)
-                    cover_train_data_list, cover_train_label_list, \
-                        stego_train_data_list, stego_train_label_list = read_data(cover_train_path, stego_train_path, start_index_train, end_index_train)
+                    cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list \
+                        = read_data(cover_train_path, stego_train_path, start_idx=start_index_train, end_idx=end_index_train, file_type=file_type)
 
                     # read files list (validation)
-                    cover_valid_data_list, cover_valid_label_list, \
-                        stego_valid_data_list, stego_valid_label_list = read_data(cover_valid_path, stego_valid_path, start_index_valid, end_index_valid)
+                    cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list \
+                        = read_data(cover_valid_path, stego_valid_path, start_idx=start_index_train, end_idx=end_index_train, file_type=file_type)
                 else:
                     cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list \
-                        = read_data(cover_files_path, stego_files_path, start_idx=start_index_train, end_idx=end_index_train)
+                        = read_data(cover_files_path, stego_files_path, start_idx=start_index_train, end_idx=end_index_train, file_type=file_type)
                     cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list \
                         = read_data(cover_files_path, stego_files_path, start_idx=start_index_valid, end_idx=end_index_valid)
 
@@ -293,8 +294,11 @@ def train(args):
                                                                            valid_loss_average, valid_accuracy_average, max_accuracy, max_accuracy_epoch))
             train_writer_train.close()
             train_writer_valid.close()
-    except Exception:
+    except Exception as e:
         print("An error occurred, please try again.")
+        print("Error Type: ", e)
+        import traceback
+        print(traceback.print_exc())
         os.system("rm -rf " + model_path)
         os.system("rm -rf " + log_path)
 
