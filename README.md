@@ -16,8 +16,8 @@ Code Domain](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/pap
 **[[paper (ACM)](https://dl.acm.org/citation.cfm?id=3206011)]**
 **[[paper (pdf)](http://www.media-security.net/?p=809)]**
 **[[dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)]**
- * [RHFCN: Fully CNN-based Steganalysis of MP3 with Rich High-Pass Filtering](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/RHFCN%EF%BC%9AFully%20CNN-based%20Steganalysis%20of%20MP3%20with%20Rich%20High-Pass%20Filtering) [Deliverd]
-**[[paper]]()**
+ * [RHFCN: Fully CNN-based Steganalysis of MP3 with Rich High-Pass Filtering](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/RHFCN%EF%BC%9AFully%20CNN-based%20Steganalysis%20of%20MP3%20with%20Rich%20High-Pass%20Filtering) **[[Accepted by ICASSP 2019, Poster]]()**
+**[[paper (pdf)]]()**
 **[[dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)]**
 
 ## Necessary Package

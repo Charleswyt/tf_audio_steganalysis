@@ -1,11 +1,13 @@
 ## Dataset
 The dataset can be downloaded from [**Audio Steganalysis Dataset, IIE (ASDIIE)**](https://pan.baidu.com/s/1rYCzJRksHkgbOOYI9MqQjA)
 
-The *extraction password* is "**z28d**".
+The ***extraction password*** is "**z28d**".
 
 You can also get all data via [**IEEEDataPort**](http://ieee-dataport.org/documents/audio-steganalysis-dataset) (Building...).
 
 We divide our database into vocal songs and light music, and we mainly steganalyze **vocal songs**.
+
+---
 
 Besides, 16,000 [**BBC Sound Effects**](http://bbcsfx.acropolis.org.uk/) are made available by the **BBC** in **WAV** format to download for use under the terms of the RemArc Licence.
 
@@ -14,7 +16,7 @@ There are other [**audio databases**](https://github.com/Charleswyt/tf_audio_ste
 According to our experiments, **10000** cover-stego pairs (8000 for training and 2000 for validation) can achieve a good effect. Thus, for a **quick** experiments, you do not need to many audio samples in the design of the network.
 
 ## Steganographic Algorithm
-**HCM**<sup>[1,2]</sup> (Huffman Code Mapping) and **EECS**<sup>[3]</sup> (Equal Length Entropy Codes Substitution, an adaptive MP3 steganographic algorithm with [**Syndrome-Trellis Code (STC)**](http://dde.binghamton.edu/download/syndrome/) and **distortion function** based on **psychological acoustics model** (**PAM**)).
+**HCM**<sup>[1,2]</sup> (Huffman Code Mapping) and **EECS**<sup>[3]</sup> (Equal Length Entropy Codes Substitution, an adaptive MP3 steganographic algorithm with [**Syndrome-Trellis Code (STC)**](http://dde.binghamton.edu/download/syndrome/)<sup>[4]</sup> and **distortion function** based on **psychological acoustics model** (**PAM**)).
 
 Note: All **built-in** MP3 algorithms embeds secret messages in the process of MP3 encoding, which will change QMDCT coefficients of MP3. So, this network can be applied to detect all data hiding methods which have impact on the QMDCT coefficients.
 
