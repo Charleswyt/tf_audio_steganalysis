@@ -27,18 +27,19 @@ You can use command **pip install -r requirements.txt** to install all packages 
 
 ## How to use
 1. install [**python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/) and add the path into the environment variable (recommand python3.5).
-2. **GPU** run environment [**configure**](https://blog.csdn.net/yhaolpz/article/details/71375762?locationNum=14&fps=1) if train the network (optional).
+2. **GPU** run environment [**configure**](https://blog.csdn.net/yhaolpz/article/details/71375762?locationNum=14&fps=1) for network training (**optional**).
 3. install all dependent packages mentioned above (open **[setup](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/setup)/requirements.txt** and input "**pip install -r requirements**" into your cmd window).
-4. **run** the code as the [**example**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/config_file) as shows
-5. use [**tensorboard**](http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html) to visualize the train process such as the **accuracy** and **loss curve** of train and validation. The command is "**tensorboard --logdir=/path/to/log-directory**".
+4. **run** the code as the [**example**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/config_file) as shows.
+5. use [**tensorboard**](http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html) to visualize the training process such as the **accuracy** and **loss curve** of training and validation. The command is "**tensorboard --logdir=/path of log**".
 6. If you want to design your own network based on this project, there is an [**instruction**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/networks/network_design.md) for you.
-7. Our sourcecode is coded with [**Pycharm**](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/setup/pycharm.md), and the hard wrap is setted as **180**.
+7. Our sourcecode is coded with [**Pycharm**](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/setup/pycharm.md), and the **hard wrap** is setted as **180**. If you setting of hard wrap is less than 180, there will be warnings shwon in pycharm.
 
 ## File description
 ID      |   File                    |   Function
 :-      |   :-                      |    :-
-1       |   src                     |   source code
-2       |   paper                   |   the PPT and brief introduction of our recent work
-3       |   setup                   |   a **requirements.txt** in this folder, which is used to install all packages in this system
-4       |   jupyter                 |   a folder for jupyter debug
-5       |   data_processing         |   tools which are used for QMDCT coefficients extraction and dataset build
+1       |   audio_samples           |   some audio samples for shown
+2       |   data_processing         |   tools which are used for QMDCT coefficients extraction and dataset build
+3       |   jupyter                 |   a folder for jupyter debug
+4       |   paper                   |   the paper, PPT, dataset and brief introduction of our recent work
+5       |   setup                   |   a **requirements.txt** in this folder, which is used to install all packages in this system
+6       |   src                     |   source code
