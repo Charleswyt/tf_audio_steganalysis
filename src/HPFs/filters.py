@@ -35,7 +35,7 @@ def srm_kernels_generator():
     :return:
         SRM kernels tensor
     """
-    srm_kernels_np = np.load("SRM_Kernels.npy")
+    srm_kernels_np = np.load("./SRM_Kernels.npy")
     [height, width, channel, filter_num] = np.shape(srm_kernels_np)
     srm_kernels = tf.constant(value=srm_kernels_np,
                               dtype=tf.float32,

@@ -352,6 +352,10 @@ def config_steganalysis_file_read(config_file_path):
                 # hyper_parameters
                 self.class_num = file_content['hyper_parameters']['class_num']
 
+                # files index
+                self.start_index_steganalysis = file_content['index']['start_index_steganalysis']
+                self.end_index_steganalysis = file_content['index']['end_index_steganalysis']
+
                 # data info
                 self.height = file_content['shape']['height']
                 self.width = file_content['shape']['width']

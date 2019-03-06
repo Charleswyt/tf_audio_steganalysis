@@ -12,4 +12,5 @@ Modified on
 from networks.tested_networks.IH_MMSec import *
 from networks.tested_networks.ICASSP import *
 from networks.tested_networks.RNN import *
-from networks.tested_networks.Dense_net import *
+from networks.tested_networks.dense_net import *
+from networks.tested_networks.dissertation import *

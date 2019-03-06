@@ -10,7 +10,7 @@ Modified on 2019.01.07
 """
 
 from layer import *
-from filters import *
+from HPFs.filters import *
 
 
 def wasdn1_1(input_data, class_num=2):
