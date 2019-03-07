@@ -80,7 +80,7 @@ def inception_v2(input_data, filter_num, name,  is_max_pool=True, is_bn=True):
     input_data_branch = batch_normalization(input_data_branch, name + "_input_data_branch_BN", activation_method="None", is_train=is_bn)
 
     output = output + input_data_branch
-    output = activation_layer(output, activation_method=activation_method)
+    output = activation_layer(output, activation_method="tanh")
 
     return output
 
@@ -96,39 +96,30 @@ def inception_v3(input_data, filter_num, name, is_max_pool=True, is_bn=True):
 
     :return: 4-D tensor
     """
-    branch1 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name+"_branch_1_conv_1",
-                         activation_method="None", alpha=alpha, padding=padding)
+    branch1 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name+"_branch_1_conv_1", activation_method="None", padding="SAME")
     branch1 = batch_normalization(branch1, name=name + "_branch_1_BN", activation_method="None", is_train=is_bn)
 
-    branch2 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name + "_branch_2_conv_1",
-                         activation_method="None", alpha=alpha, padding=padding)
-    branch2 = conv_layer(branch2, 1, 3, 1, 1, filter_num, name + "_branch_2_conv_2",
-                         activation_method="None", alpha=alpha, padding=padding)
-    branch2 = conv_layer(branch2, 3, 1, 1, 1, filter_num, name + "_branch_2_conv_3",
-                         activation_method="None", alpha=alpha, padding=padding)
+    branch2 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name + "_branch_2_conv_1", activation_method="tanh", padding="SAME")
+    branch2 = conv_layer(branch2, 1, 3, 1, 1, filter_num, name + "_branch_2_conv_2", activation_method="tanh", padding="SAME")
+    branch2 = conv_layer(branch2, 3, 1, 1, 1, filter_num, name + "_branch_2_conv_3", activation_method="None", padding="SAME")
     branch2 = batch_normalization(branch2, name=name + "_branch_2_BN", activation_method="None", is_train=is_bn)
 
-    branch3 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name + "_branch_3_conv_1",
-                         activation_method="None", alpha=alpha, padding=padding)
-    branch3 = conv_layer(branch3, 1, 5, 1, 1, filter_num, name + "_branch_3_conv_2",
-                         activation_method="None", alpha=alpha, padding=padding)
-    branch3 = conv_layer(branch3, 5, 1, 1, 1, filter_num, name + "_branch_3_conv_3",
-                         activation_method="None", alpha=alpha, padding=padding)
+    branch3 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name + "_branch_3_conv_1", activation_method="tanh", padding="SAME")
+    branch3 = conv_layer(branch3, 1, 5, 1, 1, filter_num, name + "_branch_3_conv_2", activation_method="tanh", padding="SAME")
+    branch3 = conv_layer(branch3, 5, 1, 1, 1, filter_num, name + "_branch_3_conv_3", activation_method="None", padding="SAME")
     branch3 = batch_normalization(branch3, name=name + "_branch_3_BN", activation_method="None", is_train=is_bn)
 
-    branch4 = pool_layer(input_data, 3, 3, 1, 1, name + "branch_4_pool", is_max_pool, padding=padding)
-    branch4 = conv_layer(branch4, 1, 1, 1, 1, filter_num, name + "branch_4_conv_1",
-                         activation_method="None", alpha=alpha, padding=padding)
+    branch4 = pool_layer(input_data, 3, 3, 1, 1, name + "branch_4_pool", is_max_pool=is_max_pool, padding="SAME")
+    branch4 = conv_layer(branch4, 1, 1, 1, 1, filter_num, name + "branch_4_conv_1", activation_method="None", padding="SAME")
     branch4 = batch_normalization(branch4, name=name + "_branch_4_BN", activation_method="None", is_train=is_bn)
 
     output = tf.concat([branch1, branch2, branch3, branch4], 3)
 
-    input_data_branch = conv_layer(input_data, 1, 1, 1, 1, 4 * filter_num, name + "_input_data_branch_conv_1",
-                                   activation_method="None", alpha=alpha, padding=padding)
+    input_data_branch = conv_layer(input_data, 1, 1, 1, 1, 4 * filter_num, name + "_input_data_branch_conv_1", activation_method="None", padding="SAME")
     input_data_branch = batch_normalization(input_data_branch, name=name + "_input_data_branch_BN", activation_method="None", is_train=is_bn)
 
     output = output + input_data_branch
-    output = activation_layer(output, activation_method=activation_method)
+    output = activation_layer(output, activation_method="tanh")
 
     return output
 

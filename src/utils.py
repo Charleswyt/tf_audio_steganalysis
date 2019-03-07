@@ -387,3 +387,22 @@ def create_batch(filename, batch_size):
                                                      )
 
     return data_batch, label_batch
+
+
+def get_variables_number(trainable_variables):
+    """
+    calculate the number of trainable variables in the current network
+    :param trainable_variables: trainable variables
+    :return:
+        total_parameters: the total number of trainable variables
+    """
+    total_parameters = 0
+    for variable in trainable_variables:
+        # shape is an array of tf.Dimension
+        shapes = variable.get_shape()
+        variable_parameters = 1
+        for shape in shapes:
+            variable_parameters *= shape.value
+        total_parameters += variable_parameters
+
+    return total_parameters

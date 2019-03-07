@@ -22,23 +22,20 @@ def dense_net_mp3(input_data, class_num=2, is_bn=True):
 
     conv_1 = conv_layer(input_data, 3, 3, 1, 1, 48, name="conv1", activation_method="None", padding="SAME")
 
-    block1 = dense_block(conv_1, filter_nums=24, layers=6, name="block1")
-    trans1 = transition_layer(block1, filter_nums=24, name="trans1")
+    block1 = dense_block(conv_1, filter_nums=24, layers=6, name="block1", is_bn=is_bn)
+    trans1 = transition_layer(block1, filter_nums=24, name="trans1", is_bn=is_bn)
 
-    block2 = dense_block(trans1, filter_nums=24, layers=12, name="block2")
-    trans2 = transition_layer(block2, filter_nums=24, name="trans2")
+    block2 = dense_block(trans1, filter_nums=24, layers=12, name="block2", is_bn=is_bn)
+    trans2 = transition_layer(block2, filter_nums=24, name="trans2", is_bn=is_bn)
 
-    block3 = dense_block(trans2, filter_nums=24, layers=24, name="block3")
-    trans3 = transition_layer(block3, filter_nums=24, name="trans3")
+    block3 = dense_block(trans2, filter_nums=24, layers=24, name="block3", is_bn=is_bn)
+    trans3 = transition_layer(block3, filter_nums=24, name="trans3", is_bn=is_bn)
 
-    block4 = dense_block(trans3, filter_nums=24, layers=48, name="block4")
+    block4 = dense_block(trans3, filter_nums=24, layers=48, name="block4", is_bn=is_bn)
 
     bn = batch_normalization(block4, name="BN", activation_method="tanh", is_train=is_bn)
 
-    # Global Max Pooling
-    bn_shape = bn.get_shape()
-    bn_height, bn_width = bn_shape[1], bn_shape[2]
-    pool = pool_layer(bn, bn_height, bn_width, bn_height, bn_width, name="global_max_pool", is_max_pool=True)
+    pool = global_pool(bn, name="global_max_pool", is_max_pool=True)
 
     logits = fc_layer(pool, class_num, name="out", activation_method=None)
 
@@ -54,20 +51,17 @@ def dense_net_mp3_42(input_data, class_num=2, is_bn=True):
 
     conv_1 = conv_layer(input_data, 3, 3, 1, 1, 48, name="conv1", activation_method="None", padding="SAME")
 
-    block1 = dense_block(conv_1, filter_nums=24, layers=6, name="block1")
-    trans1 = transition_layer(block1, filter_nums=24, name="trans1")
+    block1 = dense_block(conv_1, filter_nums=24, layers=6, name="block1", is_bn=is_bn)
+    trans1 = transition_layer(block1, filter_nums=24, name="trans1", is_bn=is_bn)
 
-    block2 = dense_block(trans1, filter_nums=24, layers=12, name="block2")
-    trans2 = transition_layer(block2, filter_nums=24, name="trans2")
+    block2 = dense_block(trans1, filter_nums=24, layers=12, name="block2", is_bn=is_bn)
+    trans2 = transition_layer(block2, filter_nums=24, name="trans2", is_bn=is_bn)
 
-    block3 = dense_block(trans2, filter_nums=24, layers=24, name="block3")
+    block3 = dense_block(trans2, filter_nums=24, layers=24, name="block3", is_bn=is_bn)
 
     bn = batch_normalization(block3, name="BN", activation_method="tanh", is_train=is_bn)
 
-    # Global Max Pooling
-    bn_shape = bn.get_shape()
-    bn_height, bn_width = bn_shape[1], bn_shape[2]
-    pool = pool_layer(bn, bn_height, bn_width, bn_height, bn_width, name="global_max_pool", is_max_pool=True)
+    pool = global_pool(bn, name="global_max_pool", is_max_pool=True)
 
     logits = fc_layer(pool, class_num, name="out", activation_method=None)
 
@@ -90,17 +84,14 @@ def dense_net_mp3_18(input_data, class_num=2, is_bn=True):
 
     conv_1 = conv_layer(input_data, 3, 3, 1, 1, 48, name="conv1", activation_method="None", padding="SAME")
 
-    block1 = dense_block(conv_1, filter_nums=24, layers=6, name="block1")
-    trans1 = transition_layer(block1, filter_nums=24, name="trans1")
+    block1 = dense_block(conv_1, filter_nums=24, layers=6, name="block1", is_bn=is_bn)
+    trans1 = transition_layer(block1, filter_nums=24, name="trans1", is_bn=is_bn)
 
-    block2 = dense_block(trans1, filter_nums=24, layers=8, name="block2")
+    block2 = dense_block(trans1, filter_nums=24, layers=8, name="block2", is_bn=is_bn)
 
     bn = batch_normalization(block2, name="BN", activation_method="tanh", is_train=is_bn)
 
-    # Global Max Pooling
-    bn_shape = bn.get_shape()
-    bn_height, bn_width = bn_shape[1], bn_shape[2]
-    pool = pool_layer(bn, bn_height, bn_width, bn_height, bn_width, name="global_max_pool", is_max_pool=True)
+    pool = global_pool(bn, name="global_max_pool", is_max_pool=True)
 
     logits = fc_layer(pool, class_num, name="out", activation_method=None)
 
@@ -116,15 +107,12 @@ def dense_net_mp3_6(input_data, class_num=2, is_bn=True):
 
     conv_1 = conv_layer(input_data, 3, 3, 1, 1, 48, name="conv1", activation_method="None", padding="SAME")
 
-    block1 = dense_block(conv_1, filter_nums=12, layers=6, name="block1")
-    trans1 = transition_layer(block1, filter_nums=24, name="trans1")
+    block1 = dense_block(conv_1, filter_nums=12, layers=6, name="block1", is_bn=is_bn)
+    trans1 = transition_layer(block1, filter_nums=24, name="trans1", is_bn=is_bn)
 
     bn = batch_normalization(trans1, name="BN", activation_method="tanh", is_train=is_bn)
 
-    # Global Max Pooling
-    bn_shape = bn.get_shape()
-    bn_height, bn_width = bn_shape[1], bn_shape[2]
-    pool = pool_layer(bn, bn_height, bn_width, bn_height, bn_width, name="global_max_pool", is_max_pool=True)
+    pool = global_pool(bn, name="global_max_pool", is_max_pool=True)
 
     logits = fc_layer(pool, class_num, name="out", activation_method=None)
 

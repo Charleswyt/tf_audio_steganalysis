@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from filters import *
-import tensorflow as tf
-from math import floor, sqrt
-from itertools import product
-from tensorflow.contrib.layers.python.layers import batch_norm, layer_norm
-
 """
 Created on 2017.12.29
 Finished on 2017.12.29
@@ -14,6 +8,11 @@ Modified on 2018.09.17
 
 @author: Yuntao Wang
 """
+
+from HPFs.filters import *
+import tensorflow as tf
+from math import floor
+from tensorflow.contrib.layers.python.layers import batch_norm
 
 
 def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=True, padding="VALID"):
@@ -54,6 +53,22 @@ def pool_layer(input_data, height, width, x_stride, y_stride, name, is_max_pool=
     return output
 
 
+def global_pool(input_data, name, is_max_pool=True):
+    """
+    global pooling layer
+    :param input_data: the input data
+    :param name: the name of the pooling layer
+    :param is_max_pool: if True, max pooling, else average pooling
+    :return:
+        output: a 4-D tensor [batch_size, height, width. channel]
+    """
+    shape = input_data.get_shape()
+    height, width = shape[1], shape[2]
+    output = pool_layer(input_data, height, width, height, width, name=name, is_max_pool=is_max_pool)
+
+    return output
+
+
 def batch_normalization(input_data, name, activation_method="relu", is_train=True):
     """
     BN layer
@@ -65,7 +80,7 @@ def batch_normalization(input_data, name, activation_method="relu", is_train=Tru
         output: output after batch normalization
     """
     output = batch_norm(inputs=input_data, decay=0.9, center=True, scale=True, epsilon=1e-5, scope=name, updates_collections=None,
-                        reuse=False, is_training=is_train, zero_debias_moving_mean=True)
+                        reuse=tf.AUTO_REUSE, is_training=is_train, zero_debias_moving_mean=True)
     output = activation_layer(input_data=output,
                               activation_method=activation_method)
 
@@ -322,7 +337,7 @@ def conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
         initializer = tf.truncated_normal_initializer(stddev=0.01)
 
     # the initialization of the weights and biases
-    with tf.variable_scope(name):
+    with tf.variable_scope(name, reuse=tf.AUTO_REUSE):
         weights = tf.get_variable(name="weights",
                                   shape=[height, width, channel, filter_num],
                                   dtype=tf.float32,
@@ -390,88 +405,6 @@ def static_conv_layer(input_data, kernel, x_stride, y_stride, name, padding="VAL
               % (name, shape[1], shape[2], shape[3]))
 
         return feature_map
-
-
-# def dconv_layer(input_data, height, width, x_stride, y_stride, filter_num, name,
-#                 output_shape=None, scale=2, activation_method="relu", alpha=0.2, padding="VALID",
-#                 atrous=1, init_method="xavier", bias_term=True, is_pretrain=True):
-#     """
-#     dconvolutional layer
-#     :param input_data: the input data tensor [batch_size, height, width, channels]
-#     :param height: the height of the convolutional kernel
-#     :param width: the width of the convolutional kernel
-#     :param x_stride: stride in X axis
-#     :param y_stride: stride in Y axis
-#     :param filter_num: the number of the convolutional kernel
-#     :param name: the name of the layer
-#     :param activation_method: the type of activation function (default: relu)
-#     :param alpha: leaky relu alpha (default: 0.2)
-#     :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
-#     :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
-#     :param init_method: the method of weights initialization (default: xavier)
-#     :param bias_term: whether the bias term exists or not (default: False)
-#     :param is_pretrain: whether the parameters are trainable (default: True)
-#
-#     :return:
-#         output: a 4-D tensor [number, height, width, channel]
-#     """
-#     channel = input_data.get_shape()[-1]
-#
-#     # the method of weights initialization
-#     if init_method == "xavier":
-#         initializer = tf.contrib.layers.xavier_initializer()
-#     elif init_method == "gaussian":
-#         initializer = tf.random_normal_initializer(stddev=0.01)
-#     else:
-#         initializer = tf.truncated_normal_initializer(stddev=0.01)
-#
-#     # the initialization of the weights and biases
-#     with tf.variable_scope(name):
-#         weights = tf.get_variable(name="weights",
-#                                   shape=[height, width, channel, filter_num],
-#                                   dtype=tf.float32,
-#                                   initializer=initializer,
-#                                   trainable=is_pretrain)
-#         biases = tf.get_variable(name="biases",
-#                                  shape=[filter_num],
-#                                  dtype=tf.float32,
-#                                  initializer=tf.constant_initializer(0.0),
-#                                  trainable=is_pretrain)
-#
-#         # get output shape
-#         if output_shape is None:
-#             output_shape =
-#         # the method of transpose convolution
-#         if atrous == 1:
-#             feature_map = tf.nn.conv2d_transpose(value=input_data,
-#                                                  filter=weights,
-#                                                  output_shape=
-#                                                  strides=[1, x_stride, y_stride, 1],
-#                                                  padding=padding,
-#                                                  name="dconv")
-#         else:
-#             feature_map = tf.nn.atrous_conv2d_transpose(value=input_data,
-#                                                         filters=weights,
-#                                                         rate=atrous,
-#                                                         padding=padding,
-#                                                         name="atrous_dconv")
-#         # biases term
-#         if bias_term is True:
-#             output = tf.nn.bias_add(value=feature_map,
-#                                     bias=biases,
-#                                     name="biases_add")
-#         else:
-#             output = feature_map
-#
-#         # info show
-#         shape = output.get_shape()
-#         print("name: %s, shape: (%d, %d, %d), activation: %s"
-#               % (name, shape[1], shape[2], shape[3], activation_method))
-#
-#         # activation
-#         output = activation_layer(output, activation_method, alpha)
-#
-#         return output
 
 
 def phase_split(input_data, block_size=8, name=None):
@@ -665,11 +598,60 @@ def accuracy_layer(logits, labels):
     :return: accuracy
     """
     with tf.variable_scope("accuracy"):
-        results = tf.nn.in_top_k(logits, labels, 1, name="results")
-        results = tf.cast(results, tf.float16)
+        predictions = tf.nn.in_top_k(logits, labels, 1, name="predictions")
+        results = tf.cast(predictions, tf.float16)
         accuracy = tf.reduce_mean(results)
 
         return accuracy
+
+
+def evaluation(logits, labels):
+    """
+    calculate the accuracy, fpr and fnr
+    :param logits: logits
+    :param labels: label
+    :return: accuracy, fpr, fnr
+    """
+    predictions = tf.nn.softmax(logits)
+    predictions = tf.argmax(predictions, 1)
+
+    ones_like_labels = tf.ones_like(labels)
+    zeros_like_labels = tf.zeros_like(labels)
+    ones_like_predictions = tf.ones_like(predictions)
+    zeros_like_predictions = tf.zeros_like(predictions)
+
+    true_positive = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(labels, ones_like_labels),
+                tf.equal(predictions, ones_like_predictions)), tf.float32))
+
+    true_negative = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(labels, zeros_like_labels),
+                tf.equal(predictions, zeros_like_predictions)), tf.float32))
+
+    false_positive = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(labels, zeros_like_labels),
+                tf.equal(predictions, ones_like_predictions)), tf.float32))
+
+    false_negative = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(labels, ones_like_labels),
+                tf.equal(predictions, zeros_like_predictions)), tf.float32))
+
+    # true_positive_rate = true_positive / (true_positive + false_negative)
+    # true_negative_rate = true_negative / (true_negative + false_positive)
+    false_positive_rate = false_positive / (tf.add(false_positive, true_negative))
+    false_negative_rate = false_negative / (tf.add(false_negative, true_positive))
+
+    accuracy = 1 - (false_positive_rate + false_negative_rate) / 2
+
+    return accuracy, false_positive_rate, false_negative_rate
 
 
 def error_layer(logits, labels):
@@ -768,9 +750,11 @@ def optimizer(losses, learning_rate, global_step, optimizer_type="Adam", beta1=0
             opt = tf.train.GradientDescentOptimizer(learning_rate=learning_rate,
                                                     name=optimizer_type)
 
-        train_op = opt.minimize(loss=losses,
-                                global_step=global_step,
-                                name="optimizer")
+        update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+        with tf.control_dependencies(update_ops):
+            train_op = opt.minimize(loss=losses,
+                                    global_step=global_step,
+                                    name="optimizer")
 
         return train_op
 
@@ -816,215 +800,3 @@ def learning_rate_decay(init_learning_rate, global_step, decay_steps, decay_rate
         decayed_learning_rate = init_learning_rate
 
     return decayed_learning_rate
-
-
-def inception_v1(input_data, filter_num, name, activation_method="relu", alpha=0.2, padding="VALID", atrous=1,
-                 is_max_pool=True, init_method="xavier", bias_term=True, is_pretrain=True):
-    """
-    the structure of inception V1
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param filter_num: the number of the convolutional kernel
-    :param name: the name of the layer
-    :param activation_method: the type of activation function (default: relu)
-    :param alpha: leaky relu alpha (default: 0.2)
-    :param padding: the padding method, "SAME" | "VALID" (default: "SAME")
-    :param is_max_pool: whether max pooling or not (default: True)
-    :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
-    :param init_method: the method of weights initialization (default: xavier)
-    :param bias_term: whether the bias term exists or not (default: False)
-    :param is_pretrain: whether the parameters are trainable (default: True)
-
-    :return: 4-D tensor
-    """
-    branch1 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name+"_branch_1",
-                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
-
-    branch2 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name+"branch_2_1_1",
-                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
-    branch2 = conv_layer(branch2, 3, 3, 1, 1, filter_num, name+"branch_2_3_3",
-                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
-
-    branch3 = conv_layer(input_data, 1, 1, 1, 1, filter_num, name + "branch_3_1_1",
-                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
-    branch3 = conv_layer(branch3, 5, 5, 1, 1, filter_num, name + "branch_3_5_5",
-                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
-
-    branch4 = pool_layer(input_data, 3, 3, 1, 1, name+"branch_4_pool", is_max_pool, padding)
-    branch4 = conv_layer(branch4, 1, 1, 1, 1, filter_num, name + "branch_4_1_1",
-                         activation_method, alpha, padding, atrous, init_method, bias_term, is_pretrain)
-
-    output = tf.concat([branch1, branch2, branch3, branch4], 3)
-
-    return output
-
-
-def res_conv_block(input_data, height, width, x_stride, y_stride, filter_num, name,
-                   activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
-                   init_method="xavier", bias_term=True, is_pretrain=True):
-    """
-    residual convolutional layer
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param height: the height of the convolutional kernel
-    :param width: the width of the convolutional kernel
-    :param x_stride: stride in X axis
-    :param y_stride: stride in Y axis
-    :param filter_num: the number of the convolutional kernel
-    :param name: the name of the layer
-    :param activation_method: the type of activation function (default: relu)
-    :param alpha: leaky relu alpha (default: 0.2)
-    :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
-    :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
-    :param init_method: the method of weights initialization (default: xavier)
-    :param bias_term: whether the bias term exists or not (default: False)
-    :param is_pretrain: whether the parameters are trainable (default: True)
-
-    :return:
-        output: a 4-D tensor [number, height, width, channel]
-    """
-    conv1 = conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name=name+"_conv1", activation_method=activation_method, alpha=alpha,
-                       padding=padding, atrous=atrous, init_method=init_method, bias_term=bias_term, is_pretrain=is_pretrain)
-    conv2 = conv_layer(conv1, height, width, x_stride, y_stride, filter_num, name=name + "_conv2", activation_method="None", alpha=alpha,
-                       padding=padding, atrous=atrous, init_method=init_method, bias_term=bias_term, is_pretrain=is_pretrain)
-    output = tf.add(input_data, conv2, name=name+"add")
-
-    output = activation_layer(input_data=output,
-                              activation_method=activation_method,
-                              alpha=alpha)
-
-    return output
-
-
-def res_conv_block_beta(input_data, height, width, x_stride, y_stride, filter_num, name,
-                        activation_method="relu", alpha=0.2, padding="SAME", atrous=1,
-                        init_method="xavier", bias_term=True, is_pretrain=True):
-    """
-    residual convolutional layer
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param height: the height of the convolutional kernel
-    :param width: the width of the convolutional kernel
-    :param x_stride: stride in X axis
-    :param y_stride: stride in Y axis
-    :param filter_num: the number of the convolutional kernel
-    :param name: the name of the layer
-    :param activation_method: the type of activation function (default: relu)
-    :param alpha: leaky relu alpha (default: 0.2)
-    :param padding: the padding method, "SAME" | "VALID" (default: "VALID")
-    :param atrous: the dilation rate, if atrous == 1, conv, if atrous > 1, dilated conv (default: 1)
-    :param init_method: the method of weights initialization (default: xavier)
-    :param bias_term: whether the bias term exists or not (default: False)
-    :param is_pretrain: whether the parameters are trainable (default: True)
-
-    :return:
-        output: a 4-D tensor [number, height, width, channel]
-    """
-    conv1 = conv_layer(input_data, height, width, x_stride, y_stride, filter_num, name=name+"_conv1", activation_method=activation_method, alpha=alpha,
-                       padding=padding, atrous=atrous, init_method=init_method, bias_term=bias_term, is_pretrain=is_pretrain)
-    conv2 = conv_layer(conv1, height, width, x_stride, y_stride, filter_num, name=name + "_conv2", activation_method="None", alpha=alpha,
-                       padding=padding, atrous=atrous, init_method=init_method, bias_term=bias_term, is_pretrain=is_pretrain)
-    output = tf.add(input_data, conv2, name=name+"add")
-
-    output = activation_layer(input_data=output,
-                              activation_method=activation_method,
-                              alpha=alpha)
-
-    return output
-
-
-def moments_extraction(input_data):
-    """
-    this function is used for dimension unification in Jessica's paper for steganalysis of arbitrary size
-    calculate the moments of feature maps -- mean, variance, maximum and minimum
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :return:
-        moments: a 4-D tensor [number, 1, 4, channel]
-    """
-    
-    data_max = tf.reduce_max(input_data, axis=[1, 2], keep_dims=True, name="moments_max")
-    data_min = tf.reduce_max(input_data, axis=[1, 2], keep_dims=True, name="moments_min")
-    data_mean, data_variance = tf.nn.moments(input_data, axes=[1, 2], keep_dims=True, name="moments_mean_var")
-
-    moments = tf.concat([data_max, data_min, data_mean, data_variance], axis=2, name="moments")
-
-    return moments
-
-
-def moments_extraction_enhancement(input_data):
-    """
-    this function is the enhancement version of moments extraction
-    calculate the moments of feature maps -- mean, variance, maximum and minimum, kurtosis, skewness
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :return:
-        moments: a 4-D tensor [number, 1, 6, channel]
-    """
-
-    data_max = tf.reduce_max(input_data, axis=[1, 2], keep_dims=True, name="moments_max")
-    data_min = tf.reduce_min(input_data, axis=[1, 2], keep_dims=True, name="moments_min")
-    data_mean, data_variance = tf.nn.moments(input_data, axes=[1, 2], keep_dims=True, name="moments_mean_var")
-
-    input_data_sub_mean = tf.subtract(input_data, data_mean, name="input_data_sub_mean")
-    data_variance_inverse = tf.divide(1.0, data_variance, name="data_variance_inverse")
-    data_kurtosis = tf.multiply(tf.reduce_mean(tf.pow(input_data_sub_mean, 4)), tf.pow(data_variance_inverse, 4), name="kurtosis")
-    data_skewness = tf.multiply(tf.reduce_mean(tf.pow(input_data_sub_mean, 3)), tf.pow(data_variance_inverse, 3), name="skewness")
-
-    moments = tf.concat([data_max, data_min, data_mean, data_variance, data_kurtosis, data_skewness], axis=2, name="moments")
-
-    return moments
-
-
-def basic_block(input_data, filter_nums, name):
-    """
-    basic convolutional block in dense net block
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param filter_nums: the number of convolutional kernels
-    :param name: the name of the basic block
-    :return:
-        output: a 4-D tensor [number, height, width, channel]
-    """
-    output = batch_normalization(input_data, name=name + "_BN1_1", activation_method="tanh", is_train=True)
-    output = conv_layer(output, 1, 1, 1, 1, 4*filter_nums, name=name + "_conv1_2", activation_method="None", padding="SAME")
-    output = batch_normalization(output, name=name + "_BN1_3", activation_method="tanh", is_train=True)
-    output = conv_layer(output, 3, 3, 1, 1, filter_nums, name=name + "_conv1_4", activation_method="None", padding="SAME")
-
-    return output
-
-
-def dense_block(input_data, filter_nums, layers, name):
-    """
-    basic block of dense net
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param filter_nums: the number of convolutional kernels
-    :param layers: the number of convolutional layers in a dense block
-    :param name: the name of the dense block
-    :return:
-        output: a 4-D tensor [number, height, width, channel]
-    """
-    layers_concat = list()
-    layers_concat.append(input_data)
-
-    output = basic_block(input_data, filter_nums=filter_nums, name=name+"_basic_block1")
-    layers_concat.append(output)
-
-    for layer in range(layers-1):
-        output = tf.concat(layers_concat, axis=3)
-        output = basic_block(output, filter_nums=filter_nums, name=name+"_basic_block"+str(layer+2))
-        layers_concat.append(output)
-
-    output = tf.concat(layers_concat, axis=3)
-
-    return output
-
-
-def transition_layer(input_data, filter_nums, name):
-    """
-    transition layer between two dense blocks
-    :param input_data: the input data tensor [batch_size, height, width, channels]
-    :param filter_nums: the number of convolutional kernels
-    :param name: the name of the layer
-    :return:
-        output: a 4-D tensor [number, height, width, channel]
-    """
-    output = batch_normalization(input_data, name=name + "_BN1_1", activation_method="tanh", is_train=True)
-    output = conv_layer(output, 1, 1, 1, 1, filter_nums, name=name + "_conv1_2", activation_method="None", padding="SAME")
-    output = pool_layer(output, 2, 2, 2, 2, name="pool1_1", is_max_pool=True)
-
-    return output
