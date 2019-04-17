@@ -51,7 +51,7 @@ def basic_block(input_data, filter_nums, name, is_bn=True):
     """
     output = batch_normalization(input_data, name=name + "_BN1_1", activation_method="tanh", is_train=is_bn)
     output = conv_layer(output, 1, 1, 1, 1, 4 * filter_nums, name=name + "_conv1_2", activation_method="None", padding="SAME")
-    output = batch_normalization(output, name=name + "_BN1_3", activation_method="tanh", is_train=is_train)
+    output = batch_normalization(output, name=name + "_BN1_3", activation_method="tanh", is_train=is_bn)
     output = conv_layer(output, 3, 3, 1, 1, filter_nums, name=name + "_conv1_4", activation_method="None", padding="SAME")
 
     return output

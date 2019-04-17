@@ -21,7 +21,6 @@ def audio_read(audio_file_path, sampling_rate=44100, channel="left", offset=0, d
     :param channel: "left", "right", "both"
     :param offset: start reading after this time (in seconds), default is 0
     :param duration: only load up to this much audio (in seconds), default is None
-    :param samples: the number of sample dots, default is None
     :return:
         2-D Variable, audio data in np.float32 format
     """
@@ -102,7 +101,7 @@ def get_mfcc_statistics(audio_data, sampling_rate=44100, n_mfcc=40):
     return mfcc_feature
 
 
-def get_mfcc(audio_file_path, sampling_rate=44100, offset=0, duration=1.3, n_mfcc=24):
+def get_mfcc(audio_file_path, sampling_rate=44100, offset=0, duration=1.3, n_mfcc=40):
     """
     extract mel frequency ceptral coefficients of audio
     :param audio_file_path: audio file path
@@ -118,14 +117,22 @@ def get_mfcc(audio_file_path, sampling_rate=44100, offset=0, duration=1.3, n_mfc
     mfcc_left = librosa.feature.mfcc(y=audio_data[0][0], sr=sampling_rate, n_mfcc=n_mfcc)
     mfcc_right = librosa.feature.mfcc(y=audio_data[0][1], sr=sampling_rate, n_mfcc=n_mfcc)
 
+    mfcc_dif1_left = librosa.feature.mfcc(y=np.diff(audio_data[0][0], 1, 0), sr=sampling_rate, n_mfcc=n_mfcc)
+    mfcc_dif2_left = librosa.feature.mfcc(y=np.diff(audio_data[0][0], 2, 0), sr=sampling_rate, n_mfcc=n_mfcc)
+
+    mfcc_dif1_right = librosa.feature.mfcc(y=np.diff(audio_data[0][1], 1, 0), sr=sampling_rate, n_mfcc=n_mfcc)
+    mfcc_dif2_right = librosa.feature.mfcc(y=np.diff(audio_data[0][1], 2, 0), sr=sampling_rate, n_mfcc=n_mfcc)
+
     frames = np.shape(mfcc_left)[1]
-    mfcc = np.zeros([frames, n_mfcc * 2, 1])
+    mfcc = np.zeros([frames, n_mfcc * 2, 3])
     mfcc[:, :n_mfcc, 0], mfcc[:, n_mfcc:, 0] = np.transpose(mfcc_left), np.transpose(mfcc_right)
+    mfcc[:, :n_mfcc, 0], mfcc[:, n_mfcc:, 1] = np.transpose(mfcc_dif1_left), np.transpose(mfcc_dif1_right)
+    mfcc[:, :n_mfcc, 0], mfcc[:, n_mfcc:, 2] = np.transpose(mfcc_dif2_left), np.transpose(mfcc_dif2_right)
 
     return mfcc
 
 
-def get_mfcc_batch(audio_files_list, sampling_rate=44100, offset=0, duration=1.3, n_mfcc=24):
+def get_mfcc_batch(audio_files_list, sampling_rate=44100, offset=0, duration=1.3, n_mfcc=40):
     """
     get mfcc vector of audio in batch
     :param audio_files_list: audio files list
@@ -139,9 +146,9 @@ def get_mfcc_batch(audio_files_list, sampling_rate=44100, offset=0, duration=1.3
     files_num = len(audio_files_list)
 
     mfcc = get_mfcc(audio_files_list[0], sampling_rate=sampling_rate, offset=offset, duration=duration, n_mfcc=n_mfcc)
-    height, width = np.shape(mfcc)[0], np.shape(mfcc)[1]
+    height, width, channel = np.shape(mfcc)[0], np.shape(mfcc)[1], np.shape(mfcc)[2]
 
-    data = np.zeros([files_num, height, width, 1], dtype=np.float32)
+    data = np.zeros([files_num, height, width, channel], dtype=np.float32)
 
     i = 0
     for audio_file in audio_files_list:

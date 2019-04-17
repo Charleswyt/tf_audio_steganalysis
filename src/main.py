@@ -45,6 +45,7 @@ def main():
     else:
         allocated_gpu = ""
 
+    tf.reset_default_graph()
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = allocated_gpu
 

@@ -55,7 +55,6 @@ def train(args):
     batch_size = args.batch_size                                                            # batch size
     height, width, channel = args.height, args.width, args.channel                          # height and width of input matrix
     init_learning_rate = args.learning_rate                                                 # initialized learning rate
-    n_epoch = args.epoch                                                                    # epoch
     decay_method = args.decay_method                                                        # decay method
     decay_steps, decay_rate = args.decay_step, args.decay_rate                              # decay steps | decay rate
     loss_method = args.loss_method                                                          # the calculation method of loss function
@@ -65,6 +64,7 @@ def train(args):
     carrier = args.carrier                                                                  # carrier (qmdct | audio | image)
     task_name = args.task_name                                                              # task name
     checkpoint = args.checkpoint                                                            # checkpoint
+    n_epoch = args.epoch if args.indicator == "epoch" else 500                              # epoch
 
     max_to_keep = args.max_to_keep                                                          # maximum number of recent checkpoints to keep
     keep_checkpoint_every_n_hours = args.keep_checkpoint_every_n_hours                      # how often to keep checkpoints
@@ -89,12 +89,12 @@ def train(args):
     log_path = args.log_path
 
     # information output
-    try:
+    if cover_train_path is not None:
         print("train files path(cover): %s" % cover_train_path)
         print("valid files path(cover): %s" % cover_valid_path)
         print("train files path(stego): %s" % stego_train_path)
         print("valid files path(stego): %s" % stego_valid_path)
-    except NameError:
+    else:
         print("cover files path: %s" % cover_files_path)
         print("stego files path: %s" % stego_files_path)
 
@@ -132,7 +132,7 @@ def train(args):
 
     # initialize the network
     if args.network not in networks:
-        print("Network miss-match, please try again")
+        print("Network miss-match, please try again.")
         return False
 
     if args.siamese is not True:
@@ -191,11 +191,24 @@ def train(args):
 
             # restore the model and keep training from the current breakpoint
             if checkpoint is True:
-                model_file_path = get_model_file_path(model_path)
-                if model_file_path is not None:
-                    saver.restore(sess, model_file_path)
+                if args.fine_tune_model_file_path is None:
+                    model_file_path = get_model_file_path(model_path)
+                    if model_file_path is not None:
+                        saver.restore(sess, model_file_path)
+                    else:
+                        model_file_path = fullfile(model_path, task_name)
+                        print("No such model file, training starts from the beginning.")
+                else:
+                    if not os.path.exists(args.fine_tune_model_file_path + ".index"):
+                        model_file_path = fullfile(model_path, task_name)
+                        print("No such model file, training starts from the beginning.")
+                    else:
+                        saver.restore(sess, args.fine_tune_model_file_path)
+                        model_file_path = fullfile(model_path, task_name)
+                        print("Fine-Tune on the model %s" % args.fine_tune_model_file_path)
             else:
                 model_file_path = fullfile(model_path, task_name)
+                print("Training starts from the beginning.")
 
             print("Start training...")
             print("Numbers of network %s: %d" % (args.network, get_variables_number(tf.trainable_variables())))
@@ -212,7 +225,7 @@ def train(args):
 
                     # read files list (validation)
                     cover_valid_data_list, cover_valid_label_list, stego_valid_data_list, stego_valid_label_list \
-                        = read_data(cover_valid_path, stego_valid_path, start_idx=start_index_train, end_idx=end_index_train, file_type=file_type)
+                        = read_data(cover_valid_path, stego_valid_path, start_idx=start_index_valid, end_idx=end_index_valid, file_type=file_type)
                 else:
                     # read files list (train)
                     cover_train_data_list, cover_train_label_list, stego_train_data_list, stego_train_label_list \
@@ -298,7 +311,7 @@ def train(args):
                 valid_fpr_average = valid_fpr / valid_iterations
                 valid_fnr_average = valid_fnr / valid_iterations
 
-                # model save
+                # training stop and model save
                 if valid_accuracy_average > max_accuracy:
                     max_accuracy_epoch = epoch + 1
                     saver.save(sess, model_file_path, global_step=global_step)
@@ -312,8 +325,17 @@ def train(args):
                       % (args.network, args.task_name, epoch + 1, lr, train_loss_average, train_accuracy_average,
                          valid_loss_average, valid_accuracy_average, valid_fpr_average, valid_fnr_average,
                          max_accuracy, corresponding_fpr, corresponding_fnr, max_accuracy_epoch))
+                print("Current Time:", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+
+                # training stop
+                if (args.indicator == "validation_accuracy_value" and max_accuracy > args.validation_accuracy_expectation / 100) or\
+                        (args.indicator == "epoch_interval" and max_accuracy_epoch - epoch > args.epoch_interval and
+                         max_accuracy >= args.validation_accuracy_least / 100):
+                    return
+
             train_writer_train.close()
             train_writer_valid.close()
+
     except Exception as e:
         print("An error occurred, please try again.")
         print("Error Type: ", e)
@@ -329,6 +351,7 @@ def test(args):
     carrier = args.carrier                                              # carrier (qmdct | audio | image)
     classes_num = args.class_num                                        # classes number
     start_index_test, end_index_test = args.start_index_test, args.end_index_test
+    is_shuffle = args.is_shuffle                                        # whether the files list shuffle or not
 
     # path
     cover_test_files_path = args.cover_test_path
@@ -346,14 +369,21 @@ def test(args):
 
     command = args.network + "(data, classes_num, is_bn)"
     logits = eval(command)
+    output = tf.nn.softmax(logits)
 
     accuracy, false_positive_rate, false_negative_rate = evaluation(logits=logits, labels=labels)
 
     # information output
-    print("train files path(cover): %s" % cover_test_files_path)
-    print("valid files path(stego): %s" % stego_test_files_path)
+    print("cover files path: %s" % cover_test_files_path)
+    print("stego files path: %s" % stego_test_files_path)
     print("class number: %d" % classes_num)
-    print("start load network...")
+    print("Start load network...")
+
+    config = tf.ConfigProto()
+    config.allow_soft_placement = True
+    config.gpu_options.allow_growth = True
+
+    start_time = time.time()
 
     model = tf.train.Saver()
     with tf.Session() as sess:
@@ -368,11 +398,13 @@ def test(args):
             print("The model is loaded successfully, model file: %s" % model_file_path)
             # read files list (train)
             cover_test_data_list, cover_test_label_list, \
-                stego_test_data_list, stego_test_label_list = read_data(cover_test_files_path, stego_test_files_path, start_index_test, end_index_test)
+                stego_test_data_list, stego_test_label_list = read_data(cover_test_files_path, stego_test_files_path, start_index_test, end_index_test, is_shuffle=is_shuffle)
 
             if len(cover_test_data_list) < batch_size:
                 batch_size = len(cover_test_data_list)
 
+            csv_file = open('/home1/wyt/code/tf_audio_steganalysis/logit1.csv', 'w', encoding='utf-8', newline='\n')
+            csvwriter = csv.writer(datacsv, delimiter=',')
             test_iterations, test_accuracy, test_fpr, test_fnr = 0, 0, 0, 0
             for x_test_batch, y_test_batch in \
                     minibatches(cover_test_data_list, cover_test_label_list, stego_test_data_list, stego_test_label_list, batch_size):
@@ -380,17 +412,27 @@ def test(args):
                 x_test_data = get_data_batch(x_test_batch, height=height, width=width, channel=channel, carrier=carrier)
 
                 # get the accuracy and loss
-                acc, fpr, fnr = sess.run([accuracy, false_positive_rate, false_negative_rate],
-                                         feed_dict={data: x_test_data, labels: y_test_batch, is_bn: True})
+                result, acc, fpr, fnr = sess.run([output, accuracy, false_positive_rate, false_negative_rate],
+                                                 feed_dict={data: x_test_data, labels: y_test_batch, is_bn: True})
+                for content in result:
+                    csvwriter.writerow(str([content[0], content[1]]))
+
                 test_accuracy += acc
                 test_fpr += fpr
                 test_fnr += fnr
                 test_iterations += 1
 
-                print("Batch-%d, accuracy: %f" % (test_iterations, acc))
+                # print("Batch-%003d, accuracy: %f, fpr: %f, fnr: %f" % (test_iterations, acc, fpr, fnr))
 
             test_accuracy_average = test_accuracy / test_iterations
-            print("Test accuracy: %.2f%%" % (100. * test_accuracy_average))
+            test_fpr_average = test_fpr / test_iterations
+            test_fnr_average = test_fnr / test_iterations
+            print("Test accuracy: %.2f%%, FPR: %.2f%%, FNR: %.2f%%" % (100. * test_accuracy_average, 100. * test_fpr_average, 100. * test_fnr_average))
+            csv_file.close()
+
+    et = time.time() - start_time
+    et = str(datetime.timedelta(seconds=et))[:-7]
+    print("Run Time: %s" % et)
 
 
 def steganalysis_one(args):
@@ -495,6 +537,7 @@ def steganalysis_batch(args):
                 file_name = get_file_name(file_path)
                 ret = sess.run(logits, feed_dict={data: steganalysis_data, is_bn: False})
                 sess.run(tf.local_variables_initializer())
+                print(ret)
                 result = np.argmax(ret, 1)
                 prob = 100 * ret[0][result]
 

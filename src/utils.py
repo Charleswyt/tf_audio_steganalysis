@@ -292,7 +292,7 @@ def get_model_file_path(path):
     :return:
         the path of trained tensorflow model
     """
-    if get_path_type(path) == "file":
+    if get_path_type(path + ".meta") == "file":
         return path.split(".")[0]
     elif get_path_type(path) == "folder":
         return tf.train.latest_checkpoint(path)

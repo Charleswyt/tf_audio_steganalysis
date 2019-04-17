@@ -165,7 +165,7 @@ def fc_layer(input_data, output_dim, name, activation_method="relu", alpha=None,
         if init_method is None:
             output = input_data
         else:
-            with tf.variable_scope(name):
+            with tf.variable_scope(name, reuse=tf.AUTO_REUSE):
                 # the method of weights initialization
                 if init_method == "xavier":
                     initializer = tf.contrib.layers.xavier_initializer()
@@ -218,8 +218,7 @@ def fconv_layer(input_data, filter_num, name, is_train=True, padding="VALID", in
         shape = input_data.get_shape()
         conv_height, conv_width, conv_channel = shape[1].value, shape[2].value, shape[3].value
 
-        with tf.variable_scope(name):
-
+        with tf.variable_scope(name, reuse=tf.AUTO_REUSE):
             # the method of weights initialization
             if init_method == "xavier":
                 initializer = tf.contrib.layers.xavier_initializer()
@@ -610,7 +609,8 @@ def evaluation(logits, labels):
     calculate the accuracy, fpr and fnr
     :param logits: logits
     :param labels: label
-    :return: accuracy, fpr, fnr
+    :return: accuracy, false_positive_rate, false_negative_rate,
+    true_positive_rate, true_negative_rate, precision, recall, f1_score
     """
     predictions = tf.nn.softmax(logits)
     predictions = tf.argmax(predictions, 1)
@@ -644,14 +644,60 @@ def evaluation(logits, labels):
                 tf.equal(labels, ones_like_labels),
                 tf.equal(predictions, zeros_like_predictions)), tf.float32))
 
-    # true_positive_rate = true_positive / (true_positive + false_negative)
-    # true_negative_rate = true_negative / (true_negative + false_positive)
     false_positive_rate = false_positive / (tf.add(false_positive, true_negative))
     false_negative_rate = false_negative / (tf.add(false_negative, true_positive))
 
     accuracy = 1 - (false_positive_rate + false_negative_rate) / 2
 
     return accuracy, false_positive_rate, false_negative_rate
+
+
+def evaluation_full(logits, labels):
+    """
+    calculate the accuracy, fpr and fnr, tpr, tnr, precision, recall, f1_score
+    :param logits: logits
+    :param labels: label
+    :return: accuracy, false_positive_rate, false_negative_rate,
+    true_positive_rate, true_negative_rate, precision, recall, f1_score
+    """
+    predictions = tf.nn.softmax(logits)
+    predictions = tf.argmax(predictions, 1)
+
+    ones_like_labels = tf.ones_like(labels)
+    zeros_like_labels = tf.zeros_like(labels)
+    ones_like_predictions = tf.ones_like(predictions)
+    zeros_like_predictions = tf.zeros_like(predictions)
+
+    true_positive = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(labels, ones_like_labels),
+                tf.equal(predictions, ones_like_predictions)), tf.float32))
+
+    true_negative = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(labels, zeros_like_labels),
+                tf.equal(predictions, zeros_like_predictions)), tf.float32))
+
+    false_positive = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(labels, zeros_like_labels),
+                tf.equal(predictions, ones_like_predictions)), tf.float32))
+
+    false_negative = tf.reduce_sum(
+        tf.cast(
+            tf.logical_and(
+                tf.equal(labels, ones_like_labels),
+                tf.equal(predictions, zeros_like_predictions)), tf.float32))
+
+    false_positive_rate = false_positive / (tf.add(false_positive, true_negative))
+    false_negative_rate = false_negative / (tf.add(false_negative, true_positive))
+
+    accuracy = 1 - (false_positive_rate + false_negative_rate) / 2
+
+    return accuracy, false_positive_rate, false_negative_rate, true_positive_rate, true_negative_rate, precision, recall, f1_score
 
 
 def error_layer(logits, labels):
