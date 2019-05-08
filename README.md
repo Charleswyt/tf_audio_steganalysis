@@ -21,20 +21,20 @@ tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-le
 You can use command **pip install -r requirements.txt** to install all packages mentioned above. If you don't want to change your version of tensorflow, you can use **virtualenv** to create a new python run environment.
 
 ## How to use
-1. install [**python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/) and add the path into the environment variable (recommand python3.5).
+1. Install [**python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/) and add the path into the environment variable (recommand python3.5).
 2. **GPU** run environment [**configure**](https://blog.csdn.net/yhaolpz/article/details/71375762?locationNum=14&fps=1) for network training (**optional**).
-3. install all dependent packages mentioned above (open **[setup](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/setup)/requirements.txt** and input "**pip install -r requirements**" into your cmd window).
-4. **run** the code as the [**example**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/config_file) as shows.
-5. use [**tensorboard**](http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html) to visualize the training process such as the **accuracy** and **loss curve** of training and validation. The command is "**tensorboard --logdir=/path of log**".
+3. Install all dependent packages mentioned above (open **[setup](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/setup)/requirements.txt** and input "**pip install -r requirements**" into your cmd window).
+4. **Run** the code as the [**example**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/config_file) as shows.
+5. Use [**tensorboard**](http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html) to visualize the training process such as the **accuracy** and **loss curve** of training and validation. The command is "**tensorboard --logdir=/path of log**".
 6. If you want to design your own network based on this project, there is an [**instruction**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/networks/network_design.md) for you.
 7. Our sourcecode is coded with [**Pycharm**](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/setup/pycharm.md), and the **hard wrap** is setted as **180**. If you setting of hard wrap is less than 180, there will be warnings shwon in pycharm.
 
 ## File description
 ID      |   File                    |   Function
 :-      |   :-                      |    :-
-1       |   audio_samples           |   some audio samples for shown
-2       |   data_processing         |   tools which are used for QMDCT coefficients extraction and dataset build
-3       |   jupyter                 |   a folder for jupyter debug
-4       |   paper                   |   the paper, PPT, dataset and brief introduction of our recent work
-5       |   setup                   |   a **requirements.txt** in this folder, which is used to install all packages in this system
+1       |   audio_samples           |   some audio samples
+2       |   data_processing         |   dataset build, tools which are used for QMDCT coefficients extraction and so on
+3       |   jupyter                 |   a folder for debug with jupyter
+4       |   paper                   |   the paper, presentation, dataset and brief introduction of our recent work
+5       |   setup                   |   setup and configuration
 6       |   src                     |   source code
