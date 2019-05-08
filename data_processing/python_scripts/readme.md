@@ -1,13 +1,4 @@
-### List of Python Scripts
-ID      |   File                    |   Function
-:-      |   :-                      |    :-
-1       |   batch_scripts           |   batch scripts for run of python scripts
-2       |   python_scripts          |   python scripts for samples make, QMDCT extraction and so on
-3       |   secret_message          |   secret message file for embedding
-4       |   BatchRename.exe         |   an *.exe for file rename in batch
-
-
-## Usage of Python Scripts
+## Usage of python scripts
 
 ### QMDCT extraction
 python QMDCT_extract.py "files_path" "file_num"
@@ -45,13 +36,14 @@ usage:
 
 If the sum of two percent is not 1.0, an error is presented.
 
-### Tools for Samples Make
+### Tools for sample making
 The usage of each encoder is shown as follows.
 
 Encoder         |   Command
 :-:      	    |    :-
 Encode          |   encode.exe -b "bitrate" "path of wav audio" "path of mp3 audio"
 MP3Stego(cover) |   encode_MP3Stego.exe -b "bitrate"
+MP3Stego(stego) |   encode_MP3Stego.exe -b "bitrate" -E "path of embedding file" -P "password" "path of wav audio" "path of mp3 audio"
 MP3Stego(stego) |   encode_MP3Stego.exe -b "bitrate" -E "path of embedding file" -P "password" "path of wav audio" "path of mp3 audio"
 HCM             |   encode_HCM.exe -b "bitrate" -embed "path of embedding file" -cost "type of cost function" -er "embedding_rate" -framenumber "maximum number of embedding frames" "path of wav audio" "path of mp3 audio"
 
