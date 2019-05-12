@@ -207,10 +207,11 @@ def config_train_file_read(config_file_path):
                 self.gpu_selection = file_content['mode_config']['gpu_selection']
                 self.gpu = file_content['mode_config']['gpu']
                 self.mode = file_content['mode_config']['mode']
-                self.checkpoint = file_content['mode_config']['checkpoint']
                 self.carrier = file_content['mode_config']['carrier']
                 self.network = file_content['mode_config']['network']
                 self.siamese = file_content['mode_config']['siamese']
+                self.checkpoint = file_content['mode_config']['checkpoint']
+                self.fine_tune_model_file_path = file_content['mode_config']['fine_tune_model_file_path']
 
                 if self.carrier == "mfcc" or self.carrier == "audio":
                     self.file_type = "mp3"
@@ -249,6 +250,11 @@ def config_train_file_read(config_file_path):
                 self.end_index_train = file_content["index"]["end_index_train"]
                 self.start_index_valid = file_content["index"]["start_index_valid"]
                 self.end_index_valid = file_content["index"]["end_index_valid"]
+
+                # stop criterion
+                self.indicator = file_content["stop_criterion"]["indicator"]
+                self.epoch_interval = file_content["stop_criterion"]["epoch_interval"]
+                self.validation_accuracy_expectation = file_content["stop_criterion"]["validation_accuracy_expectation"]
 
                 self.train = True
 
@@ -324,6 +330,7 @@ def config_test_file_read(config_file_path):
                 # index
                 self.start_index_test = file_content["index"]["start_index_test"]
                 self.end_index_test = file_content["index"]["end_index_test"]
+                self.is_shuffle = file_content["index"]["is_shuffle"]
 
         argument = Variable()
 

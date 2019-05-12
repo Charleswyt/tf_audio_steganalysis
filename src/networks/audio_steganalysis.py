@@ -11,6 +11,7 @@ Modified on 2018.11.12
 
 from layer import *
 from HPFs.filters import *
+from modules.inception import *
 
 
 def chen_net(input_data, class_num=2):
@@ -187,5 +188,54 @@ def rhfcn(input_data, class_num=2, is_bn=True):
     pool11 = pool_layer(bn11, bn11_height, bn11_width, bn11_height, bn11_width, name="global_max", is_max_pool=True)
 
     logits = tf.reshape(pool11, [-1, class_num])
+
+    return logits
+
+
+def google_net3(input_data, class_num=2, is_bn=True):
+    """
+    Google Net with inception V3
+    """
+
+    print("Google Net with inception V3")
+    print("Network Structure: ")
+
+    # High Pass Filtering
+    conv0 = rich_hpf_layer(input_data, name="HPFs")
+
+    # HPF and input data concat
+    conv0_input_merge = tf.concat([conv0, input_data], 3, name="conv0_input_merge")
+    concat_shape = conv0_input_merge.get_shape()
+    print("name: %s, shape: (%d, %d, %d)" % ("conv0_input_merge", concat_shape[1], concat_shape[2], concat_shape[3]))
+
+    # Group 1
+    conv1_1 = inception_v3(conv0_input_merge, 8, "conv1_1", is_max_pool=True, is_bn=is_bn)
+    pool1_2 = pool_layer(conv1_1, 3, 3, 2, 2, name="pool1_2")
+
+    # Group 2
+    conv2_1 = inception_v3(pool1_2, 16, "conv2_1", is_max_pool=True, is_bn=is_bn)
+    pool2_2 = pool_layer(conv2_1, 3, 3, 2, 2, name="pool2_2")
+
+    # Group 3
+    conv3_1 = inception_v3(pool2_2, 32, "conv3_1", is_max_pool=True, is_bn=is_bn)
+    pool3_2 = pool_layer(conv3_1, 3, 3, 2, 2, name="pool3_2")
+
+    # Group 4
+    conv4_1 = inception_v3(pool3_2, 64, "conv4_1", is_max_pool=True, is_bn=is_bn)
+    pool4_2 = pool_layer(conv4_1, 3, 3, 2, 2, name="pool4_2")
+
+    # Group 5
+    conv5_1 = inception_v3(pool4_2, 128, "conv5_1", is_max_pool=True, is_bn=is_bn)
+    pool5_2 = pool_layer(conv5_1, 3, 3, 2, 2, name="pool5_2")
+
+    # Group 6
+    conv6_1 = inception_v3(pool5_2, 256, "conv6_1", is_max_pool=True, is_bn=is_bn)
+    pool6_2 = global_pool(conv6_1, name="global_pool6_2")
+
+    # fc layers
+    fc6 = fc_layer(pool6_2, 128, name="fc6", activation_method=None)
+    bn7 = batch_normalization(fc6, name="BN7", activation_method="tanh", is_train=is_bn)
+
+    logits = fc_layer(bn7, class_num, name="fc8", activation_method=None)
 
     return logits
