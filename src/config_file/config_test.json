@@ -1,19 +1,21 @@
 {
     "files_path": {
-        "cover_test_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/validation",
-        "stego_test_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_128_W_4_H_7_ER_10/validation",
-        "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis/rhfcn/EECS_B_128_W_4_H_7_ER_10/1540486970"
+        "cover_test_path": "/home1/wyt/data/3.cover/cover_10s/128",
+        "stego_test_path": "/home1/wyt/data/MIX_B_128",
+        "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis/chap4/MIX_B_128/1552227338",
+        "_models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis/google_net3/EECS_B_128_MIX/1552299896"
     },
     "index": {
-        "start_index_test": null,
-        "end_index_test": null
+        "start_index_test": 9000,
+        "end_index_test": 9016,
+        "is_shuffle": true
     },
     "mode_config": {
-        "gpu_selection": "manu",
+        "gpu_selection": "auto",
         "gpu": "0",
         "mode": "test",
         "carrier": "qmdct",
-        "network": "rhfcn"
+        "network": "chap4"
     },
     "hyper_parameters": {
         "batch_size": 16,
@@ -21,7 +23,7 @@
     },
     "shape": {
         "height": 200,
-        "width": 450,
+        "width": 400,
         "channel": 1
     }
 }

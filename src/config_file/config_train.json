@@ -1,6 +1,7 @@
 {
+    "COMMENT": "path mode: full, semi, simple",
     "path_mode": "semi",
-    "task_name": "EECS_B_128_W_2_H_7_ER_10",
+    "task_name": "EECS_B_320_W_4_H_7_ER_10",
 	"full_samples_path": {
         "cover_train_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/train",
         "cover_valid_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/validation",
@@ -8,17 +9,17 @@
         "stego_valid_path": "/home1/wyt/data/10.QMDCT/stego/EECS/EECS_B_128_W_4_H_7_ER_10/validation"
     },
     "simple_samples_path":{
-        "cover_files_root": "/home1/wyt/data/10.QMDCT/cover/cover_10s",
-        "stego_files_root": "/home1/wyt/data/10.QMDCT/stego"
+        "cover_files_root": "/home1/wyt/data/3.cover/cover_10s",
+        "stego_files_root": "/home1/wyt/data/4.stego/EECS"
     },
     "semi_samples_path":{
-        "cover_files_path": "/home1/wyt/data/3.cover/cover_10s/128",
-        "stego_files_path": "/home1/wyt/data/4.stego/EECS/EECS_B_128_W_2_H_7_ER_10"
+        "cover_files_path": "/home/lthpc/Dataset/3.cover/cover_10s/128",
+        "stego_files_path": "/home/lthpc/Dataset/3.cover/cover_10s/128"
     },
     "files_path":{
-        "tfrecords_path": "/home1/wyt/code/tf_audio_steganalysis/tfrecords",
-        "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis",
-        "logs_path": "/home1/wyt/code/tf_audio_steganalysis/logs/steganalysis"
+        "tfrecords_path": "/home/lthpc/Projects/tf_audio_steganalysis/tfrecords",
+        "models_path": "/home/lthpc/Projects/tf_audio_steganalysis/models/steganalysis",
+        "logs_path": "/home/lthpc/Projects/tf_audio_steganalysis/logs/steganalysis"
     },
     "index": {
         "start_index_train": null,
@@ -30,14 +31,16 @@
 		"gpu_selection": "auto",
         "gpu": "0",
         "mode": "train",
-        "checkpoint": false,
         "carrier": "qmdct",
-        "network": "rhfcn",
-        "siamese": false
+        "network": "chap4",
+        "siamese": false,
+        "checkpoint": false,
+        "fine_tune_model_file_path": null,
+        "_fine_tune_model_file_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis/chap4/EECS_B_128_W_2_H_7_ER_10/1551960076/EECS_B_128_W_2_H_7_ER_10-6000-58000"
     },
     "shape": {
         "height": 200,
-        "width": 450,
+        "width": 400,
         "channel": 1
     },
     "hyper_parameters": {
@@ -49,6 +52,13 @@
         "coeff_regulation": 0.001,
         "loss_method": "sparse_softmax_cross_entropy",
         "class_num": 2
+    },
+    "stop_criterion":{
+        "COMMENT": "indicator type: epoch, validation_accuracy_value, validation_accuracy_epoch",
+        "indicator": "epoch",
+        "epoch_interval": 10,
+        "validation_accuracy_least": 75,
+        "validation_accuracy_expectation": 85
     },
     "learning_rate_method":{
         "decay_method": "exponential",

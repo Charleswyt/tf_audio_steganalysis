@@ -1,23 +1,27 @@
 {
 	"files_path": {
         "steganalysis_file_path": "/home/user/data/audio/QMDCT/cover/cover_10s/320/validation/wav10s_32002.txt",
-        "steganalysis_files_path": "/home1/wyt/data/10.QMDCT/cover/cover_10s/128/test",
-        "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis/rhfcn/EECS_B_128_W_4_H_7_ER_10/1540801003"
+        "steganalysis_files_path": "/home1/wyt/data/3.cover/cover_10s/128",
+        "models_path": "/home1/wyt/code/tf_audio_steganalysis/models/steganalysis/chap4/EECS_B_128_W_2_H_7_ER_10/1551960076"
 	},
 	"mode_config": {
-		"gpu_selection": "manu",
+		"gpu_selection": "auto",
         "gpu": "3",
         "mode": "steganalysis",
         "submode": "batch",
         "carrier": "qmdct",
-        "network": "rhfcn"
+        "network": "chap4"
+    },
+  "index": {
+        "start_index_steganalysis": 32000,
+        "end_index_steganalysis": 32006
     },
     "hyper_parameters": {
         "class_num": 2
     },
     "shape": {
         "height": 200,
-        "width": 450,
+        "width": 400,
         "channel": 1
     }
 }

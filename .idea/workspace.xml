@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c2d43106-d1ec-4b75-a6d9-339f7e1bcfc5" name="Default" comment="" />
+    <list default="true" id="c2d43106-d1ec-4b75-a6d9-339f7e1bcfc5" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_processing/batch_scripts/QMDCT_extraction_batch.bat" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/batch_scripts/QMDCT_extraction_batch.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_processing/batch_scripts/files_move_batch.bat" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/batch_scripts/files_move_batch.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_processing/batch_scripts/train_test_split_batch.bat" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/batch_scripts/train_test_split_batch.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_processing/python_scripts/files_move.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/python_scripts/files_move.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_processing/python_scripts/tools/encode_HCM.exe" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/python_scripts/tools/encode_HCM.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_processing/secret_message/temp.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/secret_message/temp.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_processing/secret_message/temp1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/secret_message/temp1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jupyter/.ipynb_checkpoints/Untitled2-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/jupyter/.ipynb_checkpoints/Untitled2-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jupyter/Untitled2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/jupyter/Untitled2.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config_file/config_steganalysis.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config_file/config_steganalysis.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config_file/config_test.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config_file/config_test.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config_file/config_train.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config_file/config_train.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matlab_scripts/jpeg_image_read.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/matlab_scripts/jpeg_image_read.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/networks/tested_networks/RNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/networks/tested_networks/RNN.py" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,7 +33,9 @@
     <SUITE FILE_PATH="coverage/steganalysis_CNN$utils.coverage" NAME="utils Coverage Results" MODIFIED="1515055529716" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/tf_audio_steganalysis$manager.coverage" NAME="manager Coverage Results" MODIFIED="1524210343465" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/tf_audio_steganalysis$run.coverage" NAME="run Coverage Results" MODIFIED="1527336709728" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tf_audio_steganalysis$progress_bar.coverage" NAME="progress_bar Coverage Results" MODIFIED="1543552970864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../tools-via-python" />
     <SUITE FILE_PATH="coverage/tf_audio_steganalysis$main.coverage" NAME="main Coverage Results" MODIFIED="1527336720031" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tf_audio_steganalysis$Nosetests_in_test_script_py.coverage" NAME="Nosetests in test_script.py Coverage Results" MODIFIED="1543568818658" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/tf_audio_steganalysis$feature_selection.coverage" NAME="feature_selection Coverage Results" MODIFIED="1526172767413" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
@@ -37,56 +57,36 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="IH_MMSec.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/IH_MMSec.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="16" column="55" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="run.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/run.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3950">
-              <caret line="166" column="20" selection-start-line="166" selection-start-column="20" selection-end-line="166" selection-end-column="20" />
+            <state relative-caret-position="11550">
+              <caret line="471" column="37" selection-start-line="471" selection-start-column="37" selection-end-line="471" selection-end-column="37" />
+              <folding>
+                <element signature="e#146#157#0" expanded="true" />
+                <marker date="1552635876387" expanded="true" signature="17055:17101" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config_train.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="12" column="32" lean-forward="true" selection-start-line="12" selection-start-column="32" selection-end-line="12" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="162" column="106" lean-forward="true" selection-start-line="162" selection-start-column="106" selection-end-line="162" selection-end-column="106" />
+            <state relative-caret-position="5125">
+              <caret line="214" column="21" selection-start-line="214" selection-start-column="21" selection-end-line="214" selection-end-column="21" />
+              <folding>
+                <element signature="e#147#156#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/config.py">
+      <file leaf-file-name="text_preprocess.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/text_preprocess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3325">
-              <caret line="137" column="30" selection-start-line="137" selection-start-column="21" selection-end-line="137" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tested_steganalysis.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/networks/tested_steganalysis.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="13" selection-start-line="13" selection-end-line="13" />
+            <state relative-caret-position="1625">
+              <caret line="66" column="18" selection-start-line="66" selection-start-column="18" selection-end-line="66" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -94,17 +94,32 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1200">
-              <caret line="52" selection-start-line="52" selection-end-line="52" />
+            <state relative-caret-position="251">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
+              <folding>
+                <element signature="e#146#155#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SPL.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/SPL.py">
+      <file leaf-file-name="filters.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/HPFs/filters.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4875">
-              <caret line="195" column="23" selection-start-line="195" selection-start-column="23" selection-end-line="195" selection-end-column="23" />
+            <state relative-caret-position="-470">
+              <caret line="80" column="96" lean-forward="true" selection-start-line="79" selection-start-column="48" selection-end-line="80" selection-end-column="96" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="175">
+              <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+              <folding>
+                <element signature="e#145#154#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -112,8 +127,11 @@
       <file leaf-file-name="layer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/layer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12425">
-              <caret line="500" column="15" selection-start-line="500" selection-start-column="4" selection-end-line="500" selection-end-column="15" />
+            <state relative-caret-position="1425">
+              <caret line="60" column="23" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
+              <folding>
+                <element signature="e#147#173#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -121,8 +139,29 @@
       <file leaf-file-name="audio_steganalysis.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/networks/audio_steganalysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2200">
-              <caret line="89" column="19" selection-start-line="89" selection-start-column="19" selection-end-line="89" selection-end-column="19" />
+            <state relative-caret-position="200">
+              <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+              <folding>
+                <element signature="e#147#166#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dissertation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/dissertation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="25900">
+              <caret line="1036" column="17" selection-start-line="990" selection-end-line="1036" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config_train.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="325">
+              <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -153,11 +192,23 @@
       <find>preprocessing_data</find>
       <find>batch_no</find>
       <find>os.system</find>
+      <find>tfrecord_write</find>
+      <find>cover_files_root</find>
+      <find>14</find>
+      <find>max</find>
+      <find>min</find>
+      <find>global</find>
+      <find>checkpoint</find>
+      <find>fine_tune_model_file_path</find>
+      <find>get_file_name</find>
+      <find>args</find>
     </findStrings>
     <replaceStrings>
       <replace>predict</replace>
       <replace>&quot;</replace>
       <replace>data_diff</replace>
+      <replace>reals</replace>
+      <replace>tanh</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -171,57 +222,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/classifier.py" />
-        <option value="$PROJECT_DIR$/feature_selection.py" />
-        <option value="$PROJECT_DIR$/TODO" />
-        <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="D:/Program Files/Python 3.5/Lib/site-packages/filetype/match.py" />
-        <option value="D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/archive.py" />
-        <option value="$PROJECT_DIR$/proposed_network.py" />
-        <option value="$PROJECT_DIR$/network_proposed.py" />
-        <option value="$PROJECT_DIR$/network_selected.py" />
-        <option value="$PROJECT_DIR$/network.py" />
-        <option value="$PROJECT_DIR$/networks/networks_image_classification.py" />
-        <option value="$PROJECT_DIR$/networks/networks_tested.py" />
-        <option value="$PROJECT_DIR$/lstm.py" />
-        <option value="$PROJECT_DIR$/filters.py" />
-        <option value="$PROJECT_DIR$/audio_preprocess.py" />
-        <option value="$PROJECT_DIR$/dataset.py" />
-        <option value="$PROJECT_DIR$/test_scipt.py" />
-        <option value="$PROJECT_DIR$/setup/requirements.txt" />
-        <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/pre_process.py" />
-        <option value="$PROJECT_DIR$/networks/image_steganalysis.py" />
-        <option value="$PROJECT_DIR$/layer.py" />
-        <option value="$PROJECT_DIR$/networks/audio_steganalysis.py" />
-        <option value="D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/__init__.py" />
-        <option value="$PROJECT_DIR$/networks/image_classification.py" />
-        <option value="$PROJECT_DIR$/networks/tested.py" />
-        <option value="$PROJECT_DIR$/image_preprocess.py" />
-        <option value="$PROJECT_DIR$/networks/networks.py" />
-        <option value="$PROJECT_DIR$/config_file/config_test.json" />
-        <option value="$PROJECT_DIR$/text_preprocess.py" />
-        <option value="$PROJECT_DIR$/file_preprocess.py" />
-        <option value="$PROJECT_DIR$/samples_make.py" />
-        <option value="$PROJECT_DIR$/config.py" />
-        <option value="$PROJECT_DIR$/config_file/config_train.json" />
-        <option value="$PROJECT_DIR$/run.py" />
-        <option value="$PROJECT_DIR$/utils.py" />
-        <option value="$PROJECT_DIR$/networks/tested_steganalysis.py" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/src/text_preprocess.py" />
+        <option value="$PROJECT_DIR$/src/networks/networks_test.py" />
+        <option value="$PROJECT_DIR$/src/networks/image_segmentation.py" />
+        <option value="$PROJECT_DIR$/src/networks/tested_networks/ICME.py" />
+        <option value="$PROJECT_DIR$/data_processing/python_scripts/samples_make.py" />
+        <option value="$PROJECT_DIR$/data_processing/python_scripts/files_move.py" />
+        <option value="$PROJECT_DIR$/data_processing/python_scripts/train_test_split.py" />
+        <option value="$PROJECT_DIR$/data_processing/python_scripts/QMDCT_extraction.py" />
+        <option value="$PROJECT_DIR$/../tools-via-python/duplication_search.py" />
+        <option value="$PROJECT_DIR$/../tools-via-python/source_code_statistics.py" />
+        <option value="$PROJECT_DIR$/../tools-via-python/system_info.py" />
+        <option value="$PROJECT_DIR$/../tools-via-python/progress_bar.py" />
+        <option value="$PROJECT_DIR$/src/networks/readme.md" />
         <option value="$PROJECT_DIR$/src/test_script.py" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/networks/IH_MMSec.py" />
+        <option value="G:/socket_client.py" />
+        <option value="$PROJECT_DIR$/src/networks/image_steganalysis.py" />
+        <option value="$PROJECT_DIR$/src/matlab_scripts/read_jpeg_image.m" />
+        <option value="$PROJECT_DIR$/src/wechat.py" />
+        <option value="$PROJECT_DIR$/src/UI.py" />
+        <option value="$PROJECT_DIR$/src/image_preprocess.py" />
+        <option value="$PROJECT_DIR$/../../2.paper/thesis_postgraduate/5. code/audio_info_visualization.py" />
         <option value="$PROJECT_DIR$/src/networks/tested_networks/IH_MMSec.py" />
-        <option value="$PROJECT_DIR$/src/networks/networks.py" />
-        <option value="$PROJECT_DIR$/paper/CNN-based Steganalysis of MP3 Steganography in the Entropy Code Domain/readme.md" />
-        <option value="$PROJECT_DIR$/src/main.py" />
+        <option value="$PROJECT_DIR$/src/networks/tested_networks/Unknown.py" />
+        <option value="$PROJECT_DIR$/src/networks/tested_networks/ICASSP.py" />
         <option value="$PROJECT_DIR$/src/networks/tested_steganalysis.py" />
+        <option value="$PROJECT_DIR$/src/networks/tested_networks/Dense_net.py" />
+        <option value="$PROJECT_DIR$/src/audio_preprocess.py" />
+        <option value="$PROJECT_DIR$/src/inception.py" />
+        <option value="$PROJECT_DIR$/src/networks/networks.py" />
+        <option value="$PROJECT_DIR$/src/filters.py" />
+        <option value="$PROJECT_DIR$/src/modules/arbitrary_size.py" />
+        <option value="$PROJECT_DIR$/src/modules/resnet_block.py" />
+        <option value="$PROJECT_DIR$/src/modules/inception.py" />
+        <option value="$PROJECT_DIR$/src/networks/tested_networks/dense_net.py" />
+        <option value="$PROJECT_DIR$/src/modules/densenet_block.py" />
+        <option value="$PROJECT_DIR$/src/experimental_scripts/test_arbitrary_size.py" />
+        <option value="$PROJECT_DIR$/src/test_arbitrary_size.py" />
         <option value="$PROJECT_DIR$/src/layer.py" />
-        <option value="$PROJECT_DIR$/src/networks/tested_networks/SPL.py" />
-        <option value="$PROJECT_DIR$/src/networks/audio_steganalysis.py" />
-        <option value="$PROJECT_DIR$/src/run.py" />
-        <option value="$PROJECT_DIR$/src/config_file/config_train.json" />
         <option value="$PROJECT_DIR$/src/utils.py" />
+        <option value="$PROJECT_DIR$/src/config_file/config_test.json" />
+        <option value="$PROJECT_DIR$/src/networks/tested_networks/dissertation.py" />
+        <option value="$PROJECT_DIR$/data_processing/python_scripts/blind_dataset_make.py" />
+        <option value="$PROJECT_DIR$/src/matlab_scripts/jpeg_image_read.py" />
+        <option value="$PROJECT_DIR$/src/config_file/config_steganalysis.json" />
+        <option value="$PROJECT_DIR$/src/run.py" />
+        <option value="$PROJECT_DIR$/src/networks/tested_networks/RNN.py" />
+        <option value="$PROJECT_DIR$/src/networks/audio_steganalysis.py" />
+        <option value="$PROJECT_DIR$/src/config_file/config_train.json" />
+        <option value="$PROJECT_DIR$/src/config.py" />
+        <option value="$PROJECT_DIR$/src/main.py" />
       </list>
     </option>
   </component>
@@ -231,11 +282,11 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="28" />
-    <option name="y" value="4" />
-    <option name="width" value="1909" />
-    <option name="height" value="1047" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-2" />
+    <option name="y" value="-14" />
+    <option name="width" value="1460" />
+    <option name="height" value="920" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -253,7 +304,23 @@
             <path>
               <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="config_file" type="462c0819:PsiDirectoryNode" />
+              <item name="HPFs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="networks" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="networks" type="462c0819:PsiDirectoryNode" />
+              <item name="tested_networks" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -270,17 +337,17 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/.gitignore&#10;E:/Myself/1.source_code/tf_audio_steganalysis/samples_make.py" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../2.paper/thesis_postgraduate/5. code/audio_info_visualization.py" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\Myself\1.source_code\tf_audio_steganalysis\src\networks\tested_networks" />
-      <recent name="E:\Myself\1.source_code\tf_audio_steganalysis" />
-      <recent name="E:\Myself\1.source_code\tf_audio_steganalysis\networks" />
-      <recent name="E:\Myself\13.project\python\steganalysis_CNN" />
-      <recent name="E:\Myself\13.project\python\steganalysis_CNN\code" />
+      <recent name="E:\Myself\1.source_code\tf_audio_steganalysis\src\experimental_scripts" />
+      <recent name="E:\Myself\1.source_code\tf_audio_steganalysis\src\modules" />
+      <recent name="E:\Myself\1.source_code\tf_audio_steganalysis\src" />
+      <recent name="E:\Myself\1.source_code\tf_audio_steganalysis\src\HPFs" />
+      <recent name="E:\Myself\1.source_code\tf_audio_steganalysis\src\networks" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Myself\1.source_code\tf_audio_steganalysis\networks" />
@@ -300,7 +367,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python tests.Nosetests in test_script.py">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="steganalysis_CNN" />
       <option name="INTERPRETER_OPTIONS" value="python3" />
@@ -339,6 +406,25 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="progress_bar" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="steganalysis_CNN" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../tools-via-python" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../tools-via-python/progress_bar.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="steganalysis_CNN" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -358,58 +444,35 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="text_preprocess" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Nosetests in test_script.py" type="tests" factoryName="Nosetests" temporary="true" nameIsGenerated="true">
       <module name="steganalysis_CNN" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/text_preprocess.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="steganalysis_CNN" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
+      <option name="_new_regexPattern" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/src/test_script.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
     <list>
-      <item itemvalue="Python.utils" />
-      <item itemvalue="Python.text_preprocess" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.manager" />
       <item itemvalue="Python.run" />
+      <item itemvalue="Python.progress_bar" />
+      <item itemvalue="Python tests.Nosetests in test_script.py" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Nosetests in test_script.py" />
+        <item itemvalue="Python.progress_bar" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python.run" />
         <item itemvalue="Python.manager" />
-        <item itemvalue="Python.text_preprocess" />
-        <item itemvalue="Python.utils" />
       </list>
     </recent_temporary>
   </component>
@@ -439,6 +502,20 @@
     </task>
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="Nosetests_in_test_script_py - 2018.11.30 at 17h 03m 31s.xml">
+      <configuration name="Nosetests in test_script.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_script_py - 2018.11.30 at 17h 05m 53s.xml">
+      <configuration name="Nosetests in test_script.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_script_py - 2018.11.30 at 17h 06m 45s.xml">
+      <configuration name="Nosetests in test_script.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_script_py - 2018.11.30 at 17h 07m 13s.xml">
+      <configuration name="Nosetests in test_script.py" configurationId="tests" />
+    </history-entry>
+  </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
@@ -449,24 +526,24 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1456" height="876" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.6242004" weight="0.27202642" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.49840087" side_tool="true" weight="0.391494" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.4997183" side_tool="true" weight="0.3689095" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="File Transfer" order="11" sideWeight="0.50159913" weight="0.26390404" />
-      <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.4978678" weight="0.32824427" />
-      <window_info active="true" anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" sideWeight="0.49733475" visible="true" weight="0.3456925" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49520257" weight="0.29007635" />
-      <window_info anchor="bottom" id="Terminal" order="18" sideWeight="0.50159913" weight="0.4612868" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.16311301" />
+      <window_info anchor="bottom" id="File Transfer" order="11" sideWeight="0.5002817" visible="true" weight="0.43147898" />
+      <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.4978678" weight="0.32715377" />
+      <window_info anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" sideWeight="0.49733475" weight="0.29698375" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49520257" weight="0.30098146" />
+      <window_info anchor="bottom" id="Terminal" order="18" sideWeight="0.50070524" weight="0.3700696" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6849315" visible="true" weight="0.18624642" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
-      <window_info anchor="right" id="SciView" order="5" weight="0.3065032" />
-      <window_info id="Structure" order="1" sideWeight="0.23129252" side_tool="true" weight="0.16071428" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" id="SciView" order="5" weight="0.5317348" />
+      <window_info anchor="right" id="Structure" order="8" sideWeight="0.31506848" side_tool="true" visible="true" weight="0.15830946" />
+      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3380589" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" weight="0.32934782" />
       <window_info anchor="right" id="Remote Host" order="3" weight="0.24733475" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -484,6 +561,39 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="right" id="Data View" order="6" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" weight="0.32934782" />
+      <window_info anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" sideWeight="0.49733475" visible="true" weight="0.31624863" />
+      <window_info anchor="right" id="Remote Host" order="3" weight="0.24733475" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49520257" weight="0.30098146" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Log Manager" order="15" weight="0.32934782" />
+      <window_info anchor="bottom" id="SFDX" order="7" weight="0.32934782" />
+      <window_info anchor="bottom" id="Execute Anonymous" order="14" />
+      <window_info anchor="bottom" id="Terminal" order="18" sideWeight="0.50159913" weight="0.3504367" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.49840087" side_tool="true" weight="0.391494" />
+      <window_info anchor="bottom" id="File Transfer" order="11" sideWeight="0.50159913" weight="0.38646287" />
+      <window_info anchor="right" x="0" y="0" width="434" height="856" id="Documentation" order="7" visible="true" weight="0.2646873" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.120469086" />
+      <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
+      <window_info anchor="right" id="Data View" order="6" />
+      <window_info anchor="bottom" id="Salesforce" order="16" weight="0.32934782" />
+      <window_info anchor="bottom" id="Debug Logs" order="17" />
+      <window_info anchor="right" id="SciView" order="5" weight="0.4227079" />
+      <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.6242004" weight="0.27202642" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Structure" order="1" sideWeight="0.23129252" side_tool="true" weight="0.16071428" />
+      <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.4978678" weight="0.32715377" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32819384" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3991276" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -493,7 +603,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="26" />
+      <option name="time" value="39" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
@@ -506,190 +616,352 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/run.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4150">
-          <caret line="166" column="20" selection-start-line="166" selection-start-column="20" selection-end-line="166" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lstm.py" />
-    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python35/site-packages/tensorflow/python/framework/constant_op.py" />
-    <entry file="file://$PROJECT_DIR$/classifier.py" />
-    <entry file="file://$PROJECT_DIR$/feature_selection.py" />
-    <entry file="file://$PROJECT_DIR$/LICENSE">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-450" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python35/site-packages/tensorflow/python/ops/nn_ops.py" />
-    <entry file="file://$PROJECT_DIR$/dataset.py" />
-    <entry file="file://$PROJECT_DIR$/distributed.py" />
-    <entry file="file://$PROJECT_DIR$/setup/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="9" selection-start-line="9" selection-end-line="9" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/manager.py" />
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/framework/constant_op.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1398">
-          <caret line="53" column="32" selection-start-line="53" selection-start-column="32" selection-end-line="53" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/networks/image_steganalysis.py" />
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/ops/gen_nn_ops.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="1485" column="29" selection-start-line="1485" selection-start-column="29" selection-end-line="1485" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/framework/op_def_library.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1221">
-          <caret line="287" column="6" selection-start-line="287" selection-start-column="6" selection-end-line="287" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/contrib/layers/python/layers/layers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="904">
-          <caret line="453" column="22" selection-start-line="453" selection-start-column="13" selection-end-line="453" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/filters.py" />
-    <entry file="file://$PROJECT_DIR$/pre_process.py" />
-    <entry file="file://$PROJECT_DIR$/networks/image_classification.py" />
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/filetype/types/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="78" column="17" selection-start-line="78" selection-start-column="17" selection-end-line="78" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/audio_preprocess.py" />
-    <entry file="file://$PROJECT_DIR$/image_preprocess.py" />
-    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/tensorflow/python/ops/losses/losses_impl.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-359">
-          <caret line="713" column="51" lean-forward="true" selection-start-line="713" selection-start-column="51" selection-end-line="713" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config_file/config_test.json" />
-    <entry file="file://$PROJECT_DIR$/text_preprocess.py" />
-    <entry file="file://$PROJECT_DIR$/networks/audio_steganalysis.py" />
-    <entry file="file://$PROJECT_DIR$/file_preprocess.py" />
-    <entry file="file://$PROJECT_DIR$/test_script.py" />
-    <entry file="file://$PROJECT_DIR$/samples_make.py" />
-    <entry file="file://$PROJECT_DIR$/main.py" />
-    <entry file="file://$PROJECT_DIR$/run.py" />
-    <entry file="file://$PROJECT_DIR$/layer.py" />
-    <entry file="file://$PROJECT_DIR$/config.py" />
-    <entry file="file://$PROJECT_DIR$/utils.py" />
-    <entry file="file://$PROJECT_DIR$/networks/networks.py" />
-    <entry file="file://$PROJECT_DIR$/networks/tested_steganalysis.py" />
-    <entry file="file://$PROJECT_DIR$/config_file/config_train.json" />
-    <entry file="file://$PROJECT_DIR$/src/test_script.py">
+    <entry file="file://$PROJECT_DIR$/data_processing/python_scripts/train_test_split.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
+          <caret line="43" column="21" lean-forward="true" selection-start-line="30" selection-end-line="43" selection-end-column="21" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$USER_HOME$/.PyCharm2018.1/system/python_stubs/-52240657/builtins.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        <state relative-caret-position="279">
+          <caret line="2296" column="8" selection-start-line="2296" selection-start-column="8" selection-end-line="2296" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/paper/CNN-based Steganalysis of MP3 Steganography in the Entropy Code Domain/readme.md">
+    <entry file="file://$PROJECT_DIR$/data_processing/python_scripts/QMDCT_extraction.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="29" column="59" selection-start-line="29" selection-start-column="59" selection-end-line="29" selection-end-column="59" />
+        <state relative-caret-position="-275">
+          <caret line="41" column="13" selection-start-line="41" selection-start-column="4" selection-end-line="41" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/networks/networks.py">
+    <entry file="file://$PROJECT_DIR$/../tools-via-python/system_info.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="1876">
+          <caret line="160" selection-start-line="160" selection-end-line="160" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../tools-via-python/source_code_statistics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="88" column="4" lean-forward="true" selection-start-line="88" selection-start-column="4" selection-end-line="88" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../tools-via-python/progress_bar.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1375">
+          <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../tools-via-python/duplication_search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1139">
+          <caret line="143" lean-forward="true" selection-start-line="143" selection-end-line="143" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/readme.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="17" column="40" selection-start-line="17" selection-start-column="40" selection-end-line="17" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/networks/readme.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://G:/socket_client.py" />
+    <entry file="file://$PROJECT_DIR$/src/matlab_scripts/read_jpeg_image.m" />
+    <entry file="file://$PROJECT_DIR$/src/networks/image_steganalysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4025">
+          <caret line="161" column="11" selection-start-line="161" selection-start-column="11" selection-end-line="161" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wechat.py" />
+    <entry file="file://$PROJECT_DIR$/src/UI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="89" selection-start-line="89" selection-end-line="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../2.paper/thesis_postgraduate/5. code/audio_info_visualization.py" />
+    <entry file="file://$PROJECT_DIR$/src/image_preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="61" column="33" lean-forward="true" selection-start-line="61" selection-start-column="33" selection-end-line="61" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/librosa/core/audio.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="29" column="4" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/numpy/lib/function_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1970">
+          <caret line="1923" column="39" selection-start-line="1923" selection-start-column="20" selection-end-line="1923" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/networks/networks_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="47" column="31" selection-start-line="47" selection-start-column="31" selection-end-line="47" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/IH_MMSec.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="16" column="55" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="55" />
+        <state relative-caret-position="-875">
+          <caret line="253" column="7" lean-forward="true" selection-start-line="253" selection-start-column="7" selection-end-line="253" selection-end-column="7" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/layer.py">
+    <entry file="file://$PROJECT_DIR$/src/networks/EECS_B_128_W_2_H_7_ER_10-2000.data-00000-of-00001" />
+    <entry file="file://$PROJECT_DIR$/src/modules/arbitrary_size.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12425">
-          <caret line="500" column="15" selection-start-line="500" selection-start-column="4" selection-end-line="500" selection-end-column="15" />
+        <state relative-caret-position="300">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/networks/audio_steganalysis.py">
+    <entry file="file://$PROJECT_DIR$/src/modules/resnet_block.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2200">
-          <caret line="89" column="19" selection-start-line="89" selection-start-column="19" selection-end-line="89" selection-end-column="19" />
+        <state relative-caret-position="-615">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/SPL.py">
+    <entry file="file://$PROJECT_DIR$/src/manager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4875">
-          <caret line="195" column="23" selection-start-line="195" selection-start-column="23" selection-end-line="195" selection-end-column="23" />
+        <state relative-caret-position="311">
+          <caret line="145" column="35" lean-forward="true" selection-start-line="145" selection-start-column="35" selection-end-line="145" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/distributed.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="17" column="47" lean-forward="true" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/modules/inception.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="57" column="60" lean-forward="true" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="60" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/networks/tested_steganalysis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
+        <state relative-caret-position="375">
+          <caret line="15" column="51" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.py">
+    <entry file="file://$PROJECT_DIR$/src/file_preprocess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1200">
-          <caret line="52" selection-start-line="52" selection-end-line="52" />
+        <state relative-caret-position="550">
+          <caret line="24" column="4" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/config.py">
+    <entry file="file://$PROJECT_DIR$/src/networks/networks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3325">
-          <caret line="137" column="30" selection-start-line="137" selection-start-column="21" selection-end-line="137" selection-end-column="30" />
+        <state relative-caret-position="775">
+          <caret line="31" column="8" selection-start-line="31" selection-end-line="31" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/run.py">
+    <entry file="file://$PROJECT_DIR$/data_processing/python_scripts/blind_dataset_make.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3950">
-          <caret line="166" column="20" selection-start-line="166" selection-start-column="20" selection-end-line="166" selection-end-column="20" />
+        <state relative-caret-position="1675">
+          <caret line="73" column="120" selection-end-line="101" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/audio_preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Python 3.5/Lib/site-packages/matlab/engine/fevalfuture.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="81" selection-start-line="81" selection-end-line="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/matlab_scripts/jpeg_image_read.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="13" column="29" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test_script.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="17" column="3" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/experimental_scripts/test_arbitrary_size.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="29" column="6" lean-forward="true" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config_file/config_test.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config_file/config_steganalysis.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="16" column="39" selection-start-line="16" selection-start-column="39" selection-end-line="16" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/modules/densenet_block.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/ICASSP.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1700">
+          <caret line="69" selection-start-line="68" selection-start-column="12" selection-end-line="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/RNN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1025">
+          <caret line="41" column="50" selection-start-line="41" selection-start-column="50" selection-end-line="41" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/dense_net.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#136#155#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/dissertation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25900">
+          <caret line="1036" column="17" selection-start-line="990" selection-end-line="1036" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/networks/audio_steganalysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+          <folding>
+            <element signature="e#147#166#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="12" column="32" lean-forward="true" selection-start-line="12" selection-start-column="32" selection-end-line="12" selection-end-column="32" />
+        <state relative-caret-position="325">
+          <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+          <folding>
+            <element signature="e#145#154#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/layer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1425">
+          <caret line="60" column="23" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
+          <folding>
+            <element signature="e#147#173#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11550">
+          <caret line="471" column="37" selection-start-line="471" selection-start-column="37" selection-end-line="471" selection-end-column="37" />
+          <folding>
+            <element signature="e#146#157#0" expanded="true" />
+            <marker date="1552635876387" expanded="true" signature="17055:17101" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="162" column="106" lean-forward="true" selection-start-line="162" selection-start-column="106" selection-end-line="162" selection-end-column="106" />
+        <state relative-caret-position="5125">
+          <caret line="214" column="21" selection-start-line="214" selection-start-column="21" selection-end-line="214" selection-end-column="21" />
+          <folding>
+            <element signature="e#147#156#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/text_preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1625">
+          <caret line="66" column="18" selection-start-line="66" selection-start-column="18" selection-end-line="66" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="e#146#155#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HPFs/filters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-470">
+          <caret line="80" column="96" lean-forward="true" selection-start-line="79" selection-start-column="48" selection-end-line="80" selection-end-column="96" />
         </state>
       </provider>
     </entry>

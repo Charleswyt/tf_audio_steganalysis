@@ -45,7 +45,7 @@ def rnn_lstm(input_data, class_num):
     # 定义LSTM的基本单元
     input_data = tf.transpose(input_data, [1, 0, 2])
     input_data = tf.reshape(input_data, [-1, n_inputs])
-    input_data = tf.nn.tanh(tf.add(tf.matmul(input_data, weights_in), biases_in))
+    input_data = tf.nn.thomranh(tf.add(tf.matmul(input_data, weights_in), biases_in))
     input_data = tf.split(input_data, n_steps, 0)
 
     lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(num_units=lstm_size,

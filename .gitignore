@@ -29,3 +29,6 @@ command_line.txt
 jupyter/data/
 !data_processing
 
+data_processing/secret_message/temp.txt
+data_processing/secret_message/stego_info_full_backup.txt
+*.bat
