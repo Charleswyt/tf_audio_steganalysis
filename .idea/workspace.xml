@@ -2,23 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c2d43106-d1ec-4b75-a6d9-339f7e1bcfc5" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_processing/batch_scripts/QMDCT_extraction_batch.bat" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/batch_scripts/QMDCT_extraction_batch.bat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_processing/batch_scripts/files_move_batch.bat" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/batch_scripts/files_move_batch.bat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_processing/batch_scripts/train_test_split_batch.bat" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/batch_scripts/train_test_split_batch.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_processing/python_scripts/files_move.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/python_scripts/files_move.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_processing/python_scripts/tools/encode_HCM.exe" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/python_scripts/tools/encode_HCM.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_processing/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_processing/secret_message/temp.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/secret_message/temp.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_processing/secret_message/temp1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing/secret_message/temp1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jupyter/.ipynb_checkpoints/Untitled2-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/jupyter/.ipynb_checkpoints/Untitled2-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jupyter/Untitled2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/jupyter/Untitled2.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config_file/config_steganalysis.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config_file/config_steganalysis.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config_file/config_test.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config_file/config_test.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config_file/config_train.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config_file/config_train.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup/pycharm.md" beforeDir="false" afterPath="$PROJECT_DIR$/setup/pycharm.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config_file/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/config_file/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/matlab_scripts/jpeg_image_read.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/matlab_scripts/jpeg_image_read.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/networks/tested_networks/RNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/networks/tested_networks/RNN.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -94,7 +89,7 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
+            <state relative-caret-position="275">
               <caret line="16" selection-start-line="16" selection-end-line="16" />
               <folding>
                 <element signature="e#146#155#0" expanded="true" />
@@ -103,11 +98,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="filters.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="filters.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/HPFs/filters.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-470">
-              <caret line="80" column="96" lean-forward="true" selection-start-line="79" selection-start-column="48" selection-end-line="80" selection-end-column="96" />
+            <state relative-caret-position="2200">
+              <caret line="90" column="53" selection-start-line="90" selection-start-column="53" selection-end-line="90" selection-end-column="53" />
             </state>
           </provider>
         </entry>
@@ -148,20 +143,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dissertation.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/networks/tested_networks/dissertation.py">
+      <file leaf-file-name="config_train.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25900">
-              <caret line="1036" column="17" selection-start-line="990" selection-end-line="1036" selection-end-column="17" />
+            <state relative-caret-position="249">
+              <caret line="61" column="6" lean-forward="true" selection-start-line="61" selection-start-column="6" selection-end-line="61" selection-end-column="6" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config_train.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
+      <file leaf-file-name="config_steganalysis.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config_file/config_steganalysis.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
+            <state relative-caret-position="400">
+              <caret line="16" column="39" selection-start-line="16" selection-start-column="39" selection-end-line="16" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -282,7 +277,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-2" />
     <option name="y" value="-14" />
     <option name="width" value="1460" />
@@ -300,6 +295,11 @@
             <path>
               <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="config_file" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="tf_audio_steganalysis" type="b2602c69:ProjectViewProjectNode" />
@@ -526,7 +526,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1456" height="876" extended-state="7" />
+    <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.6242004" weight="0.27202642" />
@@ -537,7 +537,7 @@
       <window_info anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" sideWeight="0.49733475" weight="0.29698375" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49520257" weight="0.30098146" />
       <window_info anchor="bottom" id="Terminal" order="18" sideWeight="0.50070524" weight="0.3700696" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6849315" visible="true" weight="0.18624642" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6849315" visible="true" weight="0.19197708" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
       <window_info anchor="right" id="SciView" order="5" weight="0.5317348" />
@@ -563,9 +563,10 @@
     </layout>
     <layout-to-restore>
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" weight="0.32934782" />
-      <window_info anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" sideWeight="0.49733475" visible="true" weight="0.31624863" />
-      <window_info anchor="right" id="Remote Host" order="3" weight="0.24733475" />
+      <window_info anchor="bottom" id="Salesforce" order="16" weight="0.32934782" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49520257" weight="0.30098146" />
+      <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.4978678" weight="0.32715377" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32819384" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Log Manager" order="15" weight="0.32934782" />
@@ -578,20 +579,19 @@
       <window_info anchor="bottom" id="File Transfer" order="11" sideWeight="0.50159913" weight="0.38646287" />
       <window_info anchor="right" x="0" y="0" width="434" height="856" id="Documentation" order="7" visible="true" weight="0.2646873" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.120469086" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="right" id="Data View" order="6" />
-      <window_info anchor="bottom" id="Salesforce" order="16" weight="0.32934782" />
-      <window_info anchor="bottom" id="Debug Logs" order="17" />
+      <window_info anchor="right" id="Remote Host" order="3" weight="0.24733475" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.76870745" visible="true" weight="0.120469086" />
       <window_info anchor="right" id="SciView" order="5" weight="0.4227079" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.6242004" weight="0.27202642" />
+      <window_info anchor="bottom" x="22" y="348" width="1876" height="343" id="Python Console" order="19" sideWeight="0.49733475" visible="true" weight="0.31624863" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Structure" order="1" sideWeight="0.23129252" side_tool="true" weight="0.16071428" />
-      <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.4978678" weight="0.32715377" />
+      <window_info anchor="bottom" id="Debug Logs" order="17" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32819384" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3991276" />
     </layout-to-restore>
   </component>
@@ -831,20 +831,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/config_file/config_test.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/config_file/config_steganalysis.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="16" column="39" selection-start-line="16" selection-start-column="39" selection-end-line="16" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/modules/densenet_block.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
@@ -870,9 +856,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="325">
           <caret line="14" selection-start-line="14" selection-end-line="14" />
-          <folding>
-            <element signature="e#136#155#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -890,13 +873,6 @@
           <folding>
             <element signature="e#147#166#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
         </state>
       </provider>
     </entry>
@@ -950,7 +926,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
+        <state relative-caret-position="275">
           <caret line="16" selection-start-line="16" selection-end-line="16" />
           <folding>
             <element signature="e#146#155#0" expanded="true" />
@@ -960,8 +936,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/HPFs/filters.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-470">
-          <caret line="80" column="96" lean-forward="true" selection-start-line="79" selection-start-column="48" selection-end-line="80" selection-end-column="96" />
+        <state relative-caret-position="2200">
+          <caret line="90" column="53" selection-start-line="90" selection-start-column="53" selection-end-line="90" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config_file/config_test.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config_file/config_steganalysis.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="16" column="39" selection-start-line="16" selection-start-column="39" selection-end-line="16" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config_file/config_train.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="61" column="6" lean-forward="true" selection-start-line="61" selection-start-column="6" selection-end-line="61" selection-end-column="6" />
         </state>
       </provider>
     </entry>

@@ -10,7 +10,7 @@ Hope we can have a happy communication.
 
 ---
 
-This project is a **tensorflow** implementation of recent work, you can also design your own network via this platform.
+This project is a **tensorflow** implementation of our recent work, and you can design your own network through this platform.
 + [CNN-based Steganalysis of MP3 Steganography in the Entropy
 Code Domain](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/CNN-based%20Steganalysis%20of%20MP3%20Steganography%20in%20the%20Entropy%20Code%20Domain) [[IH & MMSec](https://www.ihmmsec.org) 2018, Best Paper Award] **[[Paper (ACM)](https://dl.acm.org/citation.cfm?id=3206011)]** **[[Paper (pdf)](http://www.media-security.net/?p=809)]** **[[Presentation](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/CNN-based%20Steganalysis%20of%20MP3%20Steganography%20in%20the%20Entropy%20Code%20Domain)]** **[[Dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)]**
 * [RHFCN: Fully CNN-based Steganalysis of MP3 with Rich High-Pass Filtering](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/RHFCN%EF%BC%9AFully%20CNN-based%20Steganalysis%20of%20MP3%20with%20Rich%20High-Pass%20Filtering) [[ICASSP](https://2019.ieeeicassp.org) 2019]<br>
