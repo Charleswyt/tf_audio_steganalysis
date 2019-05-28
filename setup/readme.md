@@ -1,4 +1,4 @@
-## Needed packages
+## Necessary Packages
 + numpy
 + pandas
 + scipy
