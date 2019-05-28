@@ -4,24 +4,22 @@
 @ Email: wangyuntao2@iie.ac.cn <br>
 Hope we have a happy communication.
 
-| **`Linux CPU`** | **`Linux GPU`** | **`Windows CPU`** | **`Windows GPU`** | 
-|-----------------|-----------------|-------------------|-------------------|
-| ![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg) | ![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg) | ![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg) | ![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg) |
-
+| **`Linux CPU`** | **`Linux GPU`** | **`Windows CPU`** | **`Windows GPU`** | **`License`**  |
+|-|-|-|-|-|
+|![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg)  |![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg)    |![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg)    |![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg)    |![Travis](https://img.shields.io/eclipse-marketplace/l/notepad4e.svg) |
 ---
-
-This project is a **tensorflow** implementation of recent work, you can also design your own network via this platform.
+This project is a **tensorflow** implementation of our recent work, and you can design your own networks through the platform.
 + [CNN-based Steganalysis of MP3 Steganography in the Entropy
-Code Domain](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/CNN-based%20Steganalysis%20of%20MP3%20Steganography%20in%20the%20Entropy%20Code%20Domain) [[IH&MMSec](https://www.ihmmsec.org) 2018, Best Paper Award] **[[paper (ACM)](https://dl.acm.org/citation.cfm?id=3206011)]** **[[paper (pdf)](http://www.media-security.net/?p=809)]** **[[dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)]**
-* [RHFCN: Fully CNN-based Steganalysis of MP3 with Rich High-Pass Filtering](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/RHFCN%EF%BC%9AFully%20CNN-based%20Steganalysis%20of%20MP3%20with%20Rich%20High-Pass%20Filtering) [[ICASSP](https://2019.ieeeicassp.org) 2019] **[[Paper (IEEE)](https://ieeexplore.ieee.org/document/8683626)]** **[[paper (pdf)](http://www.media-security.net/?p=969)]** **[[dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)]**
+Code Domain](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/CNN-based%20Steganalysis%20of%20MP3%20Steganography%20in%20the%20Entropy%20Code%20Domain) [[IH&MMSec](https://www.ihmmsec.org) 2018, Best Paper Award] **[[Paper (ACM)](https://dl.acm.org/citation.cfm?id=3206011)]** **[[Paper (pdf)](http://www.media-security.net/?p=809)]** **[[Dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)]**
+* [RHFCN: Fully CNN-based Steganalysis of MP3 with Rich High-Pass Filtering](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/RHFCN%EF%BC%9AFully%20CNN-based%20Steganalysis%20of%20MP3%20with%20Rich%20High-Pass%20Filtering) [[ICASSP](https://2019.ieeeicassp.org) 2019] **[[Paper (IEEE)](https://ieeexplore.ieee.org/document/8683626)]** **[[Paper (pdf)](http://www.media-security.net/?p=969)]** **[[Dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)]**
 
 ## Necessary Packages
 tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-learn, filetype, [**virtualenv**](https://charleswyt.github.io/2018/09/06/python%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8/), [librosa](http://librosa.github.io/librosa/core.html) (depends on **[FFmpeg](http://www.ffmpeg.org/download.html)**)
 
-You can use the command, **pip install -r requirements.txt**, to install all necessary packages mentioned above. If you don't want to change or break your original version of tensorflow, you can use [**virtualenv**]() to create a new python runtime environment.
+You can use the command, **pip install -r requirements.txt**, to install all necessary packages mentioned above. If you don't want to change or break your original version of tensorflow, you can use [**virtualenv**](https://charleswyt.github.io/2018/09/06/python%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8/) to create a new python runtime environment.
 
 ## How to use
-1. Install [**python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/), and add the installation directory into the environment variable (recommand python3.5).
+1. Install [**Python3.x**](https://www.python.org/) or [**Anaconda**](https://repo.continuum.io/archive/), and add the installation directory into the environment variable (recommand python3.5).
 2. **GPU** runtime environment [**configure**](https://blog.csdn.net/yhaolpz/article/details/71375762?locationNum=14&fps=1) for the network training (**optional**).
 3. Install all dependent packages mentioned above (open **[setup](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/setup)/requirements.txt**, and input "**pip install -r requirements**" into your terminal window).
 4. **Run** the code as the [**example**](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/src/config_file) shows.
@@ -32,9 +30,9 @@ You can use the command, **pip install -r requirements.txt**, to install all nec
 ## File description
 ID      |   File                    |   Function
 :-      |   :-                      |    :-
-1       |   audio_samples           |   some audio samples for shown
-2       |   data_processing         |   tools which are used for QMDCT coefficients extraction and dataset build
-3       |   jupyter                 |   a folder for jupyter debug
-4       |   paper                   |   the paper, PPT, dataset and brief introduction of our recent work
-5       |   setup                   |   a **requirements.txt** in this folder, which is used to install all packages in this system
+1       |   audio_samples           |   some audio samples
+2       |   data_processing         |   dataset build, tools which are used for QMDCT coefficients extraction and so on
+3       |   jupyter                 |   a folder for debug with jupyter
+4       |   papers                  |   the paper, presentation, dataset and brief introduction of our recent work
+5       |   setup                   |   setup and configuration
 6       |   src                     |   source code
