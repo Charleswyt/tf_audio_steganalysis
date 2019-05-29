@@ -1,7 +1,7 @@
 ## Usage of python scripts
 
-### QMDCT extraction
-python QMDCT_extract.py "files_path" "file_num"
+### QMDCT Coefficients Matrix Extraction
+python QMDCT_extraction.py "files_path" "file_num"
 + **files_path**: path of QMDCT coefficients matrix files
 + **file_num**: num of files to be extracted, default: None (all files in this path are extracted)
 
@@ -21,7 +21,7 @@ usage:
 1. python file_move.py *** ***
 2. python file_move.py *** *** txt
 
-### Train and test dataset split (Optional)
+### Train and Test Datasets Split (Optional)
 If you need to split the dataset into train and test, this python script may satisfy you.
 
 python file_move.py "files_path" "percent_train" "percent_validation"
@@ -36,7 +36,7 @@ usage:
 
 If the sum of two percent is not 1.0, an error is presented.
 
-### Tools for sample making
+### Tools for Audio Samples Make
 The usage of each encoder is shown as follows.
 
 Encoder         |   Command
