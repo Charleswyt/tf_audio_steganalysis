@@ -11,4 +11,4 @@
 + virtualenv
 + jupyter
 
-open command and input "pip install -r requirement.txt"
+Open terminal window and input "pip install -r requirement.txt".
