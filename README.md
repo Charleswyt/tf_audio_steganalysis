@@ -10,10 +10,10 @@ Hope we have a happy communication.
 ---
 This project is a **tensorflow** implementation of our recent work, and you can design your own networks through the platform.
 + [CNN-based Steganalysis of MP3 Steganography in the Entropy
-Code Domain](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper/CNN-based%20Steganalysis%20of%20MP3%20Steganography%20in%20the%20Entropy%20Code%20Domain) [[IH&MMSec](https://www.ihmmsec.org) 2018, Best Paper Award] <br>
-**[[Paper (ACM)](https://dl.acm.org/citation.cfm?id=3206011)]** **[[Paper (pdf)](http://www.media-security.net/?p=809)]** **[[Dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)]**
+Code Domain](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/papers/CNN-based%20Steganalysis%20of%20MP3%20Steganography%20in%20the%20Entropy%20Code%20Domain) [[IH&MMSec](https://www.ihmmsec.org) 2018, Best Paper Award] <br>
+**[[Paper (ACM)](https://dl.acm.org/citation.cfm?id=3206011)]** **[[Paper (pdf)](http://www.media-security.net/?p=809)]** **[[Dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/papers)]**
 + [RHFCN: Fully CNN-based Steganalysis of MP3 with Rich High-Pass Filtering](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/papers/RHFCN%20-%20Fully%20CNN-based%20Steganalysis%20of%20MP3%20with%20Rich%20High-Pass%20Filtering) [[ICASSP](https://2019.ieeeicassp.org) 2019] <br>
-**[[Paper (IEEE)](https://ieeexplore.ieee.org/document/8683626)]** **[[Paper (pdf)](http://www.media-security.net/?p=969)]** **[[Dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/paper)]**
+**[[Paper (IEEE)](https://ieeexplore.ieee.org/document/8683626)]** **[[Paper (pdf)](http://www.media-security.net/?p=969)]** **[[Dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/papers)]**
 
 ## Necessary Packages
 tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-learn, filetype, [virtualenv](https://charleswyt.github.io/2018/09/06/python%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8/), [librosa](http://librosa.github.io/librosa/core.html) (depends on **[FFmpeg](http://www.ffmpeg.org/download.html)**)

@@ -5,7 +5,7 @@ The ***extraction password*** is "**z28d**".
 
 A pure dataset which only contains WAV audio files and audio encoders is available through [**IEEEDataPort**](http://ieee-dataport.org/documents/audio-steganalysis-dataset).
 
-We divide our dataset into vocal songs and light music, and we mainly steganalyze **vocal songs** which are with more complex waveform.
+We divide our dataset into **vocal songs** and **light music,** and we mainly steganalyze **vocal songs** which are with more complex waveform.
 
 ---
 
