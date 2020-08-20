@@ -1,6 +1,6 @@
 # Audio Steganalysis with Deep Learning
 
-@ Author: **[Yuntao Wang (Charles_wyt)](http://www.escience.cn/people/wangyuntao/index.html)** <br>
+@ Author: **Yuntao Wang (Charles_wyt)** <br>
 @ Email: wangyuntao2@iie.ac.cn <br>
 Hope we have a happy communication.
 
@@ -14,6 +14,8 @@ Code Domain](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/pap
 **[[Paper (ACM)](https://dl.acm.org/citation.cfm?id=3206011)]** **[[Paper (pdf)](http://www.media-security.net/?p=809)]** **[[Dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/papers)]**
 + [RHFCN: Fully CNN-based Steganalysis of MP3 with Rich High-Pass Filtering](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/papers/RHFCN%20-%20Fully%20CNN-based%20Steganalysis%20of%20MP3%20with%20Rich%20High-Pass%20Filtering) [[ICASSP](https://2019.ieeeicassp.org) 2019] <br>
 **[[Paper (IEEE)](https://ieeexplore.ieee.org/document/8683626)]** **[[Paper (pdf)](http://www.media-security.net/?p=969)]** **[[Dataset](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/papers)]**
++ [MP3 Steganalysis based on Joint Point-wise and Block-wise CSorrelations](https://github.com/Charleswyt/tf_audio_steganalysis/tree/master/papers/RHFCN%20-%20Fully%20CNN-based%20Steganalysis%20of%20MP3%20with%20Rich%20High-Pass%20Filtering) [[Information Sciences](https://www.sciencedirect.com/journal/information-sciences)] <br>
+**[[Paper (Elsevier)](https://www.sciencedirect.com/science/article/pii/S0020025519310047)]** **[[Repositories](https://github.com/Charleswyt/audio_steganalysis_ml)]**
 
 ## Necessary Packages
 tensorflow-gpu==1.3 or later, numpy, pandas, matplotlib, scikit-image, scikit-learn, filetype, [virtualenv](https://charleswyt.github.io/2018/09/06/python%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8/), [librosa](http://librosa.github.io/librosa/core.html) (depends on **[FFmpeg](http://www.ffmpeg.org/download.html)**)
