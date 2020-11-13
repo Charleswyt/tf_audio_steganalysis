@@ -2,7 +2,7 @@ numpy
 pandas
 scipy
 matplotlib
-tensorflow-gpu==1.4
+tensorflow-gpu==2.3.1
 scikit-learn
 scikit-image
 librosa
