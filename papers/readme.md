@@ -11,7 +11,7 @@ We divide our dataset into **vocal songs** and **light music,** and we mainly st
 
 Besides, 16,000 [**BBC Sound Effects**](http://bbcsfx.acropolis.org.uk/) are made available by the **BBC** in **WAV** format to download for use under the terms of the [RemArc Licence](https://github.com/bbcarchdev/Remarc/raw/master/doc/2016.09.27_RemArc_Content%20licence_Terms%20of%20Use_final.pdf).
 
-There are some other [**audio databases**](https://github.com/Charleswyt/tf_audio_steganalysis/blob/master/paper/audio_database.md) that we can utilize.
+There are some other [**audio databases**](https://github.com/Charleswyt/tf_audio_steganalysis/paper/audio_database.md) that we can utilize.
 
 For a **quick** experiments, you do not need to many audio samples in the design of the network. According to our experiments, **10000** cover-stego audio pairs (8000 for training and 2000 for validation) can achieve good performance.
 
