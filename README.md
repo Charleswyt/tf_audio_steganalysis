@@ -4,9 +4,6 @@
 @ Email: wangyuntao2@iie.ac.cn <br>
 Hope we have a happy communication.
 
-| **`Linux CPU`** | **`Linux GPU`** | **`Windows CPU`** | **`Windows GPU`** |
-|-|-|-|-|
-|![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg)  |![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg)    |![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg)    |![Travis](https://img.shields.io/travis/rust-lang/rust/master.svg)    |
 ---
 This project is a **tensorflow** implementation of our recent work, and you can design your own networks through the platform.
 + [CNN-based Steganalysis of MP3 Steganography in the Entropy
