@@ -1,7 +1,7 @@
 # Audio Steganalysis with Deep Learning
 
 @ Author: **Yuntao Wang (Charles_wyt)** <br>
-@ Email: wangyuntao2@iie.ac.cn <br>
+@ Email: ~~wangyuntao2@iie.ac.cn (deactivation)~~ charles_wyt@163.com <br>
 Hope we have a happy communication.
 
 ---
